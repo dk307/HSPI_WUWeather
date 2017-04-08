@@ -25,7 +25,7 @@ namespace Hspi
         public string Name { get; private set; }
         public XmlPathData PathData { get; private set; }
 
-        protected IList<VSVGPairs.VGPair> GetSingleGraphicsPairs(string fileName)
+        protected static IList<VSVGPairs.VGPair> GetSingleGraphicsPairs(string fileName)
         {
             var pairs = new List<VSVGPairs.VGPair>();
             pairs.Add(new VSVGPairs.VGPair()

@@ -180,7 +180,7 @@ namespace Hspi
 
             if (deviceEnumerator == null)
             {
-                throw new HspiException($"{Name} failed to get a device enumerator from HomeSeer.");
+                throw new HspiException(INV($"{Name} failed to get a device enumerator from HomeSeer."));
             }
 
             var currentDevices = new Dictionary<string, DeviceClass>();

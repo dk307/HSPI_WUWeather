@@ -42,7 +42,7 @@ namespace Hspi
             new PrecipitationIntensityDeviceData("Precipitation Today", new XmlPathData("precip_today_in", "precip_today_metric")),
             new PressureDeviceData("Pressure", new XmlPathData("pressure_in", "pressure_mb")),
             new PressureTrendDeviceData("Pressure Trend", new XmlPathData("pressure_trend")),
-            new VisiblityDeviceData("Visiblity", new XmlPathData("visibility_mi", "visibility_km")),
+            new VisibilityDeviceData("Visiblity", new XmlPathData("visibility_mi", "visibility_km")),
             new TemperatureDeviceData("DewPoint", new XmlPathData("dewpoint_f", "dewpoint_c")),
             new SolarRadiationDeviceData("Solar Radiation", new XmlPathData("solarradiation")),
         }.AsReadOnly();

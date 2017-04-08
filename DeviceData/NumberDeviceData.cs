@@ -6,7 +6,7 @@ namespace Hspi
 {
     public abstract class NumberDeviceData : DeviceData
     {
-        public NumberDeviceData(string name, XmlPathData pathData) :
+        protected NumberDeviceData(string name, XmlPathData pathData) :
             base(name, pathData)
         {
         }

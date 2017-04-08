@@ -80,10 +80,11 @@
     <Compile Include="ConfigPage.cs" />
     <Compile Include="DeviceData\DayForecastRootDeviceData.cs" />
     <Compile Include="DeviceData\DayDeviceData.cs" />
+    <Compile Include="DeviceData\HistoryRootDeviceData.cs" />
     <Compile Include="DeviceData\PressureTrendDeviceData.cs" />
     <Compile Include="DeviceData\SolarRadiationDeviceData.cs" />
+    <Compile Include="DeviceData\VisibilityDeviceData.cs" />
     <Compile Include="DeviceData\XmlPathData.cs" />
-    <Compile Include="DeviceData\HistroyRootDeviceData.cs" />
     <Compile Include="WUWeatherData.cs" />
     <Compile Include="WUWeatherService.cs" />
     <Compile Include="DescriptionEnum.cs" />
@@ -93,14 +94,12 @@
     <Compile Include="DeviceData\NumberDeviceData.cs" />
     <Compile Include="DeviceData\PrecipitationIntensityDeviceData.cs" />
     <Compile Include="DeviceData\PrecipitationProbabilityDeviceData.cs" />
-    <Compile Include="DeviceData\PrecipitationTypeDeviceData.cs" />
     <Compile Include="DeviceData\PressureDeviceData.cs" />
     <Compile Include="DeviceData\ProbabilityDeviceData.cs" />
     <Compile Include="DeviceData\RootDeviceData.cs" />
     <Compile Include="DeviceData\TemperatureDeviceData.cs" />
     <Compile Include="DeviceData\TemperatureMinMaxDeviceData.cs" />
     <Compile Include="DeviceData\TextDeviceData.cs" />
-    <Compile Include="DeviceData\VisiblityDeviceData.cs" />
     <Compile Include="DeviceData\WeatherTypeDeviceData.cs" />
     <Compile Include="DeviceData\WindBearingDeviceData.cs" />
     <Compile Include="DeviceData\WinSpeedDeviceData.cs" />

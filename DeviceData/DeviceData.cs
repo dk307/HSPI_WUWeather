@@ -11,7 +11,7 @@ namespace Hspi
 
     public abstract class DeviceData : DeviceDataBase
     {
-        public DeviceData(string name, XmlPathData pathData, int deviceType = 0, string initialStringValue = "--", double initialValue = 0D) :
+        protected DeviceData(string name, XmlPathData pathData, int deviceType = 0, string initialStringValue = "--", double initialValue = 0D) :
             base(name, pathData)
         {
             this.deviceType = deviceType;
@@ -23,7 +23,6 @@ namespace Hspi
 
         public override int HSDeviceType => deviceType;
         public override string HSDeviceTypeString => INV($"{WUWeatherData.PlugInName} Information Device");
-
         public override string InitialString => initialStringValue;
         public override double InitialValue => initialValue;
 
@@ -43,7 +42,7 @@ namespace Hspi
             return pairs;
         }
 
-        protected IList<VSVGPairs.VSPair> GetStatusPairsForEnum<T>()
+        protected static IList<VSVGPairs.VSPair> GetStatusPairsForEnum<T>()
         {
             var pairs = new List<VSVGPairs.VSPair>();
             foreach (var value in Enum.GetValues(typeof(T)))

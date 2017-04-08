@@ -46,14 +46,16 @@ namespace Hspi
         public static object Parse(Type enumType, string value, bool ignoreCase)
         {
             if (ignoreCase)
-                value = value.ToLower();
+            {
+                value = value.ToLowerInvariant();
+            }
 
             foreach (System.Enum val in System.Enum.GetValues(enumType))
             {
                 string comparisson = GetDescription(val);
                 if (ignoreCase)
                 {
-                    comparisson = comparisson.ToLower();
+                    comparisson = comparisson.ToLowerInvariant();
                 }
                 if (GetDescription(val) == value)
                 {

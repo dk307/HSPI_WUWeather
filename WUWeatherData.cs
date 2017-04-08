@@ -16,7 +16,7 @@ namespace Hspi
             new DayForecastRootDeviceData("Tomorrow Forecast", new XmlPathData(@"response/forecast/simpleforecast/forecastdays/forecastday[period = 2]")),
             new DayForecastRootDeviceData("2nd Day Forecast", new XmlPathData(@"response/forecast/simpleforecast/forecastdays/forecastday[period = 3]")),
             new DayForecastRootDeviceData("3rd Day Forecast", new XmlPathData(@"response/forecast/simpleforecast/forecastdays/forecastday[period = 4]")),
-            new HistroyRootDeviceData("Yesterday", new XmlPathData(@"response/history/observations")),
+            new HistoryRootDeviceData("Yesterday", new XmlPathData(@"response/history/observations")),
         }.AsReadOnly();
 
         public static string GetStringDescription(Unit unit, DeviceUnitType deviceType)

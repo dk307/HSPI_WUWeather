@@ -110,10 +110,10 @@ namespace Hspi
 
         private static WeatherType FromString(string data)
         {
-            string lowerData = data.ToLowerInvariant();
+            string upperData = data.ToUpperInvariant();
             foreach (var value in Enum.GetValues(typeof(WeatherType)))
             {
-                if (value.ToString().ToLowerInvariant() == lowerData)
+                if (value.ToString().ToUpperInvariant() == upperData)
                 {
                     return (WeatherType)value;
                 }

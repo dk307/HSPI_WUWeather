@@ -4,9 +4,9 @@ using System.IO;
 
 namespace Hspi
 {
-    public class VisiblityDeviceData : NumberDeviceData
+    public class VisibilityDeviceData : NumberDeviceData
     {
-        public VisiblityDeviceData(string name, XmlPathData pathData) :
+        public VisibilityDeviceData(string name, XmlPathData pathData) :
             base(name, pathData)
         {
         }
