@@ -1,7 +1,4 @@
-﻿using System;
-
-namespace Hspi
-
+﻿namespace Hspi
 {
     /// <summary>
     /// Class for the main program.

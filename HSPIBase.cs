@@ -9,6 +9,7 @@ using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace Hspi
 {
@@ -267,21 +268,25 @@ namespace Hspi
 
         protected virtual void LogDebug(string message)
         {
+            Trace.WriteLine(message);
             HS.WriteLog(Name, INV($"Debug:{message}"));
         }
 
         protected void LogError(string message)
         {
+            Trace.TraceError(message);
             HS.WriteLog(Name, INV($"Error:{message}"));
         }
 
         protected void LogInfo(string message)
         {
+            Trace.TraceInformation(message);
             HS.WriteLog(Name, message);
         }
 
         protected void LogWarning(string message)
         {
+            Trace.TraceWarning(message);
             HS.WriteLog(Name, INV($"Warning:{message}"));
         }
 

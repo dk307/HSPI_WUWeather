@@ -35,7 +35,7 @@ namespace Hspi
             apiKey = GetValue(APIKeyKey, string.Empty);
             refreshIntervalMinutes = GetValue(RefreshIntervalKey, 15);
             debugLogging = GetValue(DebugLoggingKey, false);
-            stationId = GetValue<string>(StationIdKey, null);
+            stationId = GetValue<string>(StationIdKey, string.Empty);
             Enum.TryParse(GetValue(UnitIdKey, Unit.US.ToString()), out unit);
 
             enabledDevices = new Dictionary<string, IDictionary<string, bool>>();

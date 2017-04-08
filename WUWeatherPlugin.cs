@@ -30,7 +30,7 @@ namespace Hspi
 #if DEBUG
                 pluginConfig.DebugLogging = true;
 #endif
-                LogDebug(INV($"APIKey:{pluginConfig.APIKey} Refresh Interval:{pluginConfig.RefreshIntervalMinutes} Minutes"));
+                LogConfiguration();
 
                 pluginConfig.ConfigChanged += PluginConfig_ConfigChanged;
 
@@ -48,6 +48,11 @@ namespace Hspi
             }
 
             return result;
+        }
+
+        private void LogConfiguration()
+        {
+            LogDebug(INV($"APIKey:{pluginConfig.APIKey} Refresh Interval:{pluginConfig.RefreshIntervalMinutes} Minutes Station:{pluginConfig.StationId}"));
         }
 
         private void PluginConfig_ConfigChanged(object sender, EventArgs e)
@@ -267,9 +272,12 @@ namespace Hspi
         {
             if (string.IsNullOrWhiteSpace(this.pluginConfig.APIKey) || string.IsNullOrWhiteSpace(this.pluginConfig.StationId))
             {
-                LogWarning("Configuration not defained to fetch weather data");
+                LogWarning("Configuration not setup to fetch weather data");
                 return;
             }
+
+            LogDebug("Starting data fetch from WU Weather");
+            LogConfiguration();
 
             WUWeatherService service = new WUWeatherService(pluginConfig.APIKey);
             var response = await service.GetDataForStationAsync(pluginConfig.StationId, true, true, true, token).ConfigureAwait(false);
