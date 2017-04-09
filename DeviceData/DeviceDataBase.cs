@@ -52,8 +52,8 @@ namespace Hspi
             }
             else
             {
+                // do not update double value on no value.
                 HS.SetDeviceString(refId, InitialString, false);
-                HS.SetDeviceValueByRef(refId, InitialValue, true);
             }
         }
 

@@ -307,7 +307,6 @@ namespace Hspi
                     foreach (var childDeviceDefinition in deviceDefinition.Children)
                     {
                         string childAddress = CreateChildAddress(deviceDefinition.Name, childDeviceDefinition.Name);
-
                         existingDevices.TryGetValue(childAddress, out var childDevice);
 
                         if (childDevice != null)
