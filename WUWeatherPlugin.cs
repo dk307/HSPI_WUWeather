@@ -264,7 +264,11 @@ namespace Hspi
                         LogWarning(INV($"Failed to Fetch Data with {ex.Message}"));
                     }
 
-                    await Task.Delay(TimeSpan.FromMinutes(pluginConfig.RefreshIntervalMinutes), combinedToken.Token).ConfigureAwait(false);
+                    // Set it to run after RefreshIntervalMinutes minutes or next 12.00 am
+                    TimeSpan nextRun = TimeSpan.FromMinutes(pluginConfig.RefreshIntervalMinutes);
+                    TimeSpan nextDay = DateTimeOffset.Now.Date.AddDays(1) - DateTimeOffset.Now;
+
+                    await Task.Delay(nextRun < nextDay ? nextRun : nextDay, combinedToken.Token).ConfigureAwait(false);
                 }
             }
         }
