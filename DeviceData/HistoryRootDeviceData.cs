@@ -34,9 +34,9 @@ namespace Hspi
         {
             new TemperatureMinMaxDeviceData("Max Temperature", new XmlPathData(GetPathMax("tempi"),GetPathMax("tempm"))),
             new TemperatureMinMaxDeviceData("Min Temperature", new XmlPathData(GetPathMin("tempi"),GetPathMin("tempm"))),
-            new PrecipitationIntensityDeviceData("Precipitation", new XmlPathData(GetPathMax("precip_totali"),GetPathMax("precip_totalm"))),
             new HumidityDeviceData("Max Humidity", new XmlPathData(GetPathMax("hum"))),
             new HumidityDeviceData("Min Humidity", new XmlPathData(GetPathMin("hum"))),
+            new PrecipitationIntensityDeviceData("Precipitation", new XmlPathData(GetPathMax("precip_totali"),GetPathMax("precip_totalm"))),
             new SolarRadiationDeviceData("Max Solar Radiation", new XmlPathData(GetPathMax("solarradiation"))),
          }.AsReadOnly();
     }
