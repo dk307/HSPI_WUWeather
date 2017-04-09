@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
-using HomeSeerAPI;
-using System.IO;
-using System;
+﻿using HomeSeerAPI;
+using NullGuard;
 using Scheduler.Classes;
+using System;
+using System.Collections.Generic;
 
 namespace Hspi
 {
     using static Hspi.StringUtil;
 
+    [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     public abstract class RootDeviceData : DeviceDataBase
     {
         public RootDeviceData(string name, XmlPathData pathData) :

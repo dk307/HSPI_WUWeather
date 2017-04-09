@@ -28,8 +28,7 @@ namespace Hspi
 
         public string GetPath(Unit unit)
         {
-            string value;
-            paths.TryGetValue(unit, out value);
+            paths.TryGetValue(unit, out string value);
             return value;
         }
 

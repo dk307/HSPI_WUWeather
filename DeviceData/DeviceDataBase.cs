@@ -1,10 +1,12 @@
 ﻿using HomeSeerAPI;
+using Scheduler.Classes;
 using System.Collections.Generic;
 using System.IO;
-using Scheduler.Classes;
+using NullGuard;
 
 namespace Hspi
 {
+    [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     public abstract class DeviceDataBase
     {
         protected DeviceDataBase(string name, XmlPathData pathData)
@@ -54,10 +56,9 @@ namespace Hspi
             }
         }
 
-        protected void UpdateDeviceData(IHSApplication HS, DeviceClass device, string data)
+        protected void UpdateDeviceData(IHSApplication HS, DeviceClass device, [AllowNull]string data)
         {
             int refId = device.get_Ref(HS);
-
             HS.SetDeviceValueByRef(refId, InitialValue, false);
             HS.SetDeviceString(refId, data, true);
         }

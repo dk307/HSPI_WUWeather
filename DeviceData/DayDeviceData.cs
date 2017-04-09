@@ -8,7 +8,7 @@ namespace Hspi
     public class DayDeviceData : TextDeviceData
     {
         public DayDeviceData(string name, XmlPathData pathData) :
-            base(name, pathData)
+           base(name, pathData)
         {
         }
 
@@ -26,9 +26,7 @@ namespace Hspi
             if ((value != null) && (value.Count != 0))
             {
                 string text = value.Item(0).InnerText;
-
-                long epoch;
-                if (long.TryParse(text, out epoch))
+                if (long.TryParse(text, out long epoch))
                 {
                     dateTime = DateTimeOffset.FromUnixTimeSeconds(epoch).LocalDateTime;
                 }

@@ -4,14 +4,16 @@ using Scheduler.Classes;
 using System.Collections.Generic;
 using System;
 using System.IO;
+using NullGuard;
 
 namespace Hspi
 {
     using static Hspi.StringUtil;
 
+    [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     public abstract class DeviceData : DeviceDataBase
     {
-        protected DeviceData(string name, XmlPathData pathData, int deviceType = 0, string initialStringValue = "--", double initialValue = 0D) :
+        protected DeviceData(string name, XmlPathData pathData, int deviceType = 0, [AllowNull]string initialStringValue = "--", double initialValue = 0D) :
             base(name, pathData)
         {
             this.deviceType = deviceType;

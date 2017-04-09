@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using HomeSeerAPI;
 using Scheduler.Classes;
+using NullGuard;
 
 namespace Hspi
 {
+    [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     public abstract class NumberDeviceData : DeviceData
     {
         protected NumberDeviceData(string name, XmlPathData pathData) :
@@ -11,15 +13,14 @@ namespace Hspi
         {
         }
 
-        public override void UpdateDeviceData(IHSApplication HS, DeviceClass device, System.Xml.XmlNodeList value)
+        public override void UpdateDeviceData(IHSApplication HS, DeviceClass device, [AllowNull] System.Xml.XmlNodeList value)
         {
             double? data = null;
 
             if ((value != null) && (value.Count != 0))
             {
                 string text = value.Item(0).InnerText;
-                double doubleValue;
-                double.TryParse(text, out doubleValue);
+                double.TryParse(text, out double doubleValue);
                 data = doubleValue;
             }
 

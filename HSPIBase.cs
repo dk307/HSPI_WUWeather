@@ -10,11 +10,13 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using NullGuard;
 
 namespace Hspi
 {
     using static StringUtil;
 
+    [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     public abstract class HspiBase : IPlugInAPI2, IDisposable
     {
         protected HspiBase(string name, int capabilities = (int)Enums.eCapabilities.CA_IO, string instanceFriendlyName = "",
@@ -47,7 +49,7 @@ namespace Hspi
 
         public override int AccessLevel() => accessLevel;
 
-        public override string ActionBuildUI(string uniqueControlId, IPlugInAPI.strTrigActInfo actionInfo) => string.Empty;
+        public override string ActionBuildUI([AllowNull]string uniqueControlId, IPlugInAPI.strTrigActInfo actionInfo) => string.Empty;
 
         public override bool ActionConfigured(IPlugInAPI.strTrigActInfo actionInfo) => true;
 
@@ -55,14 +57,14 @@ namespace Hspi
 
         public override string ActionFormatUI(IPlugInAPI.strTrigActInfo actionInfo) => string.Empty;
 
-        public override IPlugInAPI.strMultiReturn ActionProcessPostUI(NameValueCollection postData,
+        public override IPlugInAPI.strMultiReturn ActionProcessPostUI([AllowNull]NameValueCollection postData,
                                                 IPlugInAPI.strTrigActInfo actionInfo) => new IPlugInAPI.strMultiReturn();
 
         public override bool ActionReferencesDevice(IPlugInAPI.strTrigActInfo actionInfo, int deviceId) => false;
 
         public override int Capabilities() => capabilities;
 
-        public override string ConfigDevice(int deviceId, string user, int userRights, bool newDevice) => string.Empty;
+        public override string ConfigDevice(int deviceId, [AllowNull]string user, int userRights, bool newDevice) => string.Empty;
 
         [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "apiVersion",
         Justification = "This is what the old HS sample does.")]
@@ -136,7 +138,7 @@ namespace Hspi
             Dispose(true);
         }
 
-        public override string GenPage(string link) => string.Empty;
+        public override string GenPage([AllowNull]string link) => string.Empty;
 
         public override string get_ActionName(int actionNumber) => string.Empty;
 
@@ -152,11 +154,11 @@ namespace Hspi
 
         public override string get_TriggerName(int triggerNumber) => string.Empty;
 
-        public override string GetPagePlugin(string page, string user, int userRights, string queryString) => string.Empty;
+        public override string GetPagePlugin([AllowNull]string page, [AllowNull]string user, int userRights, [AllowNull]string queryString) => string.Empty;
 
         public override bool HandleAction(IPlugInAPI.strTrigActInfo actionInfo) => false;
 
-        public override void HSEvent(Enums.HSEvent eventType, object[] parameters)
+        public override void HSEvent(Enums.HSEvent eventType, [AllowNull]object[] parameters)
         {
         }
 
@@ -168,13 +170,13 @@ namespace Hspi
             return s;
         }
 
-        public override string PagePut(string data) => string.Empty;
+        public override string PagePut([AllowNull]string data) => string.Empty;
 
-        public override object PluginFunction(string functionName, object[] parameters) => null;
+        public override object PluginFunction([AllowNull]string functionName, [AllowNull]object[] parameters) => null;
 
-        public override object PluginPropertyGet(string propertyName, object[] parameters) => null;
+        public override object PluginPropertyGet([AllowNull]string propertyName, [AllowNull]object[] parameters) => null;
 
-        public override void PluginPropertySet(string propertyName, object value)
+        public override void PluginPropertySet([AllowNull]string propertyName, [AllowNull]object value)
         {
         }
 
@@ -189,11 +191,11 @@ namespace Hspi
             return pollResult;
         }
 
-        public override string PostBackProc(string page, string data, string user, int userRights) => string.Empty;
+        public override string PostBackProc([AllowNull]string page, [AllowNull]string data, [AllowNull]string user, int userRights) => string.Empty;
 
         public override bool RaisesGenericCallbacks() => false;
 
-        public override SearchReturn[] Search(string searchString, bool regEx) => null;
+        public override SearchReturn[] Search([AllowNull]string searchString, bool regEx) => null;
 
         public override void set_Condition(IPlugInAPI.strTrigActInfo actionInfo, bool value)
         {
@@ -204,7 +206,7 @@ namespace Hspi
             HS.SetDeviceValueByRef(deviceId, value, trigger);
         }
 
-        public override void SetIOMulti(List<CAPI.CAPIControl> colSend)
+        public override void SetIOMulti([AllowNull]List<CAPI.CAPIControl> colSend)
         {
         }
 
@@ -216,7 +218,7 @@ namespace Hspi
             this.CallbackClient.Disconnect();
         }
 
-        public override void SpeakIn(int deviceId, string text, bool wait, string host)
+        public override void SpeakIn(int deviceId, [AllowNull]string text, bool wait, [AllowNull]string host)
         {
         }
 
@@ -230,11 +232,11 @@ namespace Hspi
 
         public override bool SupportsMultipleInstancesSingleEXE() => supportsMultipleInstancesSingleEXE;
 
-        public override string TriggerBuildUI(string uniqueControlId, IPlugInAPI.strTrigActInfo triggerInfo) => string.Empty;
+        public override string TriggerBuildUI([AllowNull]string uniqueControlId, IPlugInAPI.strTrigActInfo triggerInfo) => string.Empty;
 
         public override string TriggerFormatUI(IPlugInAPI.strTrigActInfo actionInfo) => string.Empty;
 
-        public override IPlugInAPI.strMultiReturn TriggerProcessPostUI(NameValueCollection postData,
+        public override IPlugInAPI.strMultiReturn TriggerProcessPostUI([AllowNull]NameValueCollection postData,
             IPlugInAPI.strTrigActInfo actionInfo) => new IPlugInAPI.strMultiReturn();
 
         public override bool TriggerReferencesDevice(IPlugInAPI.strTrigActInfo actionInfo, int deviceId) => false;
@@ -242,8 +244,8 @@ namespace Hspi
         public override bool TriggerTrue(IPlugInAPI.strTrigActInfo actionInfo) => false;
 
         public override Enums.ConfigDevicePostReturn ConfigDevicePost(int deviceId,
-            string data,
-            string user,
+            [AllowNull]string data,
+            [AllowNull]string user,
             int userRights) => Enums.ConfigDevicePostReturn.DoneAndCancel;
 
         protected virtual void Dispose(bool disposing)

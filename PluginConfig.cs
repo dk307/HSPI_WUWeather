@@ -118,11 +118,9 @@ namespace Hspi
 
         public bool GetEnabled(DeviceDataBase parent, DeviceDataBase child)
         {
-            IDictionary<string, bool> childEnabled;
-            if (enabledDevices.TryGetValue(parent.Name, out childEnabled))
+            if (enabledDevices.TryGetValue(parent.Name, out var childEnabled))
             {
-                bool enabled;
-                if (childEnabled.TryGetValue(child.Name, out enabled))
+                if (childEnabled.TryGetValue(child.Name, out bool enabled))
                 {
                     return enabled;
                 }

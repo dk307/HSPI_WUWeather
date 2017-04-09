@@ -1,7 +1,9 @@
 ﻿using System;
+using NullGuard;
 
 namespace Hspi
 {
+    [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     internal static class StringUtil
     {
         public static string INV(IFormattable formattable)

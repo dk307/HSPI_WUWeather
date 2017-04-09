@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
-using HomeSeerAPI;
-using Scheduler.Classes;
+﻿using HomeSeerAPI;
+using NullGuard;
+using System.Collections.Generic;
 
 namespace Hspi
 {
+    [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     public class HumidityDeviceData : ProbabilityDeviceData
     {
         public HumidityDeviceData(string name, XmlPathData pathData) :

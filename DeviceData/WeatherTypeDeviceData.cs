@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using HomeSeerAPI;
-using System.ComponentModel;
-using System.IO;
+﻿using HomeSeerAPI;
+using NullGuard;
 using Scheduler.Classes;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Hspi
 {
-    using static Hspi.StringUtil;
-
+    [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     public class WeatherTypeDeviceData : DeviceData
     {
         // https://www.wunderground.com/weather/api/d/docs?d=resources/phrase-glossary&MR=1
@@ -80,7 +79,7 @@ namespace Hspi
         {
         }
 
-        public override void UpdateDeviceData(IHSApplication HS, DeviceClass device, System.Xml.XmlNodeList value)
+        public override void UpdateDeviceData(IHSApplication HS, DeviceClass device, [AllowNull]System.Xml.XmlNodeList value)
         {
             int refId = device.get_Ref(HS);
             bool valueSet = false;

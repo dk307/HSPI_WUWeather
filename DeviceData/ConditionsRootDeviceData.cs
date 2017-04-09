@@ -2,16 +2,18 @@
 using Scheduler.Classes;
 using System.Collections.Generic;
 using System;
+using NullGuard;
 
 namespace Hspi
 {
+    [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     public class ConditionsRootDeviceData : RootDeviceData
     {
         public ConditionsRootDeviceData() :
             base("Current", new XmlPathData(@"response/current_observation"))
         { }
 
-        public override void UpdateDeviceData(IHSApplication HS, DeviceClass device, System.Xml.XmlNodeList value)
+        public override void UpdateDeviceData(IHSApplication HS, DeviceClass device, [AllowNull]System.Xml.XmlNodeList value)
         {
             if (value == null || value.Count == 0) { return; }
 
@@ -45,7 +47,7 @@ namespace Hspi
             new VisibilityDeviceData("Visiblity", new XmlPathData("visibility_mi", "visibility_km")),
             new TemperatureDeviceData("DewPoint", new XmlPathData("dewpoint_f", "dewpoint_c")),
             new SolarRadiationDeviceData("Solar Radiation", new XmlPathData("solarradiation")),
-        }.AsReadOnly();
+         }.AsReadOnly();
 
         private DateTimeOffset? lastUpdateTime;
     }

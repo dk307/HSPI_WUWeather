@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
-using HomeSeerAPI;
-using System.IO;
+﻿using HomeSeerAPI;
+using NullGuard;
+using System.Collections.Generic;
 
 namespace Hspi
 {
+    [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     public class VisibilityDeviceData : NumberDeviceData
     {
         public VisibilityDeviceData(string name, XmlPathData pathData) :

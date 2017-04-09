@@ -1,6 +1,4 @@
-﻿using Hspi.WUWeather;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 
 namespace Hspi
 {

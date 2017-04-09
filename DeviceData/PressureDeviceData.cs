@@ -1,12 +1,10 @@
-﻿using System;
+﻿using HomeSeerAPI;
+using NullGuard;
 using System.Collections.Generic;
-using HomeSeerAPI;
-using Scheduler.Classes;
-using System.ComponentModel;
-using System.IO;
 
 namespace Hspi
 {
+    [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     public class PressureDeviceData : NumberDeviceData
     {
         public PressureDeviceData(string name, XmlPathData pathData) :

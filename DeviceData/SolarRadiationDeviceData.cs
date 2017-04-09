@@ -1,9 +1,10 @@
-﻿using System;
+﻿using HomeSeerAPI;
+using NullGuard;
 using System.Collections.Generic;
-using HomeSeerAPI;
 
 namespace Hspi
 {
+    [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     public class SolarRadiationDeviceData : NumberDeviceData
     {
         public SolarRadiationDeviceData(string name, XmlPathData pathData) :

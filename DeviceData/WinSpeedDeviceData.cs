@@ -1,8 +1,10 @@
 ﻿using HomeSeerAPI;
 using System.Collections.Generic;
+using NullGuard;
 
 namespace Hspi
 {
+    [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     public class WindSpeedDeviceData : NumberDeviceData
     {
         public WindSpeedDeviceData(string name, XmlPathData pathData) :

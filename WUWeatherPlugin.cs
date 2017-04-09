@@ -7,11 +7,13 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using NullGuard;
 
 namespace Hspi
 {
     using static Hspi.StringUtil;
 
+    [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     public class WUWeatherPlugin : HspiBase
     {
         public WUWeatherPlugin()
@@ -73,7 +75,7 @@ namespace Hspi
             return INV($"{parentAddress}.{childAddress}");
         }
 
-        private DeviceClass CreateDevice(DeviceClass parent, RootDeviceData rootDeviceData, DeviceDataBase deviceData)
+        private DeviceClass CreateDevice([AllowNull]DeviceClass parent, [AllowNull]RootDeviceData rootDeviceData, DeviceDataBase deviceData)
         {
             if (rootDeviceData != null)
             {
@@ -204,7 +206,7 @@ namespace Hspi
             return currentDevices;
         }
 
-        public override string GetPagePlugin(string page, string user, int userRights, string queryString)
+        public override string GetPagePlugin(string page, [AllowNull]string user, int userRights, [AllowNull]string queryString)
         {
             if (page == configPage.Name)
             {
@@ -214,7 +216,7 @@ namespace Hspi
             return string.Empty;
         }
 
-        public override string PostBackProc(string page, string data, string user, int userRights)
+        public override string PostBackProc(string page, string data, [AllowNull]string user, int userRights)
         {
             if (page == configPage.Name)
             {
@@ -287,8 +289,7 @@ namespace Hspi
             {
                 this.CancellationToken.ThrowIfCancellationRequested();
 
-                DeviceClass rootDevice;
-                existingDevices.TryGetValue(deviceDefinition.Name, out rootDevice);
+                existingDevices.TryGetValue(deviceDefinition.Name, out var rootDevice);
 
                 if (rootDevice == null)
                 {
@@ -307,8 +308,7 @@ namespace Hspi
                     {
                         string childAddress = CreateChildAddress(deviceDefinition.Name, childDeviceDefinition.Name);
 
-                        DeviceClass childDevice;
-                        existingDevices.TryGetValue(childAddress, out childDevice);
+                        existingDevices.TryGetValue(childAddress, out var childDevice);
 
                         if (childDevice != null)
                         {

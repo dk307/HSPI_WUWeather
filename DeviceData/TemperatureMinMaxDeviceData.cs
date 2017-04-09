@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using HomeSeerAPI;
+using NullGuard;
 
 namespace Hspi
 {
+    [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     public class TemperatureMinMaxDeviceData : NumberDeviceData
     {
         public TemperatureMinMaxDeviceData(string name, XmlPathData pathData) :

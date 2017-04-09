@@ -1,4 +1,5 @@
 ﻿using HomeSeerAPI;
+using NullGuard;
 using Scheduler.Classes;
 using System.Collections.Generic;
 
@@ -6,18 +7,15 @@ namespace Hspi
 {
     using static Hspi.StringUtil;
 
+    [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     public class HistoryRootDeviceData : RootDeviceData
     {
         public HistoryRootDeviceData(string name, XmlPathData pathData) :
             base(name, pathData)
         { }
 
-        public override void UpdateDeviceData(IHSApplication HS, DeviceClass device, System.Xml.XmlNodeList value)
+        public override void UpdateDeviceData(IHSApplication HS, DeviceClass device, [AllowNull]System.Xml.XmlNodeList value)
         {
-            if (value == null || value.Count == 0)
-            {
-                return;
-            }
         }
 
         public override IReadOnlyCollection<DeviceData> Children => HistoryWeatherDevices;

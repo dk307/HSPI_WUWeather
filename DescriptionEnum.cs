@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Reflection;
 using System.ComponentModel;
+using NullGuard;
 
 namespace Hspi
 {
+    [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     public static class EnumHelper
     {
         /// <summary>
