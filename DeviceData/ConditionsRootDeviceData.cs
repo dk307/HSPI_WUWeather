@@ -47,6 +47,7 @@ namespace Hspi
             new VisibilityDeviceData("Visiblity", new XmlPathData("visibility_mi", "visibility_km")),
             new TemperatureDeviceData("DewPoint", new XmlPathData("dewpoint_f", "dewpoint_c")),
             new SolarRadiationDeviceData("Solar Radiation", new XmlPathData("solarradiation")),
+            new SolarRadiationDeviceData("UV", new XmlPathData("UV")),
          }.AsReadOnly();
 
         private DateTimeOffset? lastUpdateTime;

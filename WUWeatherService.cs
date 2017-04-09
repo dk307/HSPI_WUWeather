@@ -1,12 +1,10 @@
-﻿using NullGuard;
-using System;
+﻿using Hspi.Exceptions;
+using NullGuard;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using Hspi.Exceptions;
 
 namespace Hspi.WUWeather
 {
@@ -105,25 +103,36 @@ namespace Hspi.WUWeather
                         throw new WUWeatherDataInvalidException(INV($"Couldn't retrieve data: status {response.StatusCode}"));
                     }
                     var xmlDoument = await ParseStringFromResponse(response).ConfigureAwait(false);
-                    var featureNodes = xmlDoument.SelectNodes("/response/*[self::current_observation or self::forecast or self::history]");
-
-                    if (featureNodes.Count == 0)
-                    {
-                        var errorNode = xmlDoument.SelectSingleNode("/response/error/type");
-                        string errorDescription = errorNode != null ? errorNode.InnerText : "Unknown";
-
-                        switch (errorDescription.ToUpperInvariant())
-                        {
-                            case "KEYNOTFOUND":
-                                throw new ApiKeyInvalidException();
-                            case "STATION:OFFLINE":
-                                throw new StationIdInvalidException();
-                        }
-                        throw new WUWeatherDataInvalidException(INV($"Server Returned:{errorDescription}"));
-                    }
-
+                    CheckErrorinResponse(xmlDoument);
                     return xmlDoument;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Checks errors in response.
+        /// </summary>
+        /// <param name="xmlDoument">The XML response.</param>
+        /// <exception cref="ApiKeyInvalidException"></exception>
+        /// <exception cref="StationIdInvalidException"></exception>
+        /// <exception cref="WUWeatherDataInvalidException"></exception>
+        private static void CheckErrorinResponse(XmlDocument xmlDoument)
+        {
+            var featureNodes = xmlDoument.SelectNodes("/response/*[self::current_observation or self::forecast or self::history]");
+
+            if (featureNodes.Count == 0)
+            {
+                var errorNode = xmlDoument.SelectSingleNode("/response/error/type");
+                string errorDescription = errorNode != null ? errorNode.InnerText : "Unknown";
+
+                switch (errorDescription.ToUpperInvariant())
+                {
+                    case "KEYNOTFOUND":
+                        throw new ApiKeyInvalidException();
+                    case "STATION:OFFLINE":
+                        throw new StationIdInvalidException();
+                }
+                throw new WUWeatherDataInvalidException(INV($"Server Returned:{errorDescription}"));
             }
         }
     }
