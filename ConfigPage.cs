@@ -109,6 +109,7 @@ namespace Hspi
                     this.pluginConfig.RefreshIntervalMinutes = (int)refreshIntervalMinutes;
                     this.pluginConfig.StationId = parts[StationId];
                     this.pluginConfig.Unit = unit;
+                    this.pluginConfig.DebugLogging = parts[DebugLoggingId] == "checked";
                     this.pluginConfig.FireConfigChanged();
                 }
 
@@ -247,6 +248,7 @@ namespace Hspi
             stb.Append(INV($"<tr><td class='tablecell'>Refresh Interval(minutes):</td><td class='tablecell'>{BuildTextBox(RefreshIntervalId, INV($"{pluginConfig.RefreshIntervalMinutes}"))} </ td ><td class='tablecell'><div id={CallsPerDayId}>{GetCallsPerDay()}</div></td></ tr > "));
             stb.Append(INV($"<tr><td class='tablecell'>Station:</td><td class='tablecell'>{BuildTextBox(StationId, INV($"{pluginConfig.StationId}"))}</td ><td class='tablecell'><div id='{ImageDivId}'>{GetImageHtml()}</div></td></ tr > "));
             stb.Append(INV($"<tr><td class='tablecell'>Unit:</td><td colspan=2 class='tablecell'>{BuildDropList(UnitId, unitsDropDown, unitsSelection)}</ td ></ tr > "));
+            stb.Append(INV($"<tr><td class='tablecell'>Debug Logging Enabled:</td><td colspan=2 class='tablecell'>{BuildCheckBox(DebugLoggingId, string.Empty, this.pluginConfig.DebugLogging)}</ td ></ tr > "));
             stb.Append(INV($"<tr><td colspan=3><div id='{ErrorDivId}' style='color:Red'></div></td><td></td></tr>"));
             stb.Append(INV($"<tr><td colspan=3>&nbsp;&nbsp;{BuildButton("Save", SaveButtonName)}</td><td></td></tr>"));
             stb.Append("<tr height='5'><td colspan=3></td></tr>");
@@ -272,6 +274,7 @@ namespace Hspi
 
         private const string SaveButtonName = "Save";
         private const string CallsPerDayId = "CallsPerDayId";
+        private const string DebugLoggingId = "DebugLoggingId";
         private const string UnitId = "UnitId";
         private const string APIKeyId = "APIKeyId";
         private const string StationId = "StationId";
