@@ -1,9 +1,11 @@
 ﻿using HomeSeerAPI;
+using NullGuard;
 using Scheduler.Classes;
 using System;
 
 namespace Hspi
 {
+    [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     public class DayDeviceData : TextDeviceData
     {
         public DayDeviceData(string name, XmlPathData pathData) :
@@ -11,7 +13,7 @@ namespace Hspi
         {
         }
 
-        public override void UpdateDeviceData(IHSApplication HS, DeviceClass device, System.Xml.XmlNodeList value)
+        public override void UpdateDeviceData(IHSApplication HS, DeviceClass device, [AllowNull]System.Xml.XmlNodeList value)
         {
             DateTimeOffset? dateTime = Parse(value);
 
@@ -19,7 +21,7 @@ namespace Hspi
             UpdateDeviceData(HS, device, deviceValue);
         }
 
-        public static DateTimeOffset? Parse(System.Xml.XmlNodeList value)
+        public static DateTimeOffset? Parse([AllowNull]System.Xml.XmlNodeList value)
         {
             DateTimeOffset? dateTime = null;
             if ((value != null) && (value.Count != 0))
