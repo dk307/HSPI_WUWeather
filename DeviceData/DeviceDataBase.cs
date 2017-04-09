@@ -44,7 +44,8 @@ namespace Hspi
         {
             int refId = device.get_Ref(HS);
 
-            if (data.HasValue)
+            double InValidValue = -999D;
+            if (data.HasValue && (System.Math.Abs(data.Value - InValidValue) > 0))
             {
                 HS.SetDeviceString(refId, null, false);
                 HS.SetDeviceValueByRef(refId, data.Value, true);
