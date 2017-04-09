@@ -44,8 +44,7 @@ namespace Hspi
         {
             int refId = device.get_Ref(HS);
 
-            double InValidValue = -999D;
-            if (data.HasValue && (System.Math.Abs(data.Value - InValidValue) > 0))
+            if (data.HasValue && !inValidValues.Contains(data.Value))
             {
                 HS.SetDeviceString(refId, null, false);
                 HS.SetDeviceValueByRef(refId, data.Value, true);
@@ -63,5 +62,7 @@ namespace Hspi
             HS.SetDeviceValueByRef(refId, InitialValue, false);
             HS.SetDeviceString(refId, data, true);
         }
+
+        private static readonly SortedSet<double> inValidValues = new SortedSet<double> { -999D, -99.99D, -9999, 99999, -25375, -2539.7, };
     };
 }
