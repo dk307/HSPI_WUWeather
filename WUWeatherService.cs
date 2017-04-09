@@ -1,10 +1,12 @@
-﻿using System;
+﻿using NullGuard;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using Hspi.Exceptions;
 
 namespace Hspi.WUWeather
 {
@@ -13,6 +15,7 @@ namespace Hspi.WUWeather
     /// <summary>
     /// The WU Weather service. Returns weather data for given locations
     /// </summary>
+    [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     public class WUWeatherService
     {
         /// <summary>
@@ -33,37 +36,15 @@ namespace Hspi.WUWeather
         /// Asynchronously retrieves weather data for a particular station.
         /// </summary>
         /// <param name="station">The station.</param>
-        /// <param name="includeYesterdayHistory">if set to <c>true</c> [include yesterday history].</param>
-        /// <param name="includeCurrent">if set to <c>true</c> [include current].</param>
-        /// <param name="includeForecast">if set to <c>true</c> [include forecast].</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>
         /// A <see cref="Task" /> for a <see cref="XmlDocument" /> containing the
         /// weather data from the response.
         /// </returns>
-        public Task<XmlDocument> GetDataForStationAsync(string station, bool includeYesterdayHistory, bool includeCurrent, bool includeForecast, CancellationToken cancellationToken)
+        public Task<XmlDocument> GetDataForStationAsync(string station, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrWhiteSpace(station))
-            {
-                throw new ArithmeticException("station");
-            }
-
-            StringBuilder featureBuilder = new StringBuilder();
-            if (includeYesterdayHistory)
-            {
-                featureBuilder.Append("yesterday/");
-            }
-            if (includeForecast)
-            {
-                featureBuilder.Append("forecast/");
-            }
-            if (includeCurrent)
-            {
-                featureBuilder.Append("conditions/");
-            }
-
-            string stationUrl = INV($"http://api.wunderground.com/api/{apiKey}/{featureBuilder.ToString()}/q/pws:{station}.xml");
-            return GetStringFromUrlAsync(stationUrl, cancellationToken);
+            string stationUrl = INV($"http://api.wunderground.com/api/{apiKey}/yesterday/forecast/conditions/q/pws:{station}.xml");
+            return GetXmlFromUrlAsync(stationUrl, cancellationToken);
         }
 
         /// <summary>
@@ -81,24 +62,6 @@ namespace Hspi.WUWeather
             }
 
             return compressionHandler;
-        }
-
-        /// <summary>
-        /// Throws an exception if the given response didn't have a status code
-        /// indicating success, with the status code included in the exception message.
-        /// </summary>
-        /// <param name="response">
-        /// The response.
-        /// </param>
-        /// <exception cref="HttpRequestException">
-        /// Thrown if the response did not have a status code indicating success.
-        /// </exception>
-        private static void ThrowExceptionIfResponseError(HttpResponseMessage response)
-        {
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new HttpRequestException("Couldn't retrieve data: status " + response.StatusCode);
-            }
         }
 
         /// <summary>
@@ -130,15 +93,36 @@ namespace Hspi.WUWeather
         /// A <see cref="Task" /> for a <see cref="XmlDocument" /> containing
         /// weather data.
         /// </returns>
-        private async Task<XmlDocument> GetStringFromUrlAsync(string requestUrl, CancellationToken cancellationToken)
+        private async Task<XmlDocument> GetXmlFromUrlAsync(string requestUrl, CancellationToken cancellationToken)
         {
             using (var compressionHandler = GetCompressionHandler())
             {
                 using (var client = new HttpClient(compressionHandler))
                 {
                     var response = await client.GetAsync(requestUrl, cancellationToken).ConfigureAwait(false);
-                    ThrowExceptionIfResponseError(response);
-                    return await ParseStringFromResponse(response).ConfigureAwait(false);
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        throw new WUWeatherDataInvalidException(INV($"Couldn't retrieve data: status {response.StatusCode}"));
+                    }
+                    var xmlDoument = await ParseStringFromResponse(response).ConfigureAwait(false);
+                    var featureNodes = xmlDoument.SelectNodes("/response/*[self::current_observation or self::forecast or self::history]");
+
+                    if (featureNodes.Count == 0)
+                    {
+                        var errorNode = xmlDoument.SelectSingleNode("/response/error/type");
+                        string errorDescription = errorNode != null ? errorNode.InnerText : "Unknown";
+
+                        switch (errorDescription.ToUpperInvariant())
+                        {
+                            case "KEYNOTFOUND":
+                                throw new ApiKeyInvalidException();
+                            case "STATION:OFFLINE":
+                                throw new StationIdInvalidException();
+                        }
+                        throw new WUWeatherDataInvalidException(INV($"Server Returned:{errorDescription}"));
+                    }
+
+                    return xmlDoument;
                 }
             }
         }

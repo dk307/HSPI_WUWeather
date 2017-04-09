@@ -94,6 +94,9 @@
     <Compile Include="DeviceData\SolarRadiationDeviceData.cs" />
     <Compile Include="DeviceData\VisibilityDeviceData.cs" />
     <Compile Include="DeviceData\XmlPathData.cs" />
+    <Compile Include="Exceptions\ApiKeyInvalidException.cs" />
+    <Compile Include="Exceptions\StationIdInvalidException.cs" />
+    <Compile Include="Exceptions\WUWeatherDataInvalidException.cs" />
     <Compile Include="WUWeatherData.cs" />
     <Compile Include="WUWeatherService.cs" />
     <Compile Include="DescriptionEnum.cs" />

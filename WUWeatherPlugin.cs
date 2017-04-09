@@ -142,12 +142,10 @@ namespace Hspi
             try
             {
                 IDictionary<string, DeviceClass> currentDevices = GetCurrentDevices();
-
                 foreach (var deviceDefinition in WUWeatherData.DeviceDefinitions)
                 {
                     this.CancellationToken.ThrowIfCancellationRequested();
-                    DeviceClass parentDevice;
-                    currentDevices.TryGetValue(deviceDefinition.Name, out parentDevice);
+                    currentDevices.TryGetValue(deviceDefinition.Name, out DeviceClass parentDevice);
 
                     foreach (var childDeviceDefinition in deviceDefinition.Children)
                     {
@@ -158,6 +156,7 @@ namespace Hspi
                             continue;
                         }
 
+                        // lazy creation of parent device when child is created
                         if (parentDevice == null)
                         {
                             parentDevice = CreateDevice(null, null, deviceDefinition);
@@ -282,7 +281,7 @@ namespace Hspi
             LogConfiguration();
 
             WUWeatherService service = new WUWeatherService(pluginConfig.APIKey);
-            var response = await service.GetDataForStationAsync(pluginConfig.StationId, true, true, true, token).ConfigureAwait(false);
+            var response = await service.GetDataForStationAsync(pluginConfig.StationId, token).ConfigureAwait(false);
 
             var existingDevices = GetCurrentDevices();
             foreach (var deviceDefinition in WUWeatherData.DeviceDefinitions)
@@ -340,11 +339,13 @@ namespace Hspi
             string link = configPage.Name;
             HS.RegisterPage(link, Name, string.Empty);
 
-            HomeSeerAPI.WebPageDesc wpd = new HomeSeerAPI.WebPageDesc();
-            wpd.plugInName = Name;
-            wpd.link = link;
-            wpd.linktext = link;
-            wpd.page_title = $"{Name} Config";
+            HomeSeerAPI.WebPageDesc wpd = new HomeSeerAPI.WebPageDesc()
+            {
+                plugInName = Name,
+                link = link,
+                linktext = link,
+                page_title = $"{Name} Config",
+            };
             Callback.RegisterConfigLink(wpd);
             Callback.RegisterLink(wpd);
         }
