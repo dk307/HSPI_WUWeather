@@ -1,6 +1,6 @@
-﻿using System.Reflection;
+﻿using NullGuard;
+using System.Reflection;
 using System.Runtime.InteropServices;
-using NullGuard;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information

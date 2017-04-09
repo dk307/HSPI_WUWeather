@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Collections.Specialized;
 using Scheduler;
+using System.Collections.Specialized;
 
 namespace Hspi
 {

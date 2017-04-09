@@ -1,5 +1,5 @@
-﻿using System;
-using NullGuard;
+﻿using NullGuard;
+using System;
 
 namespace Hspi
 {

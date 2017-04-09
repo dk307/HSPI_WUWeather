@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using HomeSeerAPI;
+﻿using HomeSeerAPI;
 using Scheduler.Classes;
 using System;
 

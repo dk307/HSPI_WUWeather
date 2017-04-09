@@ -1,7 +1,7 @@
-﻿using System;
-using System.Reflection;
+﻿using NullGuard;
+using System;
 using System.ComponentModel;
-using NullGuard;
+using System.Reflection;
 
 namespace Hspi
 {

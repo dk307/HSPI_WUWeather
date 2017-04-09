@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using HomeSeerAPI;
+﻿using HomeSeerAPI;
 using NullGuard;
+using System.Collections.Generic;
 
 namespace Hspi
 {

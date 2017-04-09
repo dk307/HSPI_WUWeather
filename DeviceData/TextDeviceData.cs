@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using HomeSeerAPI;
-using Scheduler.Classes;
+﻿using HomeSeerAPI;
 using NullGuard;
+using Scheduler.Classes;
+using System.Collections.Generic;
 
 namespace Hspi
 {

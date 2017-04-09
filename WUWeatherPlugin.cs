@@ -1,13 +1,13 @@
 ﻿using HomeSeerAPI;
 using Hspi.Exceptions;
 using Hspi.WUWeather;
+using NullGuard;
 using Scheduler.Classes;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using NullGuard;
 
 namespace Hspi
 {

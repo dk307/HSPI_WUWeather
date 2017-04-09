@@ -1,10 +1,9 @@
 ﻿using HomeSeerAPI;
-using Hspi.WUWeather;
-using Scheduler.Classes;
-using System.Collections.Generic;
-using System;
-using System.IO;
 using NullGuard;
+using Scheduler.Classes;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Hspi
 {
