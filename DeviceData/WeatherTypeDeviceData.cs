@@ -8,7 +8,7 @@ using System.ComponentModel;
 namespace Hspi
 {
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
-    public class WeatherTypeDeviceData : DeviceData
+    internal class WeatherTypeDeviceData : DeviceData
     {
         // https://www.wunderground.com/weather/api/d/docs?d=resources/phrase-glossary&MR=1
         public enum WeatherType
@@ -103,9 +103,9 @@ namespace Hspi
             }
         }
 
-        public override IList<VSVGPairs.VSPair> GetStatusPairs(PluginConfig config) => GetStatusPairsForEnum<WeatherType>();
+        public override IList<VSVGPairs.VSPair> GetStatusPairs(PluginConfig config) => GetStatusPairsForEnum(typeof(WeatherType));
 
-        public override IList<VSVGPairs.VGPair> GetGraphicsPairs(PluginConfig config) => GetGraphicsPairsForEnum<WeatherType>();
+        public override IList<VSVGPairs.VGPair> GetGraphicsPairs(PluginConfig config) => GetGraphicsPairsForEnum(typeof(WeatherType));
 
         private static WeatherType FromString(string data)
         {

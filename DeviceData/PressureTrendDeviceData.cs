@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Hspi
 {
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
-    public class PressureTrendDeviceData : TextDeviceData
+    internal class PressureTrendDeviceData : TextDeviceData
     {
         public PressureTrendDeviceData(string name, XmlPathData pathData) :
             base(name, pathData)

@@ -1,4 +1,4 @@
-using HomeSeerAPI;
+﻿using HomeSeerAPI;
 using HSCF.Communication.Scs.Communication;
 using HSCF.Communication.Scs.Communication.EndPoints.Tcp;
 using HSCF.Communication.ScsServices.Client;
@@ -17,7 +17,7 @@ namespace Hspi
     using static StringUtil;
 
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
-    public abstract class HspiBase : IPlugInAPI2, IDisposable
+    internal abstract class HspiBase : IPlugInAPI2, IDisposable
     {
         protected HspiBase(string name, int capabilities = (int)Enums.eCapabilities.CA_IO, string instanceFriendlyName = "",
                            bool supportMutipleInstances = false, int accessLevel = 1, bool supportsMultipleInstancesSingleEXE = true,
@@ -66,8 +66,7 @@ namespace Hspi
 
         public override string ConfigDevice(int deviceId, [AllowNull]string user, int userRights, bool newDevice) => string.Empty;
 
-        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "apiVersion",
-        Justification = "This is what the old HS sample does.")]
+        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "apiVersion")]
         public void Connect(string serverAddress, int serverPort)
         {
             // This method is called by our console wrapper at launch time

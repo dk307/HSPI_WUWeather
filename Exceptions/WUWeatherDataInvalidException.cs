@@ -4,12 +4,8 @@ using System.Runtime.Serialization;
 namespace Hspi.Exceptions
 {
     [Serializable]
-    public class WUWeatherDataInvalidException : HspiException
+    internal class WUWeatherDataInvalidException : HspiException
     {
-        public WUWeatherDataInvalidException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
-
         public WUWeatherDataInvalidException()
         {
         }

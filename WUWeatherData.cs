@@ -2,12 +2,12 @@
 
 namespace Hspi
 {
-    public static class WUWeatherData
+    internal static class WUWeatherData
     {
         public const string PlugInName = @"WU Weather";
         public const string ImagesPathRoot = @"\images\wuweather\";
 
-        public static readonly IReadOnlyCollection<RootDeviceData> DeviceDefinitions = new List<RootDeviceData>()
+        public static readonly IEnumerable<RootDeviceData> DeviceDefinitions = new List<RootDeviceData>()
         {
             new ConditionsRootDeviceData(),
             new DayForecastRootDeviceData("Day Forecast", new XmlPathData(@"response/forecast/simpleforecast/forecastdays/forecastday[period = 1]")),
@@ -15,7 +15,7 @@ namespace Hspi
             new DayForecastRootDeviceData("2nd Day Forecast", new XmlPathData(@"response/forecast/simpleforecast/forecastdays/forecastday[period = 3]")),
             new DayForecastRootDeviceData("3rd Day Forecast", new XmlPathData(@"response/forecast/simpleforecast/forecastdays/forecastday[period = 4]")),
             new HistoryRootDeviceData("Yesterday", new XmlPathData(@"response/history/observations")),
-        }.AsReadOnly();
+        };
 
         public static string GetStringDescription(Unit unit, DeviceUnitType deviceType)
         {

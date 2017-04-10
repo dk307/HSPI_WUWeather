@@ -6,7 +6,7 @@ using System;
 namespace Hspi
 {
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
-    public class DayDeviceData : TextDeviceData
+    internal class DayDeviceData : TextDeviceData
     {
         public DayDeviceData(string name, XmlPathData pathData) :
            base(name, pathData)

@@ -5,14 +5,14 @@ using System.Collections.Generic;
 namespace Hspi
 {
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
-    public class TemperatureDeviceData : NumberDeviceData
+    internal class TemperatureDeviceData : NumberDeviceData
     {
         public TemperatureDeviceData(string name, XmlPathData pathData) :
             base(name, pathData)
         {
         }
 
-        protected override string GetUnitString(PluginConfig config) => config.GetUnit(DeviceUnitType.Temperature);
+        protected override string GetUnitString(PluginConfig config) => config.GetUnitDescription(DeviceUnitType.Temperature);
 
         public override IList<VSVGPairs.VGPair> GetGraphicsPairs(PluginConfig config) => GetSingleGraphicsPairs("temperature.png");
     }

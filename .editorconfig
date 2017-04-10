@@ -1,0 +1,10 @@
+[*]
+end_of_line = crlf
+charset = utf-8
+
+[*.cs]
+trim_trailing_whitespace = true
+indent_style = space
+
+
+

@@ -24,7 +24,7 @@ namespace Hspi
         SI,
     }
 
-    public class PluginConfig
+    internal class PluginConfig
     {
         public event EventHandler<EventArgs> ConfigChanged;
 
@@ -36,7 +36,10 @@ namespace Hspi
             refreshIntervalMinutes = GetValue(RefreshIntervalKey, 15);
             debugLogging = GetValue(DebugLoggingKey, false);
             stationId = GetValue<string>(StationIdKey, string.Empty);
-            Enum.TryParse(GetValue(UnitIdKey, Unit.US.ToString()), out unit);
+            if (Enum.TryParse(GetValue(UnitIdKey, Unit.US.ToString()), out Unit readUnit))
+            {
+                unit = readUnit;
+            }
 
             enabledDevices = new Dictionary<string, IDictionary<string, bool>>();
 
@@ -146,7 +149,7 @@ namespace Hspi
             throw new ArgumentException("Invalid values");
         }
 
-        public string GetUnit(DeviceUnitType deviceUnit)
+        public string GetUnitDescription(DeviceUnitType deviceUnit)
         {
             return WUWeatherData.GetStringDescription(this.Unit, deviceUnit);
         }

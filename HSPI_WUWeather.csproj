@@ -41,7 +41,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>true</RunCodeAnalysis>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>HSPI_WUWeather.ruleset</CodeAnalysisRuleSet>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -53,6 +53,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>HSPI_WUWeather.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>Hspi.Program</StartupObject>
@@ -62,6 +63,10 @@
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="HomeSeerAPI">
@@ -116,7 +121,6 @@
     <Compile Include="DeviceData\WindBearingDeviceData.cs" />
     <Compile Include="DeviceData\WinSpeedDeviceData.cs" />
     <Compile Include="DeviceType.cs" />
-    <Compile Include="PageBuilder.cs" />
     <Compile Include="PluginConfig.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Exceptions\HspiConnectionException.cs" />
@@ -128,7 +132,9 @@
     <Compile Include="StringUtil.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".editorconfig" />
     <None Include="App.config" />
+    <None Include="HSPI_WUWeather.ruleset" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

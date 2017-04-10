@@ -14,7 +14,7 @@ namespace Hspi
     using static Hspi.StringUtil;
 
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
-    public class WUWeatherPlugin : HspiBase
+    internal class WUWeatherPlugin : HspiBase
     {
         public WUWeatherPlugin()
             : base(WUWeatherData.PlugInName)
@@ -45,7 +45,6 @@ namespace Hspi
             catch (Exception ex)
             {
                 result = INV($"Failed to initialize PlugIn With {ex.Message}");
-
                 LogError(result);
             }
 
@@ -207,7 +206,7 @@ namespace Hspi
 
         public override string GetPagePlugin(string page, [AllowNull]string user, int userRights, [AllowNull]string queryString)
         {
-            if (page == configPage.Name)
+            if (page == ConfigPage.Name)
             {
                 return configPage.GetWebPage();
             }
@@ -217,7 +216,7 @@ namespace Hspi
 
         public override string PostBackProc(string page, string data, [AllowNull]string user, int userRights)
         {
-            if (page == configPage.Name)
+            if (page == ConfigPage.Name)
             {
                 return configPage.PostBackProc(data, user, userRights);
             }
@@ -340,7 +339,7 @@ namespace Hspi
 
         private void RegisterConfigPage()
         {
-            string link = configPage.Name;
+            string link = ConfigPage.Name;
             HS.RegisterPage(link, Name, string.Empty);
 
             HomeSeerAPI.WebPageDesc wpd = new HomeSeerAPI.WebPageDesc()
@@ -348,7 +347,7 @@ namespace Hspi
                 plugInName = Name,
                 link = link,
                 linktext = link,
-                page_title = $"{Name} Config",
+                page_title = INV($"{Name} Config"),
             };
             Callback.RegisterConfigLink(wpd);
             Callback.RegisterLink(wpd);

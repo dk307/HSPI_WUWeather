@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace Hspi
 {
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
-    public class ConditionsRootDeviceData : RootDeviceData
+    internal class ConditionsRootDeviceData : RootDeviceData
     {
         public ConditionsRootDeviceData() :
             base("Current", new XmlPathData(@"response/current_observation"))
@@ -22,7 +22,7 @@ namespace Hspi
 
             if (lastUpdateTime.HasValue)
             {
-                UpdateDeviceData(HS, device, lastUpdateTime.Value.ToString("G"));
+                UpdateDeviceData(HS, device, lastUpdateTime.Value.ToString("G", System.Globalization.CultureInfo.CurrentCulture));
             }
         }
 

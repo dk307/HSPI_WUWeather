@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace Hspi.Exceptions
 {
     [Serializable]
-    public class ApiKeyInvalidException : WUWeatherDataInvalidException
+    internal class ApiKeyInvalidException : WUWeatherDataInvalidException
     {
         public ApiKeyInvalidException() : base("Invalid API Key")
         {

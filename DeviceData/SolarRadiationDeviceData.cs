@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Hspi
 {
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
-    public class SolarRadiationDeviceData : NumberDeviceData
+    internal class SolarRadiationDeviceData : NumberDeviceData
     {
         public SolarRadiationDeviceData(string name, XmlPathData pathData) :
             base(name, pathData)

@@ -8,7 +8,7 @@ namespace Hspi
     /// Just a wrapper on basic HS plugin
     /// </summary>
     /// <seealso cref="IPlugInAPI" />
-    public abstract class IPlugInAPI2 : IPlugInAPI
+    internal abstract class IPlugInAPI2 : IPlugInAPI
     {
         /// <summary>
         ///     Test our SCS client connection: <see cref="Hspi" /> is connected.

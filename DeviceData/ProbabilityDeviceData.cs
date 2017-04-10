@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Hspi
 {
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
-    public class ProbabilityDeviceData : NumberDeviceData
+    internal class ProbabilityDeviceData : NumberDeviceData
     {
         public ProbabilityDeviceData(string name, XmlPathData pathData) :
             base(name, pathData)

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Hspi
 {
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
-    public class DayForecastRootDeviceData : RootDeviceData
+    internal class DayForecastRootDeviceData : RootDeviceData
     {
         public DayForecastRootDeviceData(string name, XmlPathData pathData) :
             base(name, pathData)

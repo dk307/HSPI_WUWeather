@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Hspi
 {
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
-    public class WindBearingDeviceData : NumberDeviceData
+    internal class WindBearingDeviceData : NumberDeviceData
     {
         public WindBearingDeviceData(string name, XmlPathData pathData) :
             base(name, pathData)

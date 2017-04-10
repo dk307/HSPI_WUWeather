@@ -10,7 +10,7 @@ namespace Hspi
     using static Hspi.StringUtil;
 
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
-    public abstract class DeviceData : DeviceDataBase
+    internal abstract class DeviceData : DeviceDataBase
     {
         protected DeviceData(string name, XmlPathData pathData, int deviceType = 0, [AllowNull]string initialStringValue = "--", double initialValue = 0D) :
             base(name, pathData)
@@ -27,10 +27,11 @@ namespace Hspi
         public override string InitialString => initialStringValue;
         public override double InitialValue => initialValue;
 
-        protected IList<VSVGPairs.VGPair> GetGraphicsPairsForEnum<T>()
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Justification = "Need for Filename")]
+        protected static IList<VSVGPairs.VGPair> GetGraphicsPairsForEnum(Type enumType)
         {
             var pairs = new List<VSVGPairs.VGPair>();
-            foreach (var value in Enum.GetValues(typeof(T)))
+            foreach (var value in Enum.GetValues(enumType))
             {
                 var pair = new VSVGPairs.VGPair()
                 {
@@ -43,10 +44,10 @@ namespace Hspi
             return pairs;
         }
 
-        protected static IList<VSVGPairs.VSPair> GetStatusPairsForEnum<T>()
+        protected static IList<VSVGPairs.VSPair> GetStatusPairsForEnum(Type enumType)
         {
             var pairs = new List<VSVGPairs.VSPair>();
-            foreach (var value in Enum.GetValues(typeof(T)))
+            foreach (var value in Enum.GetValues(enumType))
             {
                 pairs.Add(new VSVGPairs.VSPair(HomeSeerAPI.ePairStatusControl.Status)
                 {

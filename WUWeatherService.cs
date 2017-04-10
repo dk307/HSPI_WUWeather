@@ -14,7 +14,7 @@ namespace Hspi.WUWeather
     /// The WU Weather service. Returns weather data for given locations
     /// </summary>
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
-    public class WUWeatherService
+    internal class WUWeatherService
     {
         /// <summary>
         /// The API key to use in all requests.
@@ -43,23 +43,6 @@ namespace Hspi.WUWeather
         {
             string stationUrl = INV($"http://api.wunderground.com/api/{apiKey}/yesterday/forecast/conditions/q/pws:{station}.xml");
             return GetXmlFromUrlAsync(stationUrl, cancellationToken);
-        }
-
-        /// <summary>
-        /// Creates a HttpClientHandler that supports compression for responses.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="HttpClientHandler"/> with compression support.
-        /// </returns>
-        private static HttpClientHandler GetCompressionHandler()
-        {
-            var compressionHandler = new HttpClientHandler();
-            if (compressionHandler.SupportsAutomaticDecompression)
-            {
-                compressionHandler.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
-            }
-
-            return compressionHandler;
         }
 
         /// <summary>
@@ -93,8 +76,13 @@ namespace Hspi.WUWeather
         /// </returns>
         private async Task<XmlDocument> GetXmlFromUrlAsync(string requestUrl, CancellationToken cancellationToken)
         {
-            using (var compressionHandler = GetCompressionHandler())
+            using (var compressionHandler = new HttpClientHandler())
             {
+                if (compressionHandler.SupportsAutomaticDecompression)
+                {
+                    compressionHandler.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+                }
+
                 using (var client = new HttpClient(compressionHandler))
                 {
                     var response = await client.GetAsync(requestUrl, cancellationToken).ConfigureAwait(false);

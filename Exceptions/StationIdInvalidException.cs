@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace Hspi.Exceptions
 {
     [Serializable]
-    public class StationIdInvalidException : WUWeatherDataInvalidException
+    internal class StationIdInvalidException : WUWeatherDataInvalidException
     {
         public StationIdInvalidException() : base("Invalid Station Id")
         {

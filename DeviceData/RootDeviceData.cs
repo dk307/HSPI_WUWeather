@@ -9,9 +9,9 @@ namespace Hspi
     using static Hspi.StringUtil;
 
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
-    public abstract class RootDeviceData : DeviceDataBase
+    internal abstract class RootDeviceData : DeviceDataBase
     {
-        public RootDeviceData(string name, XmlPathData pathData) :
+        protected RootDeviceData(string name, XmlPathData pathData) :
             base(name, pathData)
         {
         }

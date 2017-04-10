@@ -11,8 +11,10 @@ namespace Hspi
     using static StringUtil;
 
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
-    public class ConfigPage : PageBuilder
+    internal class ConfigPage : PageBuilderAndMenu.clsPageBuilder
     {
+        protected const string IdPrefix = "id_";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ConfigPage" /> class.
         /// </summary>
@@ -27,7 +29,7 @@ namespace Hspi
         /// <summary>
         /// Gets the name of the web page.
         /// </summary>
-        public string Name => pageName;
+        public static string Name => pageName;
 
         /// <summary>
         /// Get the web page string for the configuration page.
@@ -115,10 +117,6 @@ namespace Hspi
 
                 this.divToUpdate.Add(ImageDivId, GetImageHtml());
                 this.divToUpdate.Add(CallsPerDayId, GetCallsPerDay());
-            }
-            else if (form == INV($"{IdPrefix}{UnitId}"))
-            {
-                // do nothing
             }
             else
             {
@@ -244,13 +242,13 @@ namespace Hspi
             stb.Append(@"<div>");
             stb.Append(@"<table class='full_width_table'");
             stb.Append("<tr height='5'><td style='width:25%'></td><td style='width:20%'></td><td style='width:55%'></td></tr>");
-            stb.Append(INV($"<tr><td class='tablecell'>APIKey:</td><td  colspan=2  class='tablecell' style='width: 50px'>{BuildTextBox(APIKeyId, pluginConfig.APIKey)}</td></tr>"));
-            stb.Append(INV($"<tr><td class='tablecell'>Refresh Interval(minutes):</td><td class='tablecell'>{BuildTextBox(RefreshIntervalId, INV($"{pluginConfig.RefreshIntervalMinutes}"))} </ td ><td class='tablecell'><div id={CallsPerDayId}>{GetCallsPerDay()}</div></td></ tr > "));
-            stb.Append(INV($"<tr><td class='tablecell'>Station:</td><td class='tablecell'>{BuildTextBox(StationId, INV($"{pluginConfig.StationId}"))}</td ><td class='tablecell'><div id='{ImageDivId}'>{GetImageHtml()}</div></td></ tr > "));
-            stb.Append(INV($"<tr><td class='tablecell'>Unit:</td><td colspan=2 class='tablecell'>{BuildDropList(UnitId, unitsDropDown, unitsSelection)}</ td ></ tr > "));
-            stb.Append(INV($"<tr><td class='tablecell'>Debug Logging Enabled:</td><td colspan=2 class='tablecell'>{BuildCheckBox(DebugLoggingId, string.Empty, this.pluginConfig.DebugLogging)}</ td ></ tr > "));
+            stb.Append(INV($"<tr><td class='tablecell'>APIKey:</td><td  colspan=2  class='tablecell' style='width: 50px'>{HtmlTextBox(APIKeyId, pluginConfig.APIKey)}</td></tr>"));
+            stb.Append(INV($"<tr><td class='tablecell'>Refresh Interval(minutes):</td><td class='tablecell'>{HtmlTextBox(RefreshIntervalId, INV($"{pluginConfig.RefreshIntervalMinutes}"))} </ td ><td class='tablecell'><div id={CallsPerDayId}>{GetCallsPerDay()}</div></td></ tr > "));
+            stb.Append(INV($"<tr><td class='tablecell'>Station:</td><td class='tablecell'>{HtmlTextBox(StationId, INV($"{pluginConfig.StationId}"))}</td ><td class='tablecell'><div id='{ImageDivId}'>{GetImageHtml()}</div></td></ tr > "));
+            stb.Append(INV($"<tr><td class='tablecell'>Unit:</td><td colspan=2 class='tablecell'>{FormDropDown(UnitId, unitsDropDown, unitsSelection)}</ td ></ tr > "));
+            stb.Append(INV($"<tr><td class='tablecell'>Debug Logging Enabled:</td><td colspan=2 class='tablecell'>{FormCheckBox(DebugLoggingId, this.pluginConfig.DebugLogging, string.Empty)}</ td ></ tr > "));
             stb.Append(INV($"<tr><td colspan=3><div id='{ErrorDivId}' style='color:Red'></div></td><td></td></tr>"));
-            stb.Append(INV($"<tr><td colspan=3>&nbsp;&nbsp;{BuildButton("Save", SaveButtonName)}</td><td></td></tr>"));
+            stb.Append(INV($"<tr><td colspan=3>{FormButton("Save", SaveButtonName)}</td><td></td></tr>"));
             stb.Append("<tr height='5'><td colspan=3></td></tr>");
             stb.Append(INV($"<tr><td colspan=3></td></tr>"));
             stb.Append(@"<tr><td colspan=3><div>Icons made by <a href='http://www.freepik.com' title='Freepik' target='_blank'>Freepik</a> from <a href='http://www.flaticon.com' title='Flaticon' target='_blank'>www.flaticon.com</a> is licensed by <a href='http://creativecommons.org/licenses/by/3.0/' title='Creative Commons BY 3.0' target='_blank'>CC 3.0 BY</a></div></td></tr>");
@@ -270,6 +268,61 @@ namespace Hspi
         private static string NameToId(DeviceDataBase parent, DeviceDataBase child)
         {
             return INV($"{NameToId(parent.Name)}_{NameToId(child.Name)}");
+        }
+
+        protected static string HtmlTextBox(string name, string defaultText, int size = 25)
+        {
+            return INV($"<input type=\'text\' id=\'{IdPrefix}{name}\' size=\'{size}\' name=\'{name}\' value=\'{defaultText}\'>");
+        }
+
+        protected string FormDropDown(string name, NameValueCollection options, int selected, int width = 150, string tooltip = "")
+        {
+            var dd = new clsJQuery.jqDropList(name, PageName, false)
+            {
+                selectedItemIndex = -1,
+                id = INV($"{IdPrefix}{name}"),
+                autoPostBack = false,
+                toolTip = tooltip,
+                style = INV($"width: {width}px;"),
+                enabled = true
+            };
+
+            if (options != null)
+            {
+                for (var i = 0; i < options.Count; i++)
+                {
+                    var sel = i == selected;
+                    dd.AddItem(options.GetKey(i), options.Get(i), sel);
+                }
+            }
+
+            return dd.Build();
+        }
+
+        protected string FormCheckBox(string name, bool @checked, string label = "", bool autoPostBack = true, bool submitForm = true)
+        {
+            var cb = new clsJQuery.jqCheckBox(name, label, PageName, autoPostBack, submitForm)
+            {
+                id = INV($"{IdPrefix}{name}"),
+                @checked = @checked,
+            };
+            return cb.Build();
+        }
+
+        protected string FormButton(string name, string label, string toolTip = "")
+        {
+            var b = new clsJQuery.jqButton(name, label, PageName, true)
+            {
+                id = INV($"{IdPrefix}{name}"),
+                imagePathNormal = string.Empty
+            };
+            b.imagePathPressed = b.imagePathNormal;
+            b.toolTip = toolTip;
+            b.enabled = true;
+
+            var button = b.Build();
+            button = button.Replace("</button>\r\n", "</button>").Trim();
+            return button;
         }
 
         private const string SaveButtonName = "Save";

@@ -7,7 +7,7 @@ using System.IO;
 namespace Hspi
 {
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
-    public abstract class DeviceDataBase
+    internal abstract class DeviceDataBase
     {
         protected DeviceDataBase(string name, XmlPathData pathData)
         {

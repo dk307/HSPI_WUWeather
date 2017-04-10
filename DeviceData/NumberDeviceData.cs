@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Hspi
 {
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
-    public abstract class NumberDeviceData : DeviceData
+    internal abstract class NumberDeviceData : DeviceData
     {
         protected NumberDeviceData(string name, XmlPathData pathData) :
             base(name, pathData)
@@ -20,8 +20,10 @@ namespace Hspi
             if ((value != null) && (value.Count != 0))
             {
                 string text = value.Item(0).InnerText;
-                double.TryParse(text, out double doubleValue);
-                data = doubleValue;
+                if (double.TryParse(text, out double doubleValue))
+                {
+                    data = doubleValue;
+                }
             }
 
             UpdateDeviceData(HS, device, data);

@@ -8,7 +8,7 @@ namespace Hspi
     using static Hspi.StringUtil;
 
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
-    public class HistoryRootDeviceData : RootDeviceData
+    internal class HistoryRootDeviceData : RootDeviceData
     {
         public HistoryRootDeviceData(string name, XmlPathData pathData) :
             base(name, pathData)
