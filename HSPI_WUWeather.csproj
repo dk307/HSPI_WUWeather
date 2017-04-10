@@ -102,6 +102,7 @@
     <Compile Include="Exceptions\ApiKeyInvalidException.cs" />
     <Compile Include="Exceptions\StationIdInvalidException.cs" />
     <Compile Include="Exceptions\WUWeatherDataInvalidException.cs" />
+    <Compile Include="Unit.cs" />
     <Compile Include="WUWeatherData.cs" />
     <Compile Include="WUWeatherService.cs" />
     <Compile Include="DescriptionEnum.cs" />

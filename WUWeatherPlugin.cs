@@ -367,6 +367,10 @@ namespace Hspi
                     configPage.Dispose();
                 }
 
+                if (pluginConfig != null)
+                {
+                    pluginConfig.Dispose();
+                }
                 periodicTask?.Dispose();
 
                 disposedValue = true;

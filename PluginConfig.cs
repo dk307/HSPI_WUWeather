@@ -1,30 +1,12 @@
 ﻿using HomeSeerAPI;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
+using System.Threading;
 
 namespace Hspi
 {
-    /// <summary>
-    /// Units of measurement supported by the Forecast service.
-    /// </summary>
-    public enum Unit
-    {
-        /// <summary>
-        /// US units of measurement.
-        /// </summary>
-        [Description("US Measurements")]
-        US,
-
-        /// <summary>
-        /// SI units of measurement.
-        /// </summary>
-        [Description("SI Measurements")]
-        SI,
-    }
-
-    internal class PluginConfig
+    internal class PluginConfig : IDisposable
     {
         public event EventHandler<EventArgs> ConfigChanged;
 
@@ -58,12 +40,28 @@ namespace Hspi
         {
             get
             {
-                return apiKey;
+                configLock.EnterReadLock();
+                try
+                {
+                    return apiKey;
+                }
+                finally
+                {
+                    configLock.ExitReadLock();
+                }
             }
 
             set
             {
-                SetValue(APIKeyKey, value, ref apiKey);
+                configLock.EnterWriteLock();
+                try
+                {
+                    SetValue(APIKeyKey, value, ref apiKey);
+                }
+                finally
+                {
+                    configLock.ExitWriteLock();
+                }
             }
         }
 
@@ -71,12 +69,28 @@ namespace Hspi
         {
             get
             {
-                return stationId;
+                configLock.EnterReadLock();
+                try
+                {
+                    return stationId;
+                }
+                finally
+                {
+                    configLock.ExitReadLock();
+                }
             }
 
             set
             {
-                SetValue(StationIdKey, value, ref stationId);
+                configLock.EnterWriteLock();
+                try
+                {
+                    SetValue(StationIdKey, value, ref stationId);
+                }
+                finally
+                {
+                    configLock.ExitWriteLock();
+                }
             }
         }
 
@@ -84,12 +98,28 @@ namespace Hspi
         {
             get
             {
-                return debugLogging;
+                configLock.EnterReadLock();
+                try
+                {
+                    return debugLogging;
+                }
+                finally
+                {
+                    configLock.ExitReadLock();
+                }
             }
 
             set
             {
-                SetValue(DebugLoggingKey, value, ref debugLogging);
+                configLock.EnterWriteLock();
+                try
+                {
+                    SetValue(DebugLoggingKey, value, ref debugLogging);
+                }
+                finally
+                {
+                    configLock.ExitWriteLock();
+                }
             }
         }
 
@@ -97,12 +127,28 @@ namespace Hspi
         {
             get
             {
-                return refreshIntervalMinutes;
+                configLock.EnterReadLock();
+                try
+                {
+                    return refreshIntervalMinutes;
+                }
+                finally
+                {
+                    configLock.ExitReadLock();
+                }
             }
 
             set
             {
-                SetValue(RefreshIntervalKey, value, ref refreshIntervalMinutes);
+                configLock.EnterWriteLock();
+                try
+                {
+                    SetValue(RefreshIntervalKey, value, ref refreshIntervalMinutes);
+                }
+                finally
+                {
+                    configLock.ExitWriteLock();
+                }
             }
         }
 
@@ -110,23 +156,47 @@ namespace Hspi
         {
             get
             {
-                return unit;
+                configLock.EnterReadLock();
+                try
+                {
+                    return unit;
+                }
+                finally
+                {
+                    configLock.ExitReadLock();
+                }
             }
 
             set
             {
-                SetValue(UnitIdKey, value, ref unit);
+                configLock.EnterWriteLock();
+                try
+                {
+                    SetValue(UnitIdKey, value, ref unit);
+                }
+                finally
+                {
+                    configLock.ExitWriteLock();
+                }
             }
         }
 
         public bool GetEnabled(DeviceDataBase parent, DeviceDataBase child)
         {
-            if (enabledDevices.TryGetValue(parent.Name, out var childEnabled))
+            configLock.EnterReadLock();
+            try
             {
-                if (childEnabled.TryGetValue(child.Name, out bool enabled))
+                if (enabledDevices.TryGetValue(parent.Name, out var childEnabled))
                 {
-                    return enabled;
+                    if (childEnabled.TryGetValue(child.Name, out bool enabled))
+                    {
+                        return enabled;
+                    }
                 }
+            }
+            finally
+            {
+                configLock.ExitReadLock();
             }
 
             return false;
@@ -134,19 +204,27 @@ namespace Hspi
 
         public void SetEnabled(DeviceDataBase parent, DeviceDataBase child, bool enabled)
         {
-            IDictionary<string, bool> childEnabled;
-            if (enabledDevices.TryGetValue(parent.Name, out childEnabled))
+            configLock.EnterWriteLock();
+            try
             {
-                if (childEnabled.ContainsKey(child.Name))
+                IDictionary<string, bool> childEnabled;
+                if (enabledDevices.TryGetValue(parent.Name, out childEnabled))
                 {
-                    bool tmpOldValue = childEnabled[child.Name];
-                    SetValue(child.Name, enabled, ref tmpOldValue, parent.Name);
-                    childEnabled[child.Name] = enabled;
-                    return;
+                    if (childEnabled.ContainsKey(child.Name))
+                    {
+                        bool tmpOldValue = childEnabled[child.Name];
+                        SetValue(child.Name, enabled, ref tmpOldValue, parent.Name);
+                        childEnabled[child.Name] = enabled;
+                        return;
+                    }
                 }
-            }
 
-            throw new ArgumentException("Invalid values");
+                throw new ArgumentException("Invalid values");
+            }
+            finally
+            {
+                configLock.ExitWriteLock();
+            }
         }
 
         public string GetUnitDescription(DeviceUnitType deviceUnit)
@@ -197,9 +275,33 @@ namespace Hspi
         {
             if (ConfigChanged != null)
             {
-                ConfigChanged(this, EventArgs.Empty);
+                var ConfigChangedCopy = ConfigChanged;
+                ConfigChangedCopy(this, EventArgs.Empty);
             }
         }
+
+        #region IDisposable Support
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    configLock.Dispose();
+                }
+                disposedValue = true;
+            }
+        }
+
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion
+
 
         private const string APIKeyKey = "APIKey";
         private const string StationIdKey = "StationId";
@@ -216,5 +318,7 @@ namespace Hspi
         private int refreshIntervalMinutes;
         private string stationId;
         private Unit unit;
+        private bool disposedValue = false;
+        private readonly ReaderWriterLockSlim configLock = new ReaderWriterLockSlim();
     };
 }
