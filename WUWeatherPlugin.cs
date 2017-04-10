@@ -224,6 +224,19 @@ namespace Hspi
             return string.Empty;
         }
 
+        public override object PluginFunction([AllowNull]string functionName, [AllowNull] object[] parameters)
+        {
+            switch (functionName)
+            {
+                case null:
+                    return null;
+                case "Refresh":
+                    RestartPeriodicTask();
+                    break;
+            }
+            return null;
+        }
+
         private void RestartPeriodicTask()
         {
             lock (periodicTaskLock)
