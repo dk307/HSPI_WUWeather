@@ -1,1 +1,1 @@
-Homeseer Weather Underground PlugIn
+﻿#Homeseer Weather Underground PlugIn

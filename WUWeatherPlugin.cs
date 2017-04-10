@@ -367,6 +367,8 @@ namespace Hspi
                     configPage.Dispose();
                 }
 
+                periodicTask?.Dispose();
+
                 disposedValue = true;
             }
 
