@@ -183,7 +183,7 @@ namespace Hspi
 
             stb.Append(@"<div>");
             stb.Append(@"<table class='full_width_table'");
-            stb.Append("<tr class='tablecellblank'><td colspan=2></td></tr>");
+            stb.Append("<tr height='5'><td colspan=2></td></tr>");
             stb.Append("<tr><td colspan=2> </td></tr>");
             stb.Append("<tr><td colspan=2><strong>Select devices to be created</strong><td></tr>");
             stb.Append("<tr><td colspan=2> </td></tr>");
@@ -245,7 +245,7 @@ namespace Hspi
             stb.Append(INV($"<tr><td class='tablecell'>APIKey:</td><td  colspan=2  class='tablecell' style='width: 50px'>{HtmlTextBox(APIKeyId, pluginConfig.APIKey)}</td></tr>"));
             stb.Append(INV($"<tr><td class='tablecell'>Refresh Interval(minutes):</td><td class='tablecell'>{HtmlTextBox(RefreshIntervalId, INV($"{pluginConfig.RefreshIntervalMinutes}"))} </ td ><td class='tablecell'><div id={CallsPerDayId}>{GetCallsPerDay()}</div></td></ tr > "));
             stb.Append(INV($"<tr><td class='tablecell'>Station:</td><td class='tablecell'>{HtmlTextBox(StationId, INV($"{pluginConfig.StationId}"))}</td ><td class='tablecell'><div id='{ImageDivId}'>{GetImageHtml()}</div></td></ tr > "));
-            stb.Append(INV($"<tr><td class='tablecell'>Unit:</td><td colspan=2 class='tablecell'>{FormDropDown(UnitId, unitsDropDown, unitsSelection, 100, "Units to be used for Device")}</ td ></ tr > "));
+            stb.Append(INV($"<tr><td class='tablecell'>Unit:</td><td colspan=2 class='tablecell'>{FormDropDown(UnitId, unitsDropDown, unitsSelection, 150, "Units to be used for Device")}</ td ></ tr > "));
             stb.Append(INV($"<tr><td class='tablecell'>Debug Logging Enabled:</td><td colspan=2 class='tablecell'>{FormCheckBox(DebugLoggingId, string.Empty, this.pluginConfig.DebugLogging)}</ td ></ tr > "));
             stb.Append(INV($"<tr><td colspan=3><div id='{ErrorDivId}' style='color:Red'></div></td><td></td></tr>"));
             stb.Append(INV($"<tr><td colspan=3>{FormButton("Save", SaveButtonName, "Save Settings")}</td><td></td></tr>"));
