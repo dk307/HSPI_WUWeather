@@ -183,14 +183,14 @@ namespace Hspi
 
             stb.Append(@"<div>");
             stb.Append(@"<table class='full_width_table'");
-            stb.Append("<tr height='5'><td colspan=2></td></tr>");
+            stb.Append("<tr class='tablecellblank'><td colspan=2></td></tr>");
             stb.Append("<tr><td colspan=2> </td></tr>");
             stb.Append("<tr><td colspan=2><strong>Select devices to be created</strong><td></tr>");
             stb.Append("<tr><td colspan=2> </td></tr>");
 
             foreach (var childDeviceDefinition in root.Children)
             {
-                stb.Append(INV($"<tr><td colspan=2>{FormCheckBox(NameToId(root, childDeviceDefinition), label: childDeviceDefinition.Name, @checked: pluginConfig.GetEnabled(root, childDeviceDefinition))}</td></tr>"));
+                stb.Append(INV($"<tr><td colspan=2>{FormCheckBox(NameToId(root, childDeviceDefinition), childDeviceDefinition.Name, pluginConfig.GetEnabled(root, childDeviceDefinition))}</td></tr>"));
             }
             stb.Append(@" </table>");
             stb.Append(@"</div>");
@@ -245,10 +245,10 @@ namespace Hspi
             stb.Append(INV($"<tr><td class='tablecell'>APIKey:</td><td  colspan=2  class='tablecell' style='width: 50px'>{HtmlTextBox(APIKeyId, pluginConfig.APIKey)}</td></tr>"));
             stb.Append(INV($"<tr><td class='tablecell'>Refresh Interval(minutes):</td><td class='tablecell'>{HtmlTextBox(RefreshIntervalId, INV($"{pluginConfig.RefreshIntervalMinutes}"))} </ td ><td class='tablecell'><div id={CallsPerDayId}>{GetCallsPerDay()}</div></td></ tr > "));
             stb.Append(INV($"<tr><td class='tablecell'>Station:</td><td class='tablecell'>{HtmlTextBox(StationId, INV($"{pluginConfig.StationId}"))}</td ><td class='tablecell'><div id='{ImageDivId}'>{GetImageHtml()}</div></td></ tr > "));
-            stb.Append(INV($"<tr><td class='tablecell'>Unit:</td><td colspan=2 class='tablecell'>{FormDropDown(UnitId, unitsDropDown, unitsSelection)}</ td ></ tr > "));
-            stb.Append(INV($"<tr><td class='tablecell'>Debug Logging Enabled:</td><td colspan=2 class='tablecell'>{FormCheckBox(DebugLoggingId, this.pluginConfig.DebugLogging, string.Empty)}</ td ></ tr > "));
+            stb.Append(INV($"<tr><td class='tablecell'>Unit:</td><td colspan=2 class='tablecell'>{FormDropDown(UnitId, unitsDropDown, unitsSelection, 100, "Units to be used for Device")}</ td ></ tr > "));
+            stb.Append(INV($"<tr><td class='tablecell'>Debug Logging Enabled:</td><td colspan=2 class='tablecell'>{FormCheckBox(DebugLoggingId, string.Empty, this.pluginConfig.DebugLogging)}</ td ></ tr > "));
             stb.Append(INV($"<tr><td colspan=3><div id='{ErrorDivId}' style='color:Red'></div></td><td></td></tr>"));
-            stb.Append(INV($"<tr><td colspan=3>{FormButton("Save", SaveButtonName)}</td><td></td></tr>"));
+            stb.Append(INV($"<tr><td colspan=3>{FormButton("Save", SaveButtonName, "Save Settings")}</td><td></td></tr>"));
             stb.Append("<tr height='5'><td colspan=3></td></tr>");
             stb.Append(INV($"<tr><td colspan=3></td></tr>"));
             stb.Append(@"<tr><td colspan=3><div>Icons made by <a href='http://www.freepik.com' title='Freepik' target='_blank'>Freepik</a> from <a href='http://www.flaticon.com' title='Flaticon' target='_blank'>www.flaticon.com</a> is licensed by <a href='http://creativecommons.org/licenses/by/3.0/' title='Creative Commons BY 3.0' target='_blank'>CC 3.0 BY</a></div></td></tr>");
@@ -275,7 +275,7 @@ namespace Hspi
             return INV($"<input type=\'text\' id=\'{IdPrefix}{name}\' size=\'{size}\' name=\'{name}\' value=\'{defaultText}\'>");
         }
 
-        protected string FormDropDown(string name, NameValueCollection options, int selected, int width = 150, string tooltip = "")
+        protected string FormDropDown(string name, NameValueCollection options, int selected, int width, string tooltip)
         {
             var dd = new clsJQuery.jqDropList(name, PageName, false)
             {
@@ -299,9 +299,9 @@ namespace Hspi
             return dd.Build();
         }
 
-        protected string FormCheckBox(string name, bool @checked, string label = "", bool autoPostBack = true, bool submitForm = true)
+        protected string FormCheckBox(string name, string label, bool @checked)
         {
-            var cb = new clsJQuery.jqCheckBox(name, label, PageName, autoPostBack, submitForm)
+            var cb = new clsJQuery.jqCheckBox(name, label, PageName, true, true)
             {
                 id = INV($"{IdPrefix}{name}"),
                 @checked = @checked,
@@ -309,7 +309,7 @@ namespace Hspi
             return cb.Build();
         }
 
-        protected string FormButton(string name, string label, string toolTip = "")
+        protected string FormButton(string name, string label, string toolTip)
         {
             var b = new clsJQuery.jqButton(name, label, PageName, true)
             {
