@@ -19,7 +19,7 @@ namespace Hspi
 
             if ((value != null) && (value.Count != 0))
             {
-                string text = value.Item(0).InnerText;
+                string text = value.Item(0).InnerText.Trim();
                 if (double.TryParse(text, out double doubleValue))
                 {
                     data = doubleValue;
