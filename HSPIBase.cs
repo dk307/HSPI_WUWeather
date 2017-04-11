@@ -69,10 +69,6 @@ namespace Hspi
         [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "apiVersion")]
         public void Connect(string serverAddress, int serverPort)
         {
-            // This method is called by our console wrapper at launch time
-
-            // Create our main connection to the homeseer TCP communication framework
-            // part 1 - hs object Proxy
             try
             {
                 HsClient = ScsServiceClientBuilder.CreateClient<IHSApplication>(new ScsTcpEndPoint(serverAddress, serverPort), this);
@@ -88,7 +84,6 @@ namespace Hspi
                 throw new HspiConnectionException(INV($"Error connecting homeseer SCS client: {ex.Message}"), ex);
             }
 
-            // part 2 - callback object Proxy
             try
             {
                 CallbackClient = ScsServiceClientBuilder.CreateClient<IAppCallbackAPI>(new ScsTcpEndPoint(serverAddress, serverPort), this);

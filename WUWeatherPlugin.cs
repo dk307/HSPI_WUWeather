@@ -224,6 +224,7 @@ namespace Hspi
             return string.Empty;
         }
 
+        #region "Script Override"
         public override object PluginFunction([AllowNull]string functionName, [AllowNull] object[] parameters)
         {
             switch (functionName)
@@ -235,6 +236,59 @@ namespace Hspi
                     break;
             }
             return null;
+        }
+        #endregion
+
+
+        public override int ActionCount()
+        {
+            return 1;
+        }
+
+        public override string get_ActionName(int actionNumber)
+        {
+            switch (actionNumber)
+            {
+                case ActionRefreshTANumber:
+                    return INV($"{Name}:Refresh");
+                default:
+                    return base.get_ActionName(actionNumber);
+            }
+        }
+
+
+        public override string ActionBuildUI([AllowNull]string uniqueControlId, IPlugInAPI.strTrigActInfo actionInfo)
+        {
+            switch (actionInfo.TANumber)
+            {
+                case ActionRefreshTANumber:
+                    return string.Empty;
+                default:
+                    return base.ActionBuildUI(uniqueControlId, actionInfo);
+            }
+        }
+
+        public override string ActionFormatUI(IPlugInAPI.strTrigActInfo actionInfo)
+        {
+            switch (actionInfo.TANumber)
+            {
+                case ActionRefreshTANumber:
+                    return INV($"{WUWeatherData.PlugInName} Refreshes Data");
+                default:
+                    return base.ActionFormatUI(actionInfo);
+            }
+        }
+
+        public override bool HandleAction(IPlugInAPI.strTrigActInfo actionInfo)
+        {
+            switch (actionInfo.TANumber)
+            {
+                case ActionRefreshTANumber:
+                    RestartPeriodicTask();
+                    return true;
+                default:
+                    return base.HandleAction(actionInfo);
+            }
         }
 
         private void RestartPeriodicTask()
@@ -397,6 +451,7 @@ namespace Hspi
         private readonly object periodicTaskLock = new object();
         private ConfigPage configPage;
         private PluginConfig pluginConfig;
+        private const int ActionRefreshTANumber = 1;
         private bool disposedValue = false;
     }
 }
