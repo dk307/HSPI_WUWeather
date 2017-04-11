@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{6AFED710-7BB6-40E3-B4CD-4642DA950411}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Hspi</RootNamespace>
     <AssemblyName>HSPI_WUWeather</AssemblyName>
@@ -43,6 +43,7 @@
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <CodeAnalysisRuleSet>HSPI_WUWeather.ruleset</CodeAnalysisRuleSet>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -54,6 +55,7 @@
     <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <CodeAnalysisRuleSet>HSPI_WUWeather.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>Hspi.Program</StartupObject>
@@ -102,6 +104,7 @@
     <Compile Include="Exceptions\ApiKeyInvalidException.cs" />
     <Compile Include="Exceptions\StationIdInvalidException.cs" />
     <Compile Include="Exceptions\WUWeatherDataInvalidException.cs" />
+    <Compile Include="HSPI.cs" />
     <Compile Include="Unit.cs" />
     <Compile Include="WUWeatherData.cs" />
     <Compile Include="WUWeatherService.cs" />
@@ -135,6 +138,7 @@
   <ItemGroup>
     <None Include=".editorconfig" />
     <None Include="App.config" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="HSPI_WUWeather.ruleset" />
     <None Include="packages.config" />
   </ItemGroup>

@@ -74,7 +74,7 @@ namespace Hspi.WUWeather
         /// A <see cref="Task" /> for a <see cref="XmlDocument" /> containing
         /// weather data.
         /// </returns>
-        private async Task<XmlDocument> GetXmlFromUrlAsync(string requestUrl, CancellationToken cancellationToken)
+        private static async Task<XmlDocument> GetXmlFromUrlAsync(string requestUrl, CancellationToken cancellationToken)
         {
             using (var compressionHandler = new HttpClientHandler())
             {

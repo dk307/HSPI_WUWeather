@@ -30,7 +30,7 @@
                 }
             }
 
-            using (var plugin = new WUWeatherPlugin())
+            using (var plugin = new HSPI_WUWeather.HSPI())
             {
                 plugin.Connect(serverAddress, serverPort);
                 plugin.WaitforShutDownOrDisconnect();
