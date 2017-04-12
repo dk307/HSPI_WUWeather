@@ -2,10 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Threading;
 
 namespace Hspi
 {
+    using static StringUtil;
     internal class PluginConfig : IDisposable
     {
         public event EventHandler<EventArgs> ConfigChanged;
@@ -307,7 +309,7 @@ namespace Hspi
         private const string StationIdKey = "StationId";
         private const string UnitIdKey = "Unit";
         private const string DebugLoggingKey = "DebugLogging";
-        private const string FileName = "WUWeather.ini";
+        private readonly static string FileName = INV($"{Path.GetFileName(System.Reflection.Assembly.GetEntryAssembly().Location)}.ini");
         private const string RefreshIntervalKey = "RefreshIntervalMinutes";
         private const string DefaultSection = "Settings";
 

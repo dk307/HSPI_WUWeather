@@ -201,14 +201,18 @@ namespace Hspi
 
         private string GetImageHtml()
         {
+            StringBuilder stb = new StringBuilder();
             if (string.IsNullOrWhiteSpace(pluginConfig.StationId))
             {
-                return INV($"<a href='http://www.wunderground.com' target='_blank'><img width='100px' alt='Powered by Weather Underground' src='{WUWeatherData.ImagesPathRoot}wundergroundLogo_4c_horz.png'></a>");
+                stb.Append(INV($"<a href='http://www.wunderground.com' target='_blank'><img width='100px' alt='Powered by Weather Underground' src='{WUWeatherData.ImagesPathRoot}wundergroundLogo_4c_horz.png'></a>"));
             }
             else
             {
-                return INV($"<a href='http://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID={pluginConfig.StationId}' target='_blank'><img src='http://banners.wunderground.com/cgi-bin/banner/ban/wxBanner?bannertype=wxstnsticker_both&weatherstationcount={pluginConfig.StationId}' height='160' width='160' border='0' alt='Weather Underground PWS {pluginConfig.StationId}'/></a>");
+                stb.Append(INV($"<a href='http://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID={pluginConfig.StationId}' target='_blank'><img src='http://banners.wunderground.com/cgi-bin/banner/ban/wxBanner?bannertype=wxstnsticker_both&weatherstationcount={pluginConfig.StationId}' height='160' width='160' border='0' alt='Weather Underground PWS {pluginConfig.StationId}'/></a>"));
             }
+
+            stb.Append("&nbsp;<a href='https://www.wunderground.com/wundermap' target='_blank'>Find Station</a>");
+            return stb.ToString();
         }
 
         private string GetCallsPerDay()
@@ -242,7 +246,7 @@ namespace Hspi
             stb.Append(@"<div>");
             stb.Append(@"<table class='full_width_table'");
             stb.Append("<tr height='5'><td style='width:25%'></td><td style='width:20%'></td><td style='width:55%'></td></tr>");
-            stb.Append(INV($"<tr><td class='tablecell'>APIKey:</td><td  colspan=2  class='tablecell' style='width: 50px'>{HtmlTextBox(APIKeyId, pluginConfig.APIKey)}</td></tr>"));
+            stb.Append(INV($"<tr><td class='tablecell'>APIKey:</td><td class='tablecell' style='width: 50px'>{HtmlTextBox(APIKeyId, pluginConfig.APIKey)}</td><td class='tablecell'>&nbsp;<a href='https://www.wunderground.com/weather/api/' target='_blank'>API Home</a></td></tr>"));
             stb.Append(INV($"<tr><td class='tablecell'>Refresh Interval(minutes):</td><td class='tablecell'>{HtmlTextBox(RefreshIntervalId, INV($"{pluginConfig.RefreshIntervalMinutes}"))} </ td ><td class='tablecell'><div id={CallsPerDayId}>{GetCallsPerDay()}</div></td></ tr > "));
             stb.Append(INV($"<tr><td class='tablecell'>Station:</td><td class='tablecell'>{HtmlTextBox(StationId, INV($"{pluginConfig.StationId}"))}</td ><td class='tablecell'><div id='{ImageDivId}'>{GetImageHtml()}</div></td></ tr > "));
             stb.Append(INV($"<tr><td class='tablecell'>Unit:</td><td colspan=2 class='tablecell'>{FormDropDown(UnitId, unitsDropDown, unitsSelection, 150, "Units to be used for Device")}</ td ></ tr > "));
