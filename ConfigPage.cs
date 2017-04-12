@@ -215,7 +215,7 @@ namespace Hspi
         {
             if (pluginConfig.RefreshIntervalMinutes != 0)
             {
-                return INV($"&nbsp; ({ 1440 / pluginConfig.RefreshIntervalMinutes} calls per day)");
+                return INV($"&nbsp; ({ Math.Max(1, 1440 / pluginConfig.RefreshIntervalMinutes)} calls per day)");
             }
             else
             {

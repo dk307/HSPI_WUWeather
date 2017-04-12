@@ -138,7 +138,6 @@
   <ItemGroup>
     <None Include=".editorconfig" />
     <None Include="App.config" />
-    <None Include="ClassDiagram1.cd" />
     <None Include="HSPI_WUWeather.ruleset" />
     <None Include="packages.config" />
   </ItemGroup>
