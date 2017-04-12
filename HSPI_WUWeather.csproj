@@ -71,18 +71,18 @@
     </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HomeSeerAPI">
-      <HintPath>..\..\..\..\..\Program Files (x86)\HomeSeer HS3\HomeSeerAPI.dll</HintPath>
+    <Reference Include="HomeSeerAPI, Version=1.0.2.1, Culture=neutral, processorArchitecture=x86">
+      <HintPath>packages\Homeseer.1.0.0\lib\net45\HomeSeerAPI.dll</HintPath>
     </Reference>
-    <Reference Include="HSCF">
-      <HintPath>..\..\..\..\..\Program Files (x86)\HomeSeer HS3\HSCF.dll</HintPath>
+    <Reference Include="HSCF, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Homeseer.1.0.0\lib\net45\HSCF.dll</HintPath>
     </Reference>
     <Reference Include="NullGuard, Version=1.4.6.0, Culture=neutral, PublicKeyToken=1958ac8092168428, processorArchitecture=MSIL">
       <HintPath>packages\NullGuard.Fody.1.4.6\lib\dotnet\NullGuard.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Scheduler">
-      <HintPath>..\..\..\..\..\Program Files (x86)\HomeSeer HS3\Scheduler.dll</HintPath>
+    <Reference Include="Scheduler, Version=3.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <HintPath>packages\Homeseer.1.0.0\lib\net45\Scheduler.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
