@@ -17,7 +17,7 @@ Installation
 -----------
 Make sure that dotNet 4.6.2 is installed on machine. [Link to get it](https://support.microsoft.com/en-us/help/3151802/the-.net-framework-4.6.2-web-installer-for-windows)
 
-Place the compiled executable and config file in the HomeSeer installation directory. Restart HomeSeer. HomeSeer will recognize the plugin and will add plugin in disable state to its Plugins. Go to HomeSeer -> PlugIns -> Manage and enable this plugin. Copy Icons(icons.zip) to *\html\images\wuweather*
+Place the compiled executable and config file in the HomeSeer installation directory. Restart HomeSeer. HomeSeer will recognize the plugin and will add plugin in disable state to its Plugins. Go to HomeSeer -> PlugIns -> Manage and enable this plugin. Copy Icons([icons.zip](/asserts/Icons.zip)) to *\html\images\wuweather*
 
 ![Initial Configuration Page](/asserts/Initial.png "Initial Configuration Setting Page")
 
