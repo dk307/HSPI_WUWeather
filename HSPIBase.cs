@@ -16,6 +16,11 @@ namespace Hspi
 {
     using static StringUtil;
 
+    /// <summary>
+    /// Basic Functionality of HSPI
+    /// </summary>
+    /// <seealso cref="Hspi.IPlugInAPI2" />
+    /// <seealso cref="System.IDisposable" />
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     internal abstract class HspiBase : IPlugInAPI2, IDisposable
     {

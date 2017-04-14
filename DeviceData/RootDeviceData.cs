@@ -8,6 +8,10 @@ namespace Hspi
 {
     using static Hspi.StringUtil;
 
+    /// <summary>
+    ///  Base class for Root Devices
+    /// </summary>
+    /// <seealso cref="Hspi.DeviceDataBase" />
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     internal abstract class RootDeviceData : DeviceDataBase
     {
@@ -26,8 +30,6 @@ namespace Hspi
             });
             return pairs;
         }
-
-        public abstract void UpdateDeviceData(IHSApplication HS, DeviceClass device, System.Xml.XmlNodeList value);
 
         public abstract IReadOnlyCollection<DeviceData> Children { get; }
         public virtual DateTimeOffset? LastUpdateTime => null;

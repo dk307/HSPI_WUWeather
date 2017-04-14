@@ -6,17 +6,43 @@ using System.IO;
 
 namespace Hspi
 {
+    /// <summary>
+    /// This is base class for creating and updating devices in HomeSeer.
+    /// </summary>
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     internal abstract class DeviceDataBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DeviceDataBase"/> class.
+        /// </summary>
+        /// <param name="name">Name of the Device</param>
+        /// <param name="pathData">Path in xml used for selecting nodes in wu weather response.</param>
         protected DeviceDataBase(string name, XmlPathData pathData)
         {
             this.Name = name;
             this.PathData = pathData;
         }
 
+        /// <summary>
+        /// Gets the status pairs for creating device.
+        /// </summary>
+        /// <param name="config">The plugin configuration.</param>
+        /// <returns></returns>
         public abstract IList<VSVGPairs.VSPair> GetStatusPairs(PluginConfig config);
 
+        /// <summary>
+        /// Updates the device data from XML Node.
+        /// </summary>
+        /// <param name="HS">The HomeSeer application.</param>
+        /// <param name="device">The device  to update.</param>
+        /// <param name="value">XML Nodes containing values or null.</param>
+        public abstract void UpdateDeviceData(IHSApplication HS, DeviceClass device, System.Xml.XmlNodeList value);
+
+        /// <summary>
+        /// Gets the graphics pairs for creating device
+        /// </summary>
+        /// <param name="config">The plugin configuration.</param>
+        /// <returns></returns>
         public abstract IList<VSVGPairs.VGPair> GetGraphicsPairs(PluginConfig config);
 
         public abstract int HSDeviceType { get; }
@@ -40,6 +66,12 @@ namespace Hspi
             return pairs;
         }
 
+        /// <summary>
+        /// Updates the device data from number data
+        /// </summary>
+        /// <param name="HS">Homeseer application.</param>
+        /// <param name="device">The device to update.</param>
+        /// <param name="data">Number data.</param>
         protected void UpdateDeviceData(IHSApplication HS, DeviceClass device, double? data)
         {
             int refId = device.get_Ref(HS);
@@ -56,6 +88,12 @@ namespace Hspi
             }
         }
 
+        /// <summary>
+        /// Updates the device data from string data
+        /// </summary>
+        /// <param name="HS">Homeseer application.</param>
+        /// <param name="device">The device to update.</param>
+        /// <param name="data">string data.</param>
         protected void UpdateDeviceData(IHSApplication HS, DeviceClass device, [AllowNull]string data)
         {
             int refId = device.get_Ref(HS);
@@ -63,6 +101,9 @@ namespace Hspi
             HS.SetDeviceString(refId, data, true);
         }
 
+        /// <summary>
+        /// WU invalid values
+        /// </summary>
         private static readonly SortedSet<double> inValidValues = new SortedSet<double> { -999D, -99.99D, -9999, 99999, -25375, -2539.7, };
     };
 }

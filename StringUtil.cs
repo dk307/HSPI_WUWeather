@@ -3,6 +3,9 @@ using System;
 
 namespace Hspi
 {
+    /// <summary>
+    ///  Helper function to Format string in Invariant way.
+    /// </summary>
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     internal static class StringUtil
     {

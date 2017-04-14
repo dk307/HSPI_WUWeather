@@ -11,7 +11,7 @@ namespace Hspi.WUWeather
     using static Hspi.StringUtil;
 
     /// <summary>
-    /// The WU Weather service. Returns weather data for given locations
+    /// The WU Weather service. Returns weather data for given station
     /// </summary>
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     internal class WUWeatherService

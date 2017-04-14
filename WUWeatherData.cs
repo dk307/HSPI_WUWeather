@@ -2,11 +2,24 @@
 
 namespace Hspi
 {
+    /// <summary>
+    /// Class to store static data for WU 
+    /// </summary>
     internal static class WUWeatherData
     {
+        /// <summary>
+        /// The plugin name
+        /// </summary>
         public const string PlugInName = @"WU Weather";
+
+        /// <summary>
+        /// The images path root for devices
+        /// </summary>
         public const string ImagesPathRoot = @"\images\wuweather\";
 
+        /// <summary>
+        /// The device definitions for WU
+        /// </summary>
         public static readonly IEnumerable<RootDeviceData> DeviceDefinitions = new List<RootDeviceData>()
         {
             new ConditionsRootDeviceData(),

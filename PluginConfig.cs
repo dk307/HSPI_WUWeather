@@ -8,10 +8,18 @@ using System.Threading;
 namespace Hspi
 {
     using static StringUtil;
+    /// <summary>
+    /// Class to store PlugIn Configuration
+    /// </summary>
+    /// <seealso cref="System.IDisposable" />
     internal class PluginConfig : IDisposable
     {
         public event EventHandler<EventArgs> ConfigChanged;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PluginConfig"/> class.
+        /// </summary>
+        /// <param name="HS">The homeseer application.</param>
         public PluginConfig(IHSApplication HS)
         {
             this.HS = HS;
@@ -38,6 +46,12 @@ namespace Hspi
             }
         }
 
+        /// <summary>
+        /// Gets or sets the API key for WU
+        /// </summary>
+        /// <value>
+        /// The API key.
+        /// </value>
         public string APIKey
         {
             get
@@ -67,6 +81,12 @@ namespace Hspi
             }
         }
 
+        /// <summary>
+        /// Gets or sets the station identifier.
+        /// </summary>
+        /// <value>
+        /// The station identifier.
+        /// </value>
         public string StationId
         {
             get
@@ -96,6 +116,12 @@ namespace Hspi
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether debug logging is enabled.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [debug logging]; otherwise, <c>false</c>.
+        /// </value>
         public bool DebugLogging
         {
             get
@@ -125,6 +151,12 @@ namespace Hspi
             }
         }
 
+        /// <summary>
+        /// Gets or sets the refresh interval minutes.
+        /// </summary>
+        /// <value>
+        /// The refresh interval minutes.
+        /// </value>
         public int RefreshIntervalMinutes
         {
             get
@@ -154,6 +186,12 @@ namespace Hspi
             }
         }
 
+        /// <summary>
+        /// Gets or sets the unit of devices(SI or US).
+        /// </summary>
+        /// <value>
+        /// The unit od devices.
+        /// </value>
         public Unit Unit
         {
             get
@@ -183,7 +221,13 @@ namespace Hspi
             }
         }
 
-        public bool GetEnabled(DeviceDataBase parent, DeviceDataBase child)
+        /// <summary>
+        /// Gets value indicating if device is enabled.
+        /// </summary>
+        /// <param name="parent">The root device.</param>
+        /// <param name="child">The device.</param>
+        /// <returns></returns>
+        public bool GetDeviceEnabled(DeviceDataBase parent, DeviceDataBase child)
         {
             configLock.EnterReadLock();
             try
@@ -204,7 +248,14 @@ namespace Hspi
             return false;
         }
 
-        public void SetEnabled(DeviceDataBase parent, DeviceDataBase child, bool enabled)
+        /// <summary>
+        /// Sets the device enabled value.
+        /// </summary>
+        /// <param name="parent">The parent device.</param>
+        /// <param name="child">The device.</param>
+        /// <param name="enabled">if set to <c>true</c> [enabled].</param>
+        /// <exception cref="ArgumentException">Invalid values</exception>
+        public void SetDeviceEnabled(DeviceDataBase parent, DeviceDataBase child, bool enabled)
         {
             configLock.EnterWriteLock();
             try
@@ -229,6 +280,11 @@ namespace Hspi
             }
         }
 
+        /// <summary>
+        /// Gets the unit type description based on current Unit
+        /// </summary>
+        /// <param name="deviceUnit">The device unit.</param>
+        /// <returns>Description of Unit</returns>
         public string GetUnitDescription(DeviceUnitType deviceUnit)
         {
             return WUWeatherData.GetStringDescription(this.Unit, deviceUnit);
@@ -273,6 +329,9 @@ namespace Hspi
             }
         }
 
+        /// <summary>
+        /// Fires event that configuration changed.
+        /// </summary>
         public void FireConfigChanged()
         {
             if (ConfigChanged != null)
@@ -303,7 +362,6 @@ namespace Hspi
             Dispose(true);
         }
         #endregion
-
 
         private const string APIKeyKey = "APIKey";
         private const string StationIdKey = "StationId";

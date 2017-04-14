@@ -9,6 +9,10 @@ namespace Hspi
 {
     using static Hspi.StringUtil;
 
+    /// <summary>
+    ///  Base class for Child Devices
+    /// </summary>
+    /// <seealso cref="Hspi.DeviceDataBase" />
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     internal abstract class DeviceData : DeviceDataBase
     {
@@ -19,8 +23,6 @@ namespace Hspi
             this.initialStringValue = initialStringValue;
             this.initialValue = initialValue;
         }
-
-        public abstract void UpdateDeviceData(IHSApplication HS, DeviceClass device, System.Xml.XmlNodeList value);
 
         public override int HSDeviceType => deviceType;
         public override string HSDeviceTypeString => INV($"{WUWeatherData.PlugInName} Information Device");

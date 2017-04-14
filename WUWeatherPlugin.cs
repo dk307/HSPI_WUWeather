@@ -14,6 +14,10 @@ namespace Hspi
 {
     using static Hspi.StringUtil;
 
+    /// <summary>
+    /// Plugin class for Weather Underground
+    /// </summary>
+    /// <seealso cref="Hspi.HspiBase" />
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     internal class WUWeatherPlugin : HspiBase
     {
@@ -75,6 +79,13 @@ namespace Hspi
             return INV($"{parentAddress}.{childAddress}");
         }
 
+        /// <summary>
+        /// Creates the HS device.
+        /// </summary>
+        /// <param name="parent">The data for parent of device.</param>
+        /// <param name="rootDeviceData">The root device data.</param>
+        /// <param name="deviceData">The device data.</param>
+        /// <returns>New Device</returns>
         private DeviceClass CreateDevice([AllowNull]DeviceClass parent, [AllowNull]RootDeviceData rootDeviceData, DeviceDataBase deviceData)
         {
             if (rootDeviceData != null)
@@ -137,6 +148,9 @@ namespace Hspi
             return device;
         }
 
+        /// <summary>
+        /// Creates the devices based on configuration.
+        /// </summary>
         private void CreateDevices()
         {
             try
@@ -151,7 +165,7 @@ namespace Hspi
                     {
                         this.CancellationToken.ThrowIfCancellationRequested();
 
-                        if (!pluginConfig.GetEnabled(deviceDefinition, childDeviceDefinition))
+                        if (!pluginConfig.GetDeviceEnabled(deviceDefinition, childDeviceDefinition))
                         {
                             continue;
                         }
@@ -180,6 +194,11 @@ namespace Hspi
             }
         }
 
+        /// <summary>
+        /// Gets the current devices for plugin from Homeseer
+        /// </summary>
+        /// <returns>Current devices for plugin</returns>
+        /// <exception cref="HspiException"></exception>
         private IDictionary<string, DeviceClass> GetCurrentDevices()
         {
             var deviceEnumerator = HS.GetDeviceEnumerator() as clsDeviceEnumeration;
@@ -240,7 +259,7 @@ namespace Hspi
         }
         #endregion
 
-
+        #region "Action Override"
         public override int ActionCount()
         {
             return 1;
@@ -291,7 +310,13 @@ namespace Hspi
                     return base.HandleAction(actionInfo);
             }
         }
+        #endregion
 
+
+
+        /// <summary>
+        /// Restarts the periodic task to fetch data from server
+        /// </summary>
         private void RestartPeriodicTask()
         {
             lock (periodicTaskLock)
@@ -312,6 +337,10 @@ namespace Hspi
             }
         }
 
+        /// <summary>
+        /// Creates& update devicesin HS
+        /// </summary>
+        /// <returns>Task</returns>
         private async Task CreateAndUpdateDevices()
         {
             using (var combinedToken = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationTokenSourceForUpdateDevice.Token))
@@ -421,6 +450,10 @@ namespace Hspi
             Callback.RegisterLink(wpd);
         }
 
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources.
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
             if (!disposedValue)
