@@ -9,7 +9,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 
-
 namespace Hspi
 {
     using static Hspi.StringUtil;
@@ -32,7 +31,7 @@ namespace Hspi
             try
             {
                 pluginConfig = new PluginConfig(HS);
-                configPage = new ConfigPage(HS, this.pluginConfig);
+                configPage = new ConfigPage(HS, pluginConfig);
                 LogInfo("Starting Plugin");
 #if DEBUG
                 pluginConfig.DebugLogging = true;
@@ -63,7 +62,9 @@ namespace Hspi
 
         private void PluginConfig_ConfigChanged(object sender, EventArgs e)
         {
-            RestartPeriodicTask();
+            // Wait for 5 seconds before fetching the data to avoid sending too many requests
+            // when user is doing a bunch of changes in config.
+            RestartPeriodicTask(TimeSpan.FromSeconds(5));
         }
 
         protected override void LogDebug(string message)
@@ -151,19 +152,19 @@ namespace Hspi
         /// <summary>
         /// Creates the devices based on configuration.
         /// </summary>
-        private void CreateDevices()
+        private void CreateDevices(CancellationToken token)
         {
             try
             {
                 IDictionary<string, DeviceClass> currentDevices = GetCurrentDevices();
                 foreach (var deviceDefinition in WUWeatherData.DeviceDefinitions)
                 {
-                    this.CancellationToken.ThrowIfCancellationRequested();
+                    token.ThrowIfCancellationRequested();
                     currentDevices.TryGetValue(deviceDefinition.Name, out DeviceClass parentDevice);
 
                     foreach (var childDeviceDefinition in deviceDefinition.Children)
                     {
-                        this.CancellationToken.ThrowIfCancellationRequested();
+                        token.ThrowIfCancellationRequested();
 
                         if (!pluginConfig.GetDeviceEnabled(deviceDefinition, childDeviceDefinition))
                         {
@@ -185,7 +186,7 @@ namespace Hspi
                     }
                 }
             }
-            catch (System.OperationCanceledException)
+            catch (OperationCanceledException)
             {
             }
             catch (Exception ex)
@@ -211,7 +212,7 @@ namespace Hspi
             var currentDevices = new Dictionary<string, DeviceClass>();
             do
             {
-                this.CancellationToken.ThrowIfCancellationRequested();
+                CancellationToken.ThrowIfCancellationRequested();
                 DeviceClass device = deviceEnumerator.GetNext();
                 if ((device != null) &&
                     (device.get_Interface(HS) != null) &&
@@ -245,21 +246,25 @@ namespace Hspi
         }
 
         #region "Script Override"
+
         public override object PluginFunction([AllowNull]string functionName, [AllowNull] object[] parameters)
         {
             switch (functionName)
             {
                 case null:
                     return null;
+
                 case "Refresh":
                     RestartPeriodicTask();
                     break;
             }
             return null;
         }
-        #endregion
+
+        #endregion "Script Override"
 
         #region "Action Override"
+
         public override int ActionCount()
         {
             return 1;
@@ -271,11 +276,11 @@ namespace Hspi
             {
                 case ActionRefreshTANumber:
                     return INV($"{Name}:Refresh");
+
                 default:
                     return base.get_ActionName(actionNumber);
             }
         }
-
 
         public override string ActionBuildUI([AllowNull]string uniqueControlId, IPlugInAPI.strTrigActInfo actionInfo)
         {
@@ -283,6 +288,7 @@ namespace Hspi
             {
                 case ActionRefreshTANumber:
                     return string.Empty;
+
                 default:
                     return base.ActionBuildUI(uniqueControlId, actionInfo);
             }
@@ -294,6 +300,7 @@ namespace Hspi
             {
                 case ActionRefreshTANumber:
                     return INV($"{WUWeatherData.PlugInName} Refreshes Data");
+
                 default:
                     return base.ActionFormatUI(actionInfo);
             }
@@ -306,18 +313,19 @@ namespace Hspi
                 case ActionRefreshTANumber:
                     RestartPeriodicTask();
                     return true;
+
                 default:
                     return base.HandleAction(actionInfo);
             }
         }
-        #endregion
 
-
+        #endregion "Action Override"
 
         /// <summary>
         /// Restarts the periodic task to fetch data from server
         /// </summary>
-        private void RestartPeriodicTask()
+        /// <param name="initialDelay">The initial one time delay.</param>
+        private void RestartPeriodicTask(TimeSpan? initialDelay = null)
         {
             lock (periodicTaskLock)
             {
@@ -328,20 +336,31 @@ namespace Hspi
                     {
                         periodicTask.Wait(CancellationToken);
                     }
-                    catch (Exception) { }
+                    catch (AggregateException ex)
+                    {
+                        ex.Handle((exception) =>
+                        {
+                            if (exception is OperationCanceledException)
+                            {
+                                return true;
+                            }
+                            return false;
+                        });
+                    }
                     cancellationTokenSourceForUpdateDevice.Dispose();
                 }
 
                 cancellationTokenSourceForUpdateDevice = new CancellationTokenSource();
-                periodicTask = CreateAndUpdateDevices(); // dont wait
+                periodicTask = CreateAndUpdateDevices(initialDelay); // dont wait
             }
         }
 
         /// <summary>
-        /// Creates& update devicesin HS
+        /// Creates the and update devices.
         /// </summary>
-        /// <returns>Task</returns>
-        private async Task CreateAndUpdateDevices()
+        /// <param name="initialDelay">The initial one time delay.</param>
+        /// <returns></returns>
+        private async Task CreateAndUpdateDevices(TimeSpan? initialDelay)
         {
             using (var combinedToken = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationTokenSourceForUpdateDevice.Token))
             {
@@ -349,7 +368,12 @@ namespace Hspi
                 {
                     try
                     {
-                        CreateDevices();
+                        if (initialDelay.HasValue)
+                        {
+                            await Task.Delay(initialDelay.Value, combinedToken.Token);
+                            initialDelay = null;
+                        }
+                        CreateDevices(combinedToken.Token);
                         await FetchAndUpdateDevices(combinedToken.Token).ConfigureAwait(false);
                     }
                     catch (OperationCanceledException)
@@ -371,7 +395,7 @@ namespace Hspi
 
         private async Task FetchAndUpdateDevices(CancellationToken token)
         {
-            if (string.IsNullOrWhiteSpace(this.pluginConfig.APIKey) || string.IsNullOrWhiteSpace(this.pluginConfig.StationId))
+            if (string.IsNullOrWhiteSpace(pluginConfig.APIKey) || string.IsNullOrWhiteSpace(pluginConfig.StationId))
             {
                 LogWarning("Configuration not setup to fetch weather data");
                 return;
@@ -386,7 +410,7 @@ namespace Hspi
             var existingDevices = GetCurrentDevices();
             foreach (var deviceDefinition in WUWeatherData.DeviceDefinitions)
             {
-                this.CancellationToken.ThrowIfCancellationRequested();
+                CancellationToken.ThrowIfCancellationRequested();
 
                 existingDevices.TryGetValue(deviceDefinition.Name, out var rootDevice);
 
@@ -396,7 +420,7 @@ namespace Hspi
                     continue;
                 }
 
-                var subObject = response.SelectNodes(deviceDefinition.PathData.GetPath(this.pluginConfig.Unit));
+                var subObject = response.SelectNodes(deviceDefinition.PathData.GetPath(pluginConfig.Unit));
 
                 if (subObject != null && subObject.Count != 0)
                 {
@@ -410,10 +434,10 @@ namespace Hspi
 
                         if (childDevice != null)
                         {
-                            this.CancellationToken.ThrowIfCancellationRequested();
+                            CancellationToken.ThrowIfCancellationRequested();
                             try
                             {
-                                XmlNodeList elements = subObject.Item(0).SelectNodes(childDeviceDefinition.PathData.GetPath(this.pluginConfig.Unit));
+                                XmlNodeList elements = subObject.Item(0).SelectNodes(childDeviceDefinition.PathData.GetPath(pluginConfig.Unit));
                                 childDeviceDefinition.UpdateDeviceData(HS, childDevice, elements);
 
                                 if (lastUpdate.HasValue)
