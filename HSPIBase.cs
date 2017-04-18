@@ -123,7 +123,7 @@ namespace Hspi
                     break;
                 }
 
-                await Task.Delay(TimeSpan.FromSeconds(1), cancellationTokenSource.Token).ConfigureAwait(false);
+                await Task.Delay(TimeSpan.FromSeconds(5), cancellationTokenSource.Token).ConfigureAwait(false);
             }
         }
 
