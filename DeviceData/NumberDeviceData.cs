@@ -6,6 +6,10 @@ using System.Xml.XPath;
 
 namespace Hspi
 {
+    /// <summary>
+    ///  Base class for Number Device
+    /// </summary>
+    /// <seealso cref="Hspi.DeviceData" />
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     internal abstract class NumberDeviceData : DeviceData
     {
@@ -47,6 +51,11 @@ namespace Hspi
 
         public override IList<VSVGPairs.VGPair> GetGraphicsPairs(PluginConfig config) => new List<VSVGPairs.VGPair>();
 
+        /// <summary>
+        /// Gets the suffix for number device
+        /// </summary>
+        /// <param name="config">The plugin configuration.</param>
+        /// <returns>Suffix used for the device</returns>
         protected abstract string GetUnitString(PluginConfig config);
     }
 }

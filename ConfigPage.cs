@@ -10,6 +10,10 @@ namespace Hspi
 {
     using static StringUtil;
 
+    /// <summary>
+    /// Helper class to generate configuration page for plugin
+    /// </summary>
+    /// <seealso cref="Scheduler.PageBuilderAndMenu.clsPageBuilder" />
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     internal class ConfigPage : PageBuilderAndMenu.clsPageBuilder
     {
@@ -130,7 +134,7 @@ namespace Hspi
 
                         if (value != null)
                         {
-                            this.pluginConfig.SetEnabled(deviceDefintion, childDeviceDefinition, value == "checked");
+                            this.pluginConfig.SetDeviceEnabled(deviceDefintion, childDeviceDefinition, value == "checked");
                             changed = true;
                         }
                     }
@@ -190,7 +194,7 @@ namespace Hspi
 
             foreach (var childDeviceDefinition in root.Children)
             {
-                stb.Append(INV($"<tr><td colspan=2>{FormCheckBox(NameToId(root, childDeviceDefinition), childDeviceDefinition.Name, pluginConfig.GetEnabled(root, childDeviceDefinition))}</td></tr>"));
+                stb.Append(INV($"<tr><td colspan=2>{FormCheckBox(NameToId(root, childDeviceDefinition), childDeviceDefinition.Name, pluginConfig.GetDeviceEnabled(root, childDeviceDefinition))}</td></tr>"));
             }
             stb.Append(@" </table>");
             stb.Append(@"</div>");

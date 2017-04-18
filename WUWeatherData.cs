@@ -1,12 +1,28 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 
 namespace Hspi
 {
+    using static StringUtil;
+
+    /// <summary>
+    /// Class to store static data for WU
+    /// </summary>
     internal static class WUWeatherData
     {
+        /// <summary>
+        /// The plugin name
+        /// </summary>
         public const string PlugInName = @"WU Weather";
+
+        /// <summary>
+        /// The images path root for devices
+        /// </summary>
         public const string ImagesPathRoot = @"\images\wuweather\";
 
+        /// <summary>
+        /// The device definitions for WU
+        /// </summary>
         public static readonly IEnumerable<RootDeviceData> DeviceDefinitions = new List<RootDeviceData>()
         {
             new ConditionsRootDeviceData(),
@@ -19,55 +35,14 @@ namespace Hspi
 
         public static string GetStringDescription(Unit unit, DeviceUnitType deviceType)
         {
-            switch (unit)
+            FieldInfo fi = typeof(DeviceUnitType).GetField(deviceType.ToString());
+            foreach (var attribute in (UnitTypeDescription[])fi.GetCustomAttributes(typeof(UnitTypeDescription), false))
             {
-                case Unit.US:
-                    switch (deviceType)
-                    {
-                        case DeviceUnitType.Temperature:
-                            return " °F";
-
-                        case DeviceUnitType.Pressure:
-                            return " Hg";
-
-                        case DeviceUnitType.WinSpeed:
-                            return " miles/hr";
-
-                        case DeviceUnitType.Visibility:
-                            return " miles";
-
-                        case DeviceUnitType.Precipitation:
-                            return " inches";
-
-                        case DeviceUnitType.WeatherType:
-                            break;
-                    }
-                    break;
-
-                case Unit.SI:
-                    switch (deviceType)
-                    {
-                        case DeviceUnitType.Temperature:
-                            return " °C";
-
-                        case DeviceUnitType.Pressure:
-                            return " millibars";
-
-                        case DeviceUnitType.WinSpeed:
-                            return " km/hr";
-
-                        case DeviceUnitType.Visibility:
-                            return " km";
-
-                        case DeviceUnitType.Precipitation:
-                            return " mm";
-
-                        case DeviceUnitType.WeatherType:
-                            break;
-                    }
-                    break;
+                if (attribute.Unit == unit)
+                {
+                    return INV($" {attribute.Description}");
+                }
             }
-
             return string.Empty;
         }
     }

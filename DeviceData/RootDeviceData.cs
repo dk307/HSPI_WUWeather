@@ -8,6 +8,10 @@ namespace Hspi
 {
     using static Hspi.StringUtil;
 
+    /// <summary>
+    ///  Base class for Root Devices
+    /// </summary>
+    /// <seealso cref="Hspi.DeviceDataBase" />
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     internal abstract class RootDeviceData : DeviceDataBase
     {

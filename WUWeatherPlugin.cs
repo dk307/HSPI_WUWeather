@@ -14,6 +14,10 @@ namespace Hspi
 {
     using static Hspi.StringUtil;
 
+    /// <summary>
+    /// Plugin class for Weather Underground
+    /// </summary>
+    /// <seealso cref="Hspi.HspiBase" />
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     internal class WUWeatherPlugin : HspiBase
     {
@@ -28,7 +32,7 @@ namespace Hspi
             try
             {
                 pluginConfig = new PluginConfig(HS);
-                configPage = new ConfigPage(HS, this.pluginConfig);
+                configPage = new ConfigPage(HS, pluginConfig);
                 LogInfo("Starting Plugin");
 #if DEBUG
                 pluginConfig.DebugLogging = true;
@@ -59,7 +63,9 @@ namespace Hspi
 
         private void PluginConfig_ConfigChanged(object sender, EventArgs e)
         {
-            RestartPeriodicTask();
+            // Wait for 5 seconds before fetching the data to avoid sending too many requests
+            // when user is doing a bunch of changes in config.
+            RestartPeriodicTask(TimeSpan.FromSeconds(5));
         }
 
         protected override void LogDebug(string message)
@@ -75,6 +81,13 @@ namespace Hspi
             return INV($"{parentAddress}.{childAddress}");
         }
 
+        /// <summary>
+        /// Creates the HS device.
+        /// </summary>
+        /// <param name="parent">The data for parent of device.</param>
+        /// <param name="rootDeviceData">The root device data.</param>
+        /// <param name="deviceData">The device data.</param>
+        /// <returns>New Device</returns>
         private DeviceClass CreateDevice([AllowNull]DeviceClass parent, [AllowNull]RootDeviceData rootDeviceData, DeviceDataBase deviceData)
         {
             if (rootDeviceData != null)
@@ -137,21 +150,24 @@ namespace Hspi
             return device;
         }
 
-        private void CreateDevices()
+        /// <summary>
+        /// Creates the devices based on configuration.
+        /// </summary>
+        private void CreateDevices(CancellationToken token)
         {
             try
             {
                 IDictionary<string, DeviceClass> currentDevices = GetCurrentDevices();
                 foreach (var deviceDefinition in WUWeatherData.DeviceDefinitions)
                 {
-                    this.CancellationToken.ThrowIfCancellationRequested();
+                    token.ThrowIfCancellationRequested();
                     currentDevices.TryGetValue(deviceDefinition.Name, out DeviceClass parentDevice);
 
                     foreach (var childDeviceDefinition in deviceDefinition.Children)
                     {
-                        this.CancellationToken.ThrowIfCancellationRequested();
+                        token.ThrowIfCancellationRequested();
 
-                        if (!pluginConfig.GetEnabled(deviceDefinition, childDeviceDefinition))
+                        if (!pluginConfig.GetDeviceEnabled(deviceDefinition, childDeviceDefinition))
                         {
                             continue;
                         }
@@ -171,7 +187,7 @@ namespace Hspi
                     }
                 }
             }
-            catch (System.OperationCanceledException)
+            catch (OperationCanceledException)
             {
             }
             catch (Exception ex)
@@ -180,6 +196,11 @@ namespace Hspi
             }
         }
 
+        /// <summary>
+        /// Gets the current devices for plugin from Homeseer
+        /// </summary>
+        /// <returns>Current devices for plugin</returns>
+        /// <exception cref="HspiException"></exception>
         private IDictionary<string, DeviceClass> GetCurrentDevices()
         {
             var deviceEnumerator = HS.GetDeviceEnumerator() as clsDeviceEnumeration;
@@ -192,7 +213,7 @@ namespace Hspi
             var currentDevices = new Dictionary<string, DeviceClass>();
             do
             {
-                this.CancellationToken.ThrowIfCancellationRequested();
+                CancellationToken.ThrowIfCancellationRequested();
                 DeviceClass device = deviceEnumerator.GetNext();
                 if ((device != null) &&
                     (device.get_Interface(HS) != null) &&
@@ -242,6 +263,8 @@ namespace Hspi
         }
 
         #endregion "Script Override"
+
+        #region "Action Override"
 
         public override int ActionCount()
         {
@@ -297,7 +320,13 @@ namespace Hspi
             }
         }
 
-        private void RestartPeriodicTask()
+        #endregion "Action Override"
+
+        /// <summary>
+        /// Restarts the periodic task to fetch data from server
+        /// </summary>
+        /// <param name="initialDelay">The initial one time delay.</param>
+        private void RestartPeriodicTask(TimeSpan? initialDelay = null)
         {
             lock (periodicTaskLock)
             {
@@ -308,16 +337,31 @@ namespace Hspi
                     {
                         periodicTask.Wait(CancellationToken);
                     }
-                    catch (Exception) { }
+                    catch (AggregateException ex)
+                    {
+                        ex.Handle((exception) =>
+                        {
+                            if (exception is OperationCanceledException)
+                            {
+                                return true;
+                            }
+                            return false;
+                        });
+                    }
                     cancellationTokenSourceForUpdateDevice.Dispose();
                 }
 
                 cancellationTokenSourceForUpdateDevice = new CancellationTokenSource();
-                periodicTask = CreateAndUpdateDevices(); // dont wait
+                periodicTask = CreateAndUpdateDevices(initialDelay); // dont wait
             }
         }
 
-        private async Task CreateAndUpdateDevices()
+        /// <summary>
+        /// Creates the and update devices.
+        /// </summary>
+        /// <param name="initialDelay">The initial one time delay.</param>
+        /// <returns></returns>
+        private async Task CreateAndUpdateDevices(TimeSpan? initialDelay)
         {
             using (var combinedToken = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationTokenSourceForUpdateDevice.Token))
             {
@@ -325,7 +369,12 @@ namespace Hspi
                 {
                     try
                     {
-                        CreateDevices();
+                        if (initialDelay.HasValue)
+                        {
+                            await Task.Delay(initialDelay.Value, combinedToken.Token);
+                            initialDelay = null;
+                        }
+                        CreateDevices(combinedToken.Token);
                         await FetchAndUpdateDevices(combinedToken.Token).ConfigureAwait(false);
                     }
                     catch (OperationCanceledException)
@@ -347,7 +396,7 @@ namespace Hspi
 
         private async Task FetchAndUpdateDevices(CancellationToken token)
         {
-            if (string.IsNullOrWhiteSpace(this.pluginConfig.APIKey) || string.IsNullOrWhiteSpace(this.pluginConfig.StationId))
+            if (string.IsNullOrWhiteSpace(pluginConfig.APIKey) || string.IsNullOrWhiteSpace(pluginConfig.StationId))
             {
                 LogWarning("Configuration not setup to fetch weather data");
                 return;
@@ -363,7 +412,8 @@ namespace Hspi
             var existingDevices = GetCurrentDevices();
             foreach (var deviceDefinition in WUWeatherData.DeviceDefinitions)
             {
-                this.CancellationToken.ThrowIfCancellationRequested();
+                CancellationToken.ThrowIfCancellationRequested();
+
                 existingDevices.TryGetValue(deviceDefinition.Name, out var rootDevice);
 
                 if (rootDevice == null)
@@ -395,7 +445,7 @@ namespace Hspi
 
                         if (childDevice != null)
                         {
-                            this.CancellationToken.ThrowIfCancellationRequested();
+                            CancellationToken.ThrowIfCancellationRequested();
                             try
                             {
                                 XPathExpression subExpression = childDeviceDefinition.PathData.GetPath(this.pluginConfig.Unit);
@@ -436,6 +486,10 @@ namespace Hspi
             Callback.RegisterLink(wpd);
         }
 
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources.
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
             if (!disposedValue)

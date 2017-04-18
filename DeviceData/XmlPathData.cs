@@ -4,9 +4,17 @@ using System.Xml.XPath;
 
 namespace Hspi
 {
+    /// <summary>
+    /// Class to describe XMLPaths for a Device for various  Units
+    /// </summary>
     public sealed class XmlPathData
     {
-        public XmlPathData(string universal) : this(universal, universal)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XmlPathData"/> class.
+        /// </summary>
+        /// <param name="universal">Single xmlpath for all Unit.</param>
+        public XmlPathData(string universal) :
+            this(universal, universal)
         {
         }
 
