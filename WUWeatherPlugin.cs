@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-
+using System.Xml.XPath;
 
 namespace Hspi
 {
@@ -226,20 +226,22 @@ namespace Hspi
         }
 
         #region "Script Override"
+
         public override object PluginFunction([AllowNull]string functionName, [AllowNull] object[] parameters)
         {
             switch (functionName)
             {
                 case null:
                     return null;
+
                 case "Refresh":
                     RestartPeriodicTask();
                     break;
             }
             return null;
         }
-        #endregion
 
+        #endregion "Script Override"
 
         public override int ActionCount()
         {
@@ -252,11 +254,11 @@ namespace Hspi
             {
                 case ActionRefreshTANumber:
                     return INV($"{Name}:Refresh");
+
                 default:
                     return base.get_ActionName(actionNumber);
             }
         }
-
 
         public override string ActionBuildUI([AllowNull]string uniqueControlId, IPlugInAPI.strTrigActInfo actionInfo)
         {
@@ -264,6 +266,7 @@ namespace Hspi
             {
                 case ActionRefreshTANumber:
                     return string.Empty;
+
                 default:
                     return base.ActionBuildUI(uniqueControlId, actionInfo);
             }
@@ -275,6 +278,7 @@ namespace Hspi
             {
                 case ActionRefreshTANumber:
                     return INV($"{WUWeatherData.PlugInName} Refreshes Data");
+
                 default:
                     return base.ActionFormatUI(actionInfo);
             }
@@ -287,6 +291,7 @@ namespace Hspi
                 case ActionRefreshTANumber:
                     RestartPeriodicTask();
                     return true;
+
                 default:
                     return base.HandleAction(actionInfo);
             }
@@ -352,26 +357,35 @@ namespace Hspi
             LogConfiguration();
 
             WUWeatherService service = new WUWeatherService(pluginConfig.APIKey);
-            var response = await service.GetDataForStationAsync(pluginConfig.StationId, token).ConfigureAwait(false);
+            XmlDocument rootXmlDocument = await service.GetDataForStationAsync(pluginConfig.StationId, token).ConfigureAwait(false);
+            XPathNavigator rootNavigator = rootXmlDocument.CreateNavigator();
 
             var existingDevices = GetCurrentDevices();
             foreach (var deviceDefinition in WUWeatherData.DeviceDefinitions)
             {
                 this.CancellationToken.ThrowIfCancellationRequested();
-
                 existingDevices.TryGetValue(deviceDefinition.Name, out var rootDevice);
 
                 if (rootDevice == null)
                 {
-                    // no root device exists yet
+                    // no root device exists yet so children won't exist
                     continue;
                 }
 
-                var subObject = response.SelectNodes(deviceDefinition.PathData.GetPath(this.pluginConfig.Unit));
+                XPathExpression childExpression = deviceDefinition.PathData.GetPath(this.pluginConfig.Unit);
+                XPathNodeIterator childNodeIter = rootNavigator.Select(childExpression);
 
-                if (subObject != null && subObject.Count != 0)
+                if (childNodeIter != null && childNodeIter.MoveNext())
                 {
-                    deviceDefinition.UpdateDeviceData(HS, rootDevice, subObject);
+                    XmlElement childElement = childNodeIter.Current.UnderlyingObject as XmlElement;
+
+                    if (childElement == null)
+                    {
+                        LogWarning(INV($"{deviceDefinition.Name} has invalid type in xml document."));
+                        continue;
+                    }
+                    deviceDefinition.UpdateDeviceData(HS, rootDevice, childElement);
+                    var childNavigator = childElement.CreateNavigator();
 
                     DateTimeOffset? lastUpdate = deviceDefinition.LastUpdateTime;
                     foreach (var childDeviceDefinition in deviceDefinition.Children)
@@ -384,7 +398,8 @@ namespace Hspi
                             this.CancellationToken.ThrowIfCancellationRequested();
                             try
                             {
-                                XmlNodeList elements = subObject.Item(0).SelectNodes(childDeviceDefinition.PathData.GetPath(this.pluginConfig.Unit));
+                                XPathExpression subExpression = childDeviceDefinition.PathData.GetPath(this.pluginConfig.Unit);
+                                XPathNodeIterator elements = childNavigator.Select(subExpression);
                                 childDeviceDefinition.UpdateDeviceData(HS, childDevice, elements);
 
                                 if (lastUpdate.HasValue)

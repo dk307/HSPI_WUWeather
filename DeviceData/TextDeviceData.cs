@@ -2,6 +2,7 @@
 using NullGuard;
 using Scheduler.Classes;
 using System.Collections.Generic;
+using System.Xml.XPath;
 
 namespace Hspi
 {
@@ -13,12 +14,12 @@ namespace Hspi
         {
         }
 
-        public override void UpdateDeviceData(IHSApplication HS, DeviceClass device, [AllowNull] System.Xml.XmlNodeList value)
+        public override void UpdateDeviceData(IHSApplication HS, DeviceClass device, [AllowNull] XPathNodeIterator value)
         {
             string stringValue = null;
-            if ((value != null) && (value.Count != 0))
+            if ((value != null) && (value.MoveNext()))
             {
-                stringValue = value.Item(0).InnerText;
+                stringValue = value.Current.ToString();
             }
             UpdateDeviceData(HS, device, stringValue);
         }

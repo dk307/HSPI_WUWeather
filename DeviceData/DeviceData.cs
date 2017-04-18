@@ -20,7 +20,7 @@ namespace Hspi
             this.initialValue = initialValue;
         }
 
-        public abstract void UpdateDeviceData(IHSApplication HS, DeviceClass device, System.Xml.XmlNodeList value);
+        public abstract void UpdateDeviceData(IHSApplication HS, DeviceClass device, System.Xml.XPath.XPathNodeIterator value);
 
         public override int HSDeviceType => deviceType;
         public override string HSDeviceTypeString => INV($"{WUWeatherData.PlugInName} Information Device");

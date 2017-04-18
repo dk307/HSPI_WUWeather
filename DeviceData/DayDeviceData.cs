@@ -13,7 +13,7 @@ namespace Hspi
         {
         }
 
-        public override void UpdateDeviceData(IHSApplication HS, DeviceClass device, [AllowNull]System.Xml.XmlNodeList value)
+        public override void UpdateDeviceData(IHSApplication HS, DeviceClass device, [AllowNull]System.Xml.XPath.XPathNodeIterator value)
         {
             DateTimeOffset? dateTime = Parse(value);
 
@@ -21,12 +21,12 @@ namespace Hspi
             UpdateDeviceData(HS, device, deviceValue);
         }
 
-        public static DateTimeOffset? Parse([AllowNull]System.Xml.XmlNodeList value)
+        public static DateTimeOffset? Parse([AllowNull]System.Xml.XPath.XPathNodeIterator value)
         {
             DateTimeOffset? dateTime = null;
-            if ((value != null) && (value.Count != 0))
+            if ((value != null) && (value.MoveNext()))
             {
-                string text = value.Item(0).InnerText;
+                string text = value.Current.ToString();
                 if (long.TryParse(text, out long epoch))
                 {
                     dateTime = DateTimeOffset.FromUnixTimeSeconds(epoch).LocalDateTime;

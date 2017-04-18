@@ -27,7 +27,7 @@ namespace Hspi
             return pairs;
         }
 
-        public abstract void UpdateDeviceData(IHSApplication HS, DeviceClass device, System.Xml.XmlNodeList value);
+        public abstract void UpdateDeviceData(IHSApplication HS, DeviceClass device, System.Xml.XmlElement value);
 
         public abstract IReadOnlyCollection<DeviceData> Children { get; }
         public virtual DateTimeOffset? LastUpdateTime => null;

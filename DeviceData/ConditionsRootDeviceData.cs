@@ -3,6 +3,7 @@ using NullGuard;
 using Scheduler.Classes;
 using System;
 using System.Collections.Generic;
+using System.Xml;
 
 namespace Hspi
 {
@@ -13,13 +14,12 @@ namespace Hspi
             base("Current", new XmlPathData(@"response/current_observation"))
         { }
 
-        public override void UpdateDeviceData(IHSApplication HS, DeviceClass device, [AllowNull]System.Xml.XmlNodeList value)
+        public override void UpdateDeviceData(IHSApplication HS, DeviceClass device, System.Xml.XmlElement value)
         {
-            if (value == null || value.Count == 0) { return; }
+            var childNavigator = value.CreateNavigator();
+            var nodeIter = childNavigator.Select(lastUpdatePath.GetPath(Unit.SI));
 
-            var lastUpdateTimeNodes = value.Item(0).SelectNodes(@"observation_epoch");
-            lastUpdateTime = DayDeviceData.Parse(lastUpdateTimeNodes);
-
+            lastUpdateTime = DayDeviceData.Parse(nodeIter);
             if (lastUpdateTime.HasValue)
             {
                 UpdateDeviceData(HS, device, lastUpdateTime.Value.ToString("G", System.Globalization.CultureInfo.CurrentCulture));
@@ -50,6 +50,7 @@ namespace Hspi
             new WindSpeedDeviceData("Wind Speed", new XmlPathData("wind_mph", "wind_kph")),
          }.AsReadOnly();
 
-        private DateTimeOffset? lastUpdateTime;
+        private readonly XmlPathData lastUpdatePath = new XmlPathData(@"observation_epoch");
+        private DateTimeOffset? lastUpdateTime = null;
     }
 }

@@ -14,7 +14,7 @@ namespace Hspi
             base(name, pathData)
         { }
 
-        public override void UpdateDeviceData(IHSApplication HS, DeviceClass device, [AllowNull]System.Xml.XmlNodeList value)
+        public override void UpdateDeviceData(IHSApplication HS, DeviceClass device, System.Xml.XmlElement value)
         {
         }
 

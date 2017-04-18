@@ -12,14 +12,11 @@ namespace Hspi
             base(name, pathData)
         { }
 
-        public override void UpdateDeviceData(IHSApplication HS, DeviceClass device, [AllowNull]System.Xml.XmlNodeList value)
+        public override void UpdateDeviceData(IHSApplication HS, DeviceClass device, System.Xml.XmlElement value)
         {
-            if (value == null || value.Count == 0)
-            {
-                return;
-            }
-
-            dayDeviceData.UpdateDeviceData(HS, device, value.Item(0).SelectNodes(dayDeviceData.PathData.GetPath(Unit.US)));
+            var childNavigator = value.CreateNavigator();
+            var nodeIter = childNavigator.Select(dayDeviceData.PathData.GetPath(Unit.US));
+            dayDeviceData.UpdateDeviceData(HS, device, nodeIter);
         }
 
         public override IReadOnlyCollection<DeviceData> Children => DayForecastWeatherDevices;

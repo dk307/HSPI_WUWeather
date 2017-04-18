@@ -79,14 +79,14 @@ namespace Hspi
         {
         }
 
-        public override void UpdateDeviceData(IHSApplication HS, DeviceClass device, [AllowNull]System.Xml.XmlNodeList value)
+        public override void UpdateDeviceData(IHSApplication HS, DeviceClass device, [AllowNull]System.Xml.XPath.XPathNodeIterator value)
         {
             int refId = device.get_Ref(HS);
             bool valueSet = false;
 
-            if ((value != null) && (value.Count != 0))
+            if ((value != null) && (value.MoveNext()))
             {
-                var data = value == null ? null : value.Item(0).InnerText;
+                var data = value == null ? null : value.Current.ToString();
 
                 if (!string.IsNullOrWhiteSpace(data))
                 {

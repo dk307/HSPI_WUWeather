@@ -1,37 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.XPath;
 
 namespace Hspi
 {
     public sealed class XmlPathData
     {
-        public XmlPathData(string universal)
+        public XmlPathData(string universal) : this(universal, universal)
         {
-            paths = new Dictionary<Unit, string>();
-            foreach (var value in Enum.GetValues(typeof(Unit)))
-            {
-                paths[(Unit)value] = universal;
-            }
-        }
-
-        public XmlPathData(IDictionary<Unit, string> paths)
-        {
-            this.paths = paths;
         }
 
         public XmlPathData(string us, string si)
         {
-            paths = new Dictionary<Unit, string>();
-            paths[Unit.US] = us;
-            paths[Unit.SI] = si;
+            paths = new Dictionary<Unit, Lazy<XPathExpression>>();
+            paths[Unit.US] = new Lazy<XPathExpression>(() => { return XPathExpression.Compile(us); }, true);
+            paths[Unit.SI] = new Lazy<XPathExpression>(() => { return XPathExpression.Compile(si); }, true);
         }
 
-        public string GetPath(Unit unit)
+        public XPathExpression GetPath(Unit unit)
         {
-            paths.TryGetValue(unit, out string value);
-            return value;
+            if (paths.TryGetValue(unit, out var value))
+            {
+                return value.Value;
+            }
+            return null;
         }
 
-        private readonly IDictionary<Unit, string> paths;
+        private readonly IDictionary<Unit, Lazy<XPathExpression>> paths;
     }
 }
