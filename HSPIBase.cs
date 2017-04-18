@@ -81,8 +81,6 @@ namespace Hspi
                 HS = HsClient.ServiceProxy;
 
                 var apiVersion = HS.APIVersion; // just to make sure our connection is valid
-
-                Task.Run(async () => await CheckConnection());
             }
             catch (Exception ex)
             {
@@ -111,20 +109,13 @@ namespace Hspi
             {
                 throw new HspiConnectionException(Invariant($"Error connecting homeseer to our plugin: {ex.Message}"), ex);
             }
+
+            HsClient.Disconnected += HsClient_Disconnected;
         }
 
-        private async Task CheckConnection()
+        private void HsClient_Disconnected(object sender, EventArgs e)
         {
-            while (!cancellationTokenSource.Token.IsCancellationRequested)
-            {
-                if (!Connected)
-                {
-                    cancellationTokenSource.Cancel();
-                    break;
-                }
-
-                await Task.Delay(TimeSpan.FromSeconds(5), cancellationTokenSource.Token).ConfigureAwait(false);
-            }
+            cancellationTokenSource.Cancel();
         }
 
         public void WaitforShutDownOrDisconnect()
@@ -213,6 +204,11 @@ namespace Hspi
         {
             cancellationTokenSource.Cancel();
 
+            if (HsClient != null)
+            {
+                HsClient.Disconnected -= HsClient_Disconnected;
+            }
+
             this.HsClient.Disconnect();
             this.CallbackClient.Disconnect();
         }
@@ -253,9 +249,13 @@ namespace Hspi
             {
                 if (disposing)
                 {
-                    cancellationTokenSource.Dispose();
-                    HsClient?.Dispose();
+                    if (HsClient != null)
+                    {
+                        HsClient.Disconnected -= HsClient_Disconnected;
+                        HsClient.Dispose();
+                    }
                     CallbackClient?.Dispose();
+                    cancellationTokenSource.Dispose();
                 }
                 disposedValue = true;
             }
