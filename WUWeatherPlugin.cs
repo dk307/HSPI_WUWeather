@@ -153,11 +153,12 @@ namespace Hspi
         /// <summary>
         /// Creates the devices based on configuration.
         /// </summary>
-        private void CreateDevices(CancellationToken token)
+        /// <param name="currentDevices">The current HS devices.</param>
+        /// <param name="token">The token.</param>
+        private void CreateDevices(IDictionary<string, DeviceClass> currentDevices, CancellationToken token)
         {
             try
             {
-                IDictionary<string, DeviceClass> currentDevices = GetCurrentDevices();
                 foreach (var deviceDefinition in WUWeatherData.DeviceDefinitions)
                 {
                     token.ThrowIfCancellationRequested();
@@ -176,13 +177,15 @@ namespace Hspi
                         if (parentDevice == null)
                         {
                             parentDevice = CreateDevice(null, null, deviceDefinition);
+                            currentDevices.Add(parentDevice.get_Address(HS), parentDevice);
                         }
 
                         string childAddress = CreateChildAddress(parentDevice.get_Address(HS), childDeviceDefinition.Name);
 
                         if (!currentDevices.ContainsKey(childAddress))
                         {
-                            CreateDevice(parentDevice, deviceDefinition, childDeviceDefinition);
+                            var childDevice = CreateDevice(parentDevice, deviceDefinition, childDeviceDefinition);
+                            currentDevices.Add(childDevice.get_Address(HS), childDevice);
                         }
                     }
                 }
@@ -374,8 +377,9 @@ namespace Hspi
                             await Task.Delay(initialDelay.Value, combinedToken.Token);
                             initialDelay = null;
                         }
-                        CreateDevices(combinedToken.Token);
-                        await FetchAndUpdateDevices(combinedToken.Token).ConfigureAwait(false);
+                        IDictionary<string, DeviceClass> currentDevices = GetCurrentDevices();
+                        CreateDevices(currentDevices, combinedToken.Token);
+                        await FetchAndUpdateDevices(currentDevices, combinedToken.Token).ConfigureAwait(false);
                     }
                     catch (OperationCanceledException)
                     {
@@ -394,7 +398,13 @@ namespace Hspi
             }
         }
 
-        private async Task FetchAndUpdateDevices(CancellationToken token)
+        /// <summary>
+        /// Fetches the WU Data and update devices.
+        /// </summary>
+        /// <param name="existingDevices">The existing devices in HS.</param>
+        /// <param name="token">The token.</param>
+        /// <returns>Task</returns>
+        private async Task FetchAndUpdateDevices(IDictionary<string, DeviceClass> existingDevices, CancellationToken token)
         {
             if (string.IsNullOrWhiteSpace(pluginConfig.APIKey) || string.IsNullOrWhiteSpace(pluginConfig.StationId))
             {
@@ -409,7 +419,6 @@ namespace Hspi
             XmlDocument rootXmlDocument = await service.GetDataForStationAsync(pluginConfig.StationId, token).ConfigureAwait(false);
             XPathNavigator rootNavigator = rootXmlDocument.CreateNavigator();
 
-            var existingDevices = GetCurrentDevices();
             foreach (var deviceDefinition in WUWeatherData.DeviceDefinitions)
             {
                 CancellationToken.ThrowIfCancellationRequested();
