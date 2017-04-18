@@ -402,7 +402,7 @@ namespace Hspi
                 return;
             }
 
-            LogDebug("Starting data fetch from WU Weather");
+            LogInfo(Invariant($"Starting data fetch from WU Weather from station:{pluginConfig.StationId}"));
             LogConfiguration();
 
             WUWeatherService service = new WUWeatherService(pluginConfig.APIKey);
