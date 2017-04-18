@@ -3,7 +3,6 @@ using NullGuard;
 using Scheduler.Classes;
 using System;
 using System.Collections.Generic;
-using System.Xml;
 
 namespace Hspi
 {

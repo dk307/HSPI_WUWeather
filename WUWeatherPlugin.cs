@@ -12,7 +12,7 @@ using System.Xml.XPath;
 
 namespace Hspi
 {
-    using static Hspi.StringUtil;
+    using static System.FormattableString;
 
     /// <summary>
     /// Plugin class for Weather Underground
@@ -49,7 +49,7 @@ namespace Hspi
             }
             catch (Exception ex)
             {
-                result = INV($"Failed to initialize PlugIn With {ex.Message}");
+                result = Invariant($"Failed to initialize PlugIn With {ex.Message}");
                 LogError(result);
             }
 
@@ -58,7 +58,7 @@ namespace Hspi
 
         private void LogConfiguration()
         {
-            LogDebug(INV($"APIKey:{pluginConfig.APIKey} Refresh Interval:{pluginConfig.RefreshIntervalMinutes} Minutes Station:{pluginConfig.StationId}"));
+            LogDebug(Invariant($"APIKey:{pluginConfig.APIKey} Refresh Interval:{pluginConfig.RefreshIntervalMinutes} Minutes Station:{pluginConfig.StationId}"));
         }
 
         private void PluginConfig_ConfigChanged(object sender, EventArgs e)
@@ -78,7 +78,7 @@ namespace Hspi
 
         private static string CreateChildAddress(string parentAddress, string childAddress)
         {
-            return INV($"{parentAddress}.{childAddress}");
+            return Invariant($"{parentAddress}.{childAddress}");
         }
 
         /// <summary>
@@ -92,11 +92,11 @@ namespace Hspi
         {
             if (rootDeviceData != null)
             {
-                LogDebug(INV($"Creating {deviceData.Name} under {rootDeviceData.Name}"));
+                LogDebug(Invariant($"Creating {deviceData.Name} under {rootDeviceData.Name}"));
             }
             else
             {
-                LogDebug(INV($"Creating Root {deviceData.Name}"));
+                LogDebug(Invariant($"Creating Root {deviceData.Name}"));
             }
 
             DeviceClass device = null;
@@ -192,7 +192,7 @@ namespace Hspi
             }
             catch (Exception ex)
             {
-                LogError(INV($"Failed to Create Devices For PlugIn With {ex.Message}"));
+                LogError(Invariant($"Failed to Create Devices For PlugIn With {ex.Message}"));
             }
         }
 
@@ -207,7 +207,7 @@ namespace Hspi
 
             if (deviceEnumerator == null)
             {
-                throw new HspiException(INV($"{Name} failed to get a device enumerator from HomeSeer."));
+                throw new HspiException(Invariant($"{Name} failed to get a device enumerator from HomeSeer."));
             }
 
             var currentDevices = new Dictionary<string, DeviceClass>();
@@ -276,7 +276,7 @@ namespace Hspi
             switch (actionNumber)
             {
                 case ActionRefreshTANumber:
-                    return INV($"{Name}:Refresh");
+                    return Invariant($"{Name}:Refresh");
 
                 default:
                     return base.get_ActionName(actionNumber);
@@ -300,7 +300,7 @@ namespace Hspi
             switch (actionInfo.TANumber)
             {
                 case ActionRefreshTANumber:
-                    return INV($"{WUWeatherData.PlugInName} Refreshes Data");
+                    return Invariant($"{WUWeatherData.PlugInName} Refreshes Data");
 
                 default:
                     return base.ActionFormatUI(actionInfo);
@@ -382,7 +382,7 @@ namespace Hspi
                     }
                     catch (Exception ex)
                     {
-                        LogWarning(INV($"Failed to Fetch Data with {ex.Message}"));
+                        LogWarning(Invariant($"Failed to Fetch Data with {ex.Message}"));
                     }
 
                     // Set it to run after RefreshIntervalMinutes minutes or next 12.00 am
@@ -431,7 +431,7 @@ namespace Hspi
 
                     if (childElement == null)
                     {
-                        LogWarning(INV($"{deviceDefinition.Name} has invalid type in xml document."));
+                        LogWarning(Invariant($"{deviceDefinition.Name} has invalid type in xml document."));
                         continue;
                     }
                     deviceDefinition.UpdateDeviceData(HS, rootDevice, childElement);
@@ -480,7 +480,7 @@ namespace Hspi
                 plugInName = Name,
                 link = link,
                 linktext = link,
-                page_title = INV($"{Name} Config"),
+                page_title = Invariant($"{Name} Config"),
             };
             Callback.RegisterConfigLink(wpd);
             Callback.RegisterLink(wpd);

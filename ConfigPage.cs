@@ -8,7 +8,7 @@ using System.Web;
 
 namespace Hspi
 {
-    using static StringUtil;
+    using static System.FormattableString;
 
     /// <summary>
     /// Helper class to generate configuration page for plugin
@@ -80,7 +80,7 @@ namespace Hspi
 
             string form = parts["id"];
 
-            if (form == INV($"{IdPrefix}{SaveButtonName}"))
+            if (form == Invariant($"{IdPrefix}{SaveButtonName}"))
             {
                 StringBuilder results = new StringBuilder();
 
@@ -160,7 +160,7 @@ namespace Hspi
             var tabs = new clsJQuery.jqTabs("tab1id", PageName);
             var tab1 = new clsJQuery.Tab();
             tab1.tabTitle = "Settings";
-            tab1.tabDIVID = INV($"tabs{i++}");
+            tab1.tabDIVID = Invariant($"tabs{i++}");
             tab1.tabContent = BuildSettingTab();
             tabs.tabs.Add(tab1);
 
@@ -168,7 +168,7 @@ namespace Hspi
             {
                 var tab = new clsJQuery.Tab();
                 tab.tabTitle = deviceDefintion.Name;
-                tab.tabDIVID = INV($"tabs{i++}");
+                tab.tabDIVID = Invariant($"tabs{i++}");
                 tab.tabContent = BuildTab(deviceDefintion);
                 tabs.tabs.Add(tab);
             }
@@ -183,7 +183,7 @@ namespace Hspi
         {
             StringBuilder stb = new StringBuilder();
             string idName = NameToId(root.Name);
-            stb.Append(PageBuilderAndMenu.clsPageBuilder.FormStart(INV($"ftm{idName}"), INV($"Id{idName}"), "Post"));
+            stb.Append(PageBuilderAndMenu.clsPageBuilder.FormStart(Invariant($"ftm{idName}"), Invariant($"Id{idName}"), "Post"));
 
             stb.Append(@"<div>");
             stb.Append(@"<table class='full_width_table'");
@@ -194,7 +194,7 @@ namespace Hspi
 
             foreach (var childDeviceDefinition in root.Children)
             {
-                stb.Append(INV($"<tr><td colspan=2>{FormCheckBox(NameToId(root, childDeviceDefinition), childDeviceDefinition.Name, pluginConfig.GetDeviceEnabled(root, childDeviceDefinition))}</td></tr>"));
+                stb.Append(Invariant($"<tr><td colspan=2>{FormCheckBox(NameToId(root, childDeviceDefinition), childDeviceDefinition.Name, pluginConfig.GetDeviceEnabled(root, childDeviceDefinition))}</td></tr>"));
             }
             stb.Append(@" </table>");
             stb.Append(@"</div>");
@@ -208,11 +208,11 @@ namespace Hspi
             StringBuilder stb = new StringBuilder();
             if (string.IsNullOrWhiteSpace(pluginConfig.StationId))
             {
-                stb.Append(INV($"<a href='http://www.wunderground.com' target='_blank'><img width='100px' alt='Powered by Weather Underground' src='{WUWeatherData.ImagesPathRoot}wundergroundLogo_4c_horz.png'></a>"));
+                stb.Append(Invariant($"<a href='http://www.wunderground.com' target='_blank'><img width='100px' alt='Powered by Weather Underground' src='{WUWeatherData.ImagesPathRoot}wundergroundLogo_4c_horz.png'></a>"));
             }
             else
             {
-                stb.Append(INV($"<a href='http://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID={pluginConfig.StationId}' target='_blank'><img src='http://banners.wunderground.com/cgi-bin/banner/ban/wxBanner?bannertype=wxstnsticker_both&weatherstationcount={pluginConfig.StationId}' height='160' width='160' border='0' alt='Weather Underground PWS {pluginConfig.StationId}'/></a>"));
+                stb.Append(Invariant($"<a href='http://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID={pluginConfig.StationId}' target='_blank'><img src='http://banners.wunderground.com/cgi-bin/banner/ban/wxBanner?bannertype=wxstnsticker_both&weatherstationcount={pluginConfig.StationId}' height='160' width='160' border='0' alt='Weather Underground PWS {pluginConfig.StationId}'/></a>"));
             }
 
             stb.Append("&nbsp;<a href='https://www.wunderground.com/wundermap' target='_blank'>Find Station</a>");
@@ -223,7 +223,7 @@ namespace Hspi
         {
             if (pluginConfig.RefreshIntervalMinutes != 0)
             {
-                return INV($"&nbsp; ({ Math.Max(1, 1440 / pluginConfig.RefreshIntervalMinutes)} calls per day)");
+                return Invariant($"&nbsp; ({ Math.Max(1, 1440 / pluginConfig.RefreshIntervalMinutes)} calls per day)");
             }
             else
             {
@@ -250,15 +250,15 @@ namespace Hspi
             stb.Append(@"<div>");
             stb.Append(@"<table class='full_width_table'");
             stb.Append("<tr height='5'><td style='width:25%'></td><td style='width:20%'></td><td style='width:55%'></td></tr>");
-            stb.Append(INV($"<tr><td class='tablecell'>APIKey:</td><td class='tablecell' style='width: 50px'>{HtmlTextBox(APIKeyId, pluginConfig.APIKey)}</td><td class='tablecell'>&nbsp;<a href='https://www.wunderground.com/weather/api/' target='_blank'>API Home</a></td></tr>"));
-            stb.Append(INV($"<tr><td class='tablecell'>Refresh Interval(minutes):</td><td class='tablecell'>{HtmlTextBox(RefreshIntervalId, INV($"{pluginConfig.RefreshIntervalMinutes}"))} </ td ><td class='tablecell'><div id={CallsPerDayId}>{GetCallsPerDay()}</div></td></ tr > "));
-            stb.Append(INV($"<tr><td class='tablecell'>Station:</td><td class='tablecell'>{HtmlTextBox(StationId, INV($"{pluginConfig.StationId}"))}</td ><td class='tablecell'><div id='{ImageDivId}'>{GetImageHtml()}</div></td></ tr > "));
-            stb.Append(INV($"<tr><td class='tablecell'>Unit:</td><td colspan=2 class='tablecell'>{FormDropDown(UnitId, unitsDropDown, unitsSelection, 150, "Units to be used for Device")}</ td ></ tr > "));
-            stb.Append(INV($"<tr><td class='tablecell'>Debug Logging Enabled:</td><td colspan=2 class='tablecell'>{FormCheckBox(DebugLoggingId, string.Empty, this.pluginConfig.DebugLogging)}</ td ></ tr > "));
-            stb.Append(INV($"<tr><td colspan=3><div id='{ErrorDivId}' style='color:Red'></div></td><td></td></tr>"));
-            stb.Append(INV($"<tr><td colspan=3>{FormButton("Save", SaveButtonName, "Save Settings")}</td><td></td></tr>"));
+            stb.Append(Invariant($"<tr><td class='tablecell'>APIKey:</td><td class='tablecell' style='width: 50px'>{HtmlTextBox(APIKeyId, pluginConfig.APIKey)}</td><td class='tablecell'>&nbsp;<a href='https://www.wunderground.com/weather/api/' target='_blank'>API Home</a></td></tr>"));
+            stb.Append(Invariant($"<tr><td class='tablecell'>Refresh Interval(minutes):</td><td class='tablecell'>{HtmlTextBox(RefreshIntervalId, Invariant($"{pluginConfig.RefreshIntervalMinutes}"))} </ td ><td class='tablecell'><div id={CallsPerDayId}>{GetCallsPerDay()}</div></td></ tr > "));
+            stb.Append(Invariant($"<tr><td class='tablecell'>Station:</td><td class='tablecell'>{HtmlTextBox(StationId, Invariant($"{pluginConfig.StationId}"))}</td ><td class='tablecell'><div id='{ImageDivId}'>{GetImageHtml()}</div></td></ tr > "));
+            stb.Append(Invariant($"<tr><td class='tablecell'>Unit:</td><td colspan=2 class='tablecell'>{FormDropDown(UnitId, unitsDropDown, unitsSelection, 150, "Units to be used for Device")}</ td ></ tr > "));
+            stb.Append(Invariant($"<tr><td class='tablecell'>Debug Logging Enabled:</td><td colspan=2 class='tablecell'>{FormCheckBox(DebugLoggingId, string.Empty, this.pluginConfig.DebugLogging)}</ td ></ tr > "));
+            stb.Append(Invariant($"<tr><td colspan=3><div id='{ErrorDivId}' style='color:Red'></div></td><td></td></tr>"));
+            stb.Append(Invariant($"<tr><td colspan=3>{FormButton("Save", SaveButtonName, "Save Settings")}</td><td></td></tr>"));
             stb.Append("<tr height='5'><td colspan=3></td></tr>");
-            stb.Append(INV($"<tr><td colspan=3></td></tr>"));
+            stb.Append(Invariant($"<tr><td colspan=3></td></tr>"));
             stb.Append(@"<tr><td colspan=3><div>Icons made by <a href='http://www.freepik.com' title='Freepik' target='_blank'>Freepik</a> from <a href='http://www.flaticon.com' title='Flaticon' target='_blank'>www.flaticon.com</a> is licensed by <a href='http://creativecommons.org/licenses/by/3.0/' title='Creative Commons BY 3.0' target='_blank'>CC 3.0 BY</a></div></td></tr>");
             stb.Append(@"<tr height='5'><td colspan=3></td></tr>");
             stb.Append(@" </table>");
@@ -275,12 +275,12 @@ namespace Hspi
 
         private static string NameToId(DeviceDataBase parent, DeviceDataBase child)
         {
-            return INV($"{NameToId(parent.Name)}_{NameToId(child.Name)}");
+            return Invariant($"{NameToId(parent.Name)}_{NameToId(child.Name)}");
         }
 
         protected static string HtmlTextBox(string name, string defaultText, int size = 25)
         {
-            return INV($"<input type=\'text\' id=\'{IdPrefix}{name}\' size=\'{size}\' name=\'{name}\' value=\'{defaultText}\'>");
+            return Invariant($"<input type=\'text\' id=\'{IdPrefix}{name}\' size=\'{size}\' name=\'{name}\' value=\'{defaultText}\'>");
         }
 
         protected string FormDropDown(string name, NameValueCollection options, int selected, int width, string tooltip)
@@ -288,10 +288,10 @@ namespace Hspi
             var dd = new clsJQuery.jqDropList(name, PageName, false)
             {
                 selectedItemIndex = -1,
-                id = INV($"{IdPrefix}{name}"),
+                id = Invariant($"{IdPrefix}{name}"),
                 autoPostBack = false,
                 toolTip = tooltip,
-                style = INV($"width: {width}px;"),
+                style = Invariant($"width: {width}px;"),
                 enabled = true
             };
 
@@ -311,7 +311,7 @@ namespace Hspi
         {
             var cb = new clsJQuery.jqCheckBox(name, label, PageName, true, true)
             {
-                id = INV($"{IdPrefix}{name}"),
+                id = Invariant($"{IdPrefix}{name}"),
                 @checked = @checked,
             };
             return cb.Build();
@@ -321,7 +321,7 @@ namespace Hspi
         {
             var b = new clsJQuery.jqButton(name, label, PageName, true)
             {
-                id = INV($"{IdPrefix}{name}"),
+                id = Invariant($"{IdPrefix}{name}"),
                 imagePathNormal = string.Empty
             };
             b.imagePathPressed = b.imagePathNormal;
@@ -342,7 +342,7 @@ namespace Hspi
         private const string ErrorDivId = "message_id";
         private const string ImageDivId = "image_id";
         private const string RefreshIntervalId = "RefreshIntervalId";
-        private static readonly string pageName = INV($"{WUWeatherData.PlugInName} Config");
+        private static readonly string pageName = Invariant($"{WUWeatherData.PlugInName} Config");
         private readonly IHSApplication HS;
         private readonly PluginConfig pluginConfig;
     }

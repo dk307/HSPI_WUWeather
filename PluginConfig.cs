@@ -7,7 +7,8 @@ using System.Threading;
 
 namespace Hspi
 {
-    using static StringUtil;
+    using static System.FormattableString;
+
     /// <summary>
     /// Class to store PlugIn Configuration
     /// </summary>
@@ -355,19 +356,19 @@ namespace Hspi
             }
         }
 
-
         // This code added to correctly implement the disposable pattern.
         public void Dispose()
         {
             Dispose(true);
         }
-        #endregion
+
+        #endregion IDisposable Support
 
         private const string APIKeyKey = "APIKey";
         private const string StationIdKey = "StationId";
         private const string UnitIdKey = "Unit";
         private const string DebugLoggingKey = "DebugLogging";
-        private readonly static string FileName = INV($"{Path.GetFileName(System.Reflection.Assembly.GetEntryAssembly().Location)}.ini");
+        private readonly static string FileName = Invariant($"{Path.GetFileName(System.Reflection.Assembly.GetEntryAssembly().Location)}.ini");
         private const string RefreshIntervalKey = "RefreshIntervalMinutes";
         private const string DefaultSection = "Settings";
 

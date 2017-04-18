@@ -8,7 +8,7 @@ using System.Xml;
 
 namespace Hspi.WUWeather
 {
-    using static Hspi.StringUtil;
+    using static System.FormattableString;
 
     /// <summary>
     /// The WU Weather service. Returns weather data for given station
@@ -41,7 +41,7 @@ namespace Hspi.WUWeather
         /// </returns>
         public Task<XmlDocument> GetDataForStationAsync(string station, CancellationToken cancellationToken)
         {
-            string stationUrl = INV($"http://api.wunderground.com/api/{apiKey}/yesterday/forecast/conditions/q/pws:{station}.xml");
+            string stationUrl = Invariant($"http://api.wunderground.com/api/{apiKey}/yesterday/forecast/conditions/q/pws:{station}.xml");
             return GetXmlFromUrlAsync(stationUrl, cancellationToken);
         }
 
@@ -88,7 +88,7 @@ namespace Hspi.WUWeather
                     var response = await client.GetAsync(requestUrl, cancellationToken).ConfigureAwait(false);
                     if (!response.IsSuccessStatusCode)
                     {
-                        throw new WUWeatherDataInvalidException(INV($"Couldn't retrieve data: status {response.StatusCode}"));
+                        throw new WUWeatherDataInvalidException(Invariant($"Couldn't retrieve data: status {response.StatusCode}"));
                     }
                     var xmlDoument = await ParseStringFromResponse(response).ConfigureAwait(false);
                     CheckErrorinResponse(xmlDoument);
@@ -120,7 +120,7 @@ namespace Hspi.WUWeather
                     case "STATION:OFFLINE":
                         throw new StationIdInvalidException();
                 }
-                throw new WUWeatherDataInvalidException(INV($"Server Returned:{errorDescription}"));
+                throw new WUWeatherDataInvalidException(Invariant($"Server Returned:{errorDescription}"));
             }
         }
     }

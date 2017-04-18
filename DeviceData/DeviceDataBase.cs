@@ -31,14 +31,6 @@ namespace Hspi
         public abstract IList<VSVGPairs.VSPair> GetStatusPairs(PluginConfig config);
 
         /// <summary>
-        /// Updates the device data from XML Node.
-        /// </summary>
-        /// <param name="HS">The HomeSeer application.</param>
-        /// <param name="device">The device  to update.</param>
-        /// <param name="value">XML Nodes containing values or null.</param>
-        public abstract void UpdateDeviceData(IHSApplication HS, DeviceClass device, System.Xml.XmlNodeList value);
-
-        /// <summary>
         /// Gets the graphics pairs for creating device
         /// </summary>
         /// <param name="config">The plugin configuration.</param>

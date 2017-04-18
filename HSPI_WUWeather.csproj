@@ -133,7 +133,6 @@
     <Compile Include="HSPIBase.cs" />
     <Compile Include="IPlugInAPI2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StringUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

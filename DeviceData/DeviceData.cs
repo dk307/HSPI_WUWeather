@@ -7,7 +7,7 @@ using System.IO;
 
 namespace Hspi
 {
-    using static Hspi.StringUtil;
+    using static System.FormattableString;
 
     /// <summary>
     ///  Base class for Child Devices
@@ -24,10 +24,16 @@ namespace Hspi
             this.initialValue = initialValue;
         }
 
+        /// <summary>
+        /// Updates the device data from XML Node.
+        /// </summary>
+        /// <param name="HS">The HomeSeer application.</param>
+        /// <param name="device">The device  to update.</param>
+        /// <param name="value">XML Nodes Iterator containing values or null.</param>
         public abstract void UpdateDeviceData(IHSApplication HS, DeviceClass device, System.Xml.XPath.XPathNodeIterator value);
 
         public override int HSDeviceType => deviceType;
-        public override string HSDeviceTypeString => INV($"{WUWeatherData.PlugInName} Information Device");
+        public override string HSDeviceTypeString => Invariant($"{WUWeatherData.PlugInName} Information Device");
         public override string InitialString => initialStringValue;
         public override double InitialValue => initialValue;
 
@@ -40,7 +46,7 @@ namespace Hspi
                 var pair = new VSVGPairs.VGPair()
                 {
                     PairType = VSVGPairs.VSVGPairType.SingleValue,
-                    Graphic = Path.Combine(WUWeatherData.ImagesPathRoot, INV($"{value.ToString().ToLowerInvariant()}.png")),
+                    Graphic = Path.Combine(WUWeatherData.ImagesPathRoot, Invariant($"{value.ToString().ToLowerInvariant()}.png")),
                     Set_Value = (int)value,
                 };
                 pairs.Add(pair);

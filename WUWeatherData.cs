@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace Hspi
 {
-    using static StringUtil;
+    using static System.FormattableString;
 
     /// <summary>
     /// Class to store static data for WU
@@ -40,7 +40,7 @@ namespace Hspi
             {
                 if (attribute.Unit == unit)
                 {
-                    return INV($" {attribute.Description}");
+                    return Invariant($" {attribute.Description}");
                 }
             }
             return string.Empty;

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Hspi
 {
-    using static Hspi.StringUtil;
+    using static System.FormattableString;
 
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     internal class HistoryRootDeviceData : RootDeviceData
@@ -22,12 +22,12 @@ namespace Hspi
 
         private static string GetPathMax(string child)
         {
-            return INV($"//observation/{child}[not(. <../preceding-sibling::observation/{child}) and not(. <../following-sibling::observation/{child})]");
+            return Invariant($"//observation/{child}[not(. <../preceding-sibling::observation/{child}) and not(. <../following-sibling::observation/{child})]");
         }
 
         private static string GetPathMin(string child)
         {
-            return INV($"//observation/{child}[not(. >../preceding-sibling::observation/{child}) and not(. >../following-sibling::observation/{child})]");
+            return Invariant($"//observation/{child}[not(. >../preceding-sibling::observation/{child}) and not(. >../following-sibling::observation/{child})]");
         }
 
         private static readonly IReadOnlyCollection<DeviceData> HistoryWeatherDevices = new List<DeviceData>()

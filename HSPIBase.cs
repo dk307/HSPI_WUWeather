@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Hspi
 {
-    using static StringUtil;
+    using static System.FormattableString;
 
     /// <summary>
     /// Basic Functionality of HSPI
@@ -86,7 +86,7 @@ namespace Hspi
             }
             catch (Exception ex)
             {
-                throw new HspiConnectionException(INV($"Error connecting homeseer SCS client: {ex.Message}"), ex);
+                throw new HspiConnectionException(Invariant($"Error connecting homeseer SCS client: {ex.Message}"), ex);
             }
 
             try
@@ -99,7 +99,7 @@ namespace Hspi
             }
             catch (Exception ex)
             {
-                throw new HspiConnectionException(INV($"Error connecting callback SCS client: {ex.Message}"), ex);
+                throw new HspiConnectionException(Invariant($"Error connecting callback SCS client: {ex.Message}"), ex);
             }
 
             // Establish the reverse connection from homeseer back to our plugin
@@ -109,7 +109,7 @@ namespace Hspi
             }
             catch (Exception ex)
             {
-                throw new HspiConnectionException(INV($"Error connecting homeseer to our plugin: {ex.Message}"), ex);
+                throw new HspiConnectionException(Invariant($"Error connecting homeseer to our plugin: {ex.Message}"), ex);
             }
         }
 
@@ -270,13 +270,13 @@ namespace Hspi
         protected virtual void LogDebug(string message)
         {
             Trace.WriteLine(message);
-            HS.WriteLog(Name, INV($"Debug:{message}"));
+            HS.WriteLog(Name, Invariant($"Debug:{message}"));
         }
 
         protected void LogError(string message)
         {
             Trace.TraceError(message);
-            HS.WriteLog(Name, INV($"Error:{message}"));
+            HS.WriteLog(Name, Invariant($"Error:{message}"));
         }
 
         protected void LogInfo(string message)
@@ -288,7 +288,7 @@ namespace Hspi
         protected void LogWarning(string message)
         {
             Trace.TraceWarning(message);
-            HS.WriteLog(Name, INV($"Warning:{message}"));
+            HS.WriteLog(Name, Invariant($"Warning:{message}"));
         }
 
         private readonly int accessLevel;

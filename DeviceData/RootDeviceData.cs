@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Hspi
 {
-    using static Hspi.StringUtil;
+    using static System.FormattableString;
 
     /// <summary>
     ///  Base class for Root Devices
@@ -38,7 +38,7 @@ namespace Hspi
 
         public override IList<VSVGPairs.VGPair> GetGraphicsPairs(PluginConfig config) => GetSingleGraphicsPairs("root.png");
 
-        public override string HSDeviceTypeString => INV($"{WUWeatherData.PlugInName} Root Device");
+        public override string HSDeviceTypeString => Invariant($"{WUWeatherData.PlugInName} Root Device");
         public override string InitialString => "Root";
         public override double InitialValue => 0D;
         public override int HSDeviceType => (int)DeviceTypeInfo_m.DeviceTypeInfo.eDeviceType_Plugin.Root;

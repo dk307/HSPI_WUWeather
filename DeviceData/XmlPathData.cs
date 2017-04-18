@@ -18,6 +18,11 @@ namespace Hspi
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XmlPathData"/> class.
+        /// </summary>
+        /// <param name="us">The us XPath.</param>
+        /// <param name="si">The si XPath.</param>
         public XmlPathData(string us, string si)
         {
             paths = new Dictionary<Unit, Lazy<XPathExpression>>();
@@ -25,6 +30,11 @@ namespace Hspi
             paths[Unit.SI] = new Lazy<XPathExpression>(() => { return XPathExpression.Compile(si); }, true);
         }
 
+        /// <summary>
+        /// Gets the path for Unit.
+        /// </summary>
+        /// <param name="unit">The unit.</param>
+        /// <returns>XPath</returns>
         public XPathExpression GetPath(Unit unit)
         {
             if (paths.TryGetValue(unit, out var value))
