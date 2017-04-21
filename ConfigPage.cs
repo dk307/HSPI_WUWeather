@@ -80,7 +80,7 @@ namespace Hspi
 
             string form = parts["id"];
 
-            if (form == Invariant($"{IdPrefix}{SaveButtonName}"))
+            if (form == NameToIdWithPrefix(SaveButtonName))
             {
                 StringBuilder results = new StringBuilder();
 
@@ -273,6 +273,11 @@ namespace Hspi
             return name.Replace(' ', '_');
         }
 
+        private static string NameToIdWithPrefix(string name)
+        {
+            return Invariant($"{ IdPrefix}{NameToId(name)}");
+        }
+
         private static string NameToId(DeviceDataBase parent, DeviceDataBase child)
         {
             return Invariant($"{NameToId(parent.Name)}_{NameToId(child.Name)}");
@@ -280,15 +285,15 @@ namespace Hspi
 
         protected static string HtmlTextBox(string name, string defaultText, int size = 25)
         {
-            return Invariant($"<input type=\'text\' id=\'{IdPrefix}{name}\' size=\'{size}\' name=\'{name}\' value=\'{defaultText}\'>");
+            return Invariant($"<input type=\'text\' id=\'{NameToIdWithPrefix(name)}\' size=\'{size}\' name=\'{name}\' value=\'{defaultText}\'>");
         }
 
         protected string FormDropDown(string name, NameValueCollection options, int selected, int width, string tooltip)
         {
-            var dd = new clsJQuery.jqDropList(name, PageName, false)
+            var dropdown = new clsJQuery.jqDropList(name, PageName, false)
             {
                 selectedItemIndex = -1,
-                id = Invariant($"{IdPrefix}{name}"),
+                id = NameToIdWithPrefix(name),
                 autoPostBack = false,
                 toolTip = tooltip,
                 style = Invariant($"width: {width}px;"),
@@ -300,37 +305,34 @@ namespace Hspi
                 for (var i = 0; i < options.Count; i++)
                 {
                     var sel = i == selected;
-                    dd.AddItem(options.GetKey(i), options.Get(i), sel);
+                    dropdown.AddItem(options.GetKey(i), options.Get(i), sel);
                 }
             }
 
-            return dd.Build();
+            return dropdown.Build();
         }
 
         protected string FormCheckBox(string name, string label, bool @checked)
         {
-            var cb = new clsJQuery.jqCheckBox(name, label, PageName, true, true)
+            var checkbox = new clsJQuery.jqCheckBox(name, label, PageName, true, true)
             {
-                id = Invariant($"{IdPrefix}{name}"),
+                id = NameToIdWithPrefix(name),
                 @checked = @checked,
             };
-            return cb.Build();
+            return checkbox.Build();
         }
 
         protected string FormButton(string name, string label, string toolTip)
         {
-            var b = new clsJQuery.jqButton(name, label, PageName, true)
+            var button = new clsJQuery.jqButton(name, label, PageName, true)
             {
-                id = Invariant($"{IdPrefix}{name}"),
-                imagePathNormal = string.Empty
+                id = NameToIdWithPrefix(name),
+                toolTip = toolTip,
             };
-            b.imagePathPressed = b.imagePathNormal;
-            b.toolTip = toolTip;
-            b.enabled = true;
+            button.toolTip = toolTip;
+            button.enabled = true;
 
-            var button = b.Build();
-            button = button.Replace("</button>\r\n", "</button>").Trim();
-            return button;
+            return button.Build();
         }
 
         private const string SaveButtonName = "Save";
