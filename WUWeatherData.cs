@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
+using System.IO;
 
 namespace Hspi
 {
@@ -18,7 +19,7 @@ namespace Hspi
         /// <summary>
         /// The images path root for devices
         /// </summary>
-        public const string ImagesPathRoot = @"\images\wuweather\";
+        public static readonly string ImagesPathRoot = Path.Combine(Path.DirectorySeparatorChar.ToString(), "images", "wuweather");
 
         /// <summary>
         /// The device definitions for WU

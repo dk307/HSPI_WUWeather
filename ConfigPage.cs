@@ -208,7 +208,7 @@ namespace Hspi
             StringBuilder stb = new StringBuilder();
             if (string.IsNullOrWhiteSpace(pluginConfig.StationId))
             {
-                stb.Append(Invariant($"<a href='http://www.wunderground.com' target='_blank'><img width='100px' alt='Powered by Weather Underground' src='{WUWeatherData.ImagesPathRoot}wundergroundLogo_4c_horz.png'></a>"));
+                stb.Append(Invariant($"<a href='http://www.wunderground.com' target='_blank'><img width='100px' alt='Powered by Weather Underground' src='http://icons.wxug.com/logos/PNG/wundergroundLogo_4c.png'></a>"));
             }
             else
             {
