@@ -17,6 +17,6 @@ namespace Hspi
             return WUWeatherData.GetStringDescription(unit, DeviceUnitType.Precipitation);
         }
 
-        public override IList<VSVGPairs.VGPair> GetGraphicsPairs(PluginConfig config) => GetSingleGraphicsPairs("rainmeasure.png");
+        public override IList<VSVGPairs.VGPair> GraphicsPairs => GetSingleGraphicsPairs("rainmeasure.png");
     }
 }

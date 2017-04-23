@@ -12,6 +12,6 @@ namespace Hspi
         {
         }
 
-        public override IList<VSVGPairs.VGPair> GetGraphicsPairs(PluginConfig config) => GetSingleGraphicsPairs("precipitationprobability.png");
+        public override IList<VSVGPairs.VGPair> GraphicsPairs => GetSingleGraphicsPairs("precipitationprobability.png");
     }
 }

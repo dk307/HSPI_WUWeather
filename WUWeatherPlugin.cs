@@ -117,13 +117,13 @@ namespace Hspi
                 device.set_Last_Change(HS, DateTime.Now);
                 device.set_Location2(HS, parent != null ? parent.get_Name(HS) : deviceData.Name);
                 device.set_Location(HS, Name);
-                var pairs = deviceData.GetStatusPairs(pluginConfig);
+                var pairs = deviceData.StatusPairs;
                 foreach (var pair in pairs)
                 {
                     HS.DeviceVSP_AddPair(refId, pair);
                 }
 
-                var gPairs = deviceData.GetGraphicsPairs(pluginConfig);
+                var gPairs = deviceData.GraphicsPairs;
                 foreach (var gpair in gPairs)
                 {
                     HS.DeviceVGP_AddPair(refId, gpair);

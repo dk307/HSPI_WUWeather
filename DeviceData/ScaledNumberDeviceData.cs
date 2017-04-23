@@ -9,20 +9,23 @@ namespace Hspi
         {
         }
 
-        public override IList<VSVGPairs.VSPair> GetStatusPairs(PluginConfig config)
+        public override IList<VSVGPairs.VSPair> StatusPairs
         {
-            var pairs = new List<VSVGPairs.VSPair>();
-            pairs.Add(new VSVGPairs.VSPair(HomeSeerAPI.ePairStatusControl.Status)
+            get
             {
-                PairType = VSVGPairs.VSVGPairType.Range,
-                RangeStart = int.MinValue,
-                RangeEnd = int.MaxValue,
-                IncludeValues = true,
-                RangeStatusDecimals = 2,
-                RangeStatusSuffix = " @S@",
-                HasScale = true,
-            });
-            return pairs;
+                var pairs = new List<VSVGPairs.VSPair>();
+                pairs.Add(new VSVGPairs.VSPair(HomeSeerAPI.ePairStatusControl.Status)
+                {
+                    PairType = VSVGPairs.VSVGPairType.Range,
+                    RangeStart = int.MinValue,
+                    RangeEnd = int.MaxValue,
+                    IncludeValues = true,
+                    RangeStatusDecimals = 2,
+                    RangeStatusSuffix = " @S@",
+                    HasScale = true,
+                });
+                return pairs;
+            }
         }
 
         public abstract string GetDeviceSuffix(Unit unit);

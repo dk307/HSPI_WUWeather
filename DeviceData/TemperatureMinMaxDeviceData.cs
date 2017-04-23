@@ -17,6 +17,6 @@ namespace Hspi
             return WUWeatherData.GetStringDescription(unit, DeviceUnitType.Temperature);
         }
 
-        public override IList<VSVGPairs.VGPair> GetGraphicsPairs(PluginConfig config) => GetSingleGraphicsPairs("thermometers.png");
+        public override IList<VSVGPairs.VGPair> GraphicsPairs => GetSingleGraphicsPairs("thermometers.png");
     }
 }

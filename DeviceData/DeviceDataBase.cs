@@ -26,16 +26,16 @@ namespace Hspi
         /// <summary>
         /// Gets the status pairs for creating device.
         /// </summary>
-        /// <param name="config">The plugin configuration.</param>
+        ///
         /// <returns></returns>
-        public abstract IList<VSVGPairs.VSPair> GetStatusPairs(PluginConfig config);
+        public abstract IList<VSVGPairs.VSPair> StatusPairs { get; }
 
         /// <summary>
         /// Gets the graphics pairs for creating device
         /// </summary>
-        /// <param name="config">The plugin configuration.</param>
+        ///
         /// <returns></returns>
-        public abstract IList<VSVGPairs.VGPair> GetGraphicsPairs(PluginConfig config);
+        public abstract IList<VSVGPairs.VGPair> GraphicsPairs { get; }
 
         public abstract int HSDeviceType { get; }
         public abstract string HSDeviceTypeString { get; }

@@ -14,6 +14,6 @@ namespace Hspi
 
         protected override string Suffix => string.Empty;
 
-        public override IList<VSVGPairs.VGPair> GetGraphicsPairs(PluginConfig config) => GetSingleGraphicsPairs("windbearing.png");
+        public override IList<VSVGPairs.VGPair> GraphicsPairs => GetSingleGraphicsPairs("windbearing.png");
     }
 }

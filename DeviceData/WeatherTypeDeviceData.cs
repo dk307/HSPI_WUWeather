@@ -103,9 +103,9 @@ namespace Hspi
             }
         }
 
-        public override IList<VSVGPairs.VSPair> GetStatusPairs(PluginConfig config) => GetStatusPairsForEnum(typeof(WeatherType));
+        public override IList<VSVGPairs.VSPair> StatusPairs => GetStatusPairsForEnum(typeof(WeatherType));
 
-        public override IList<VSVGPairs.VGPair> GetGraphicsPairs(PluginConfig config) => GetGraphicsPairsForEnum(typeof(WeatherType));
+        public override IList<VSVGPairs.VGPair> GraphicsPairs => GetGraphicsPairsForEnum(typeof(WeatherType));
 
         private static WeatherType FromString(string data)
         {

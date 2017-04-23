@@ -17,6 +17,6 @@ namespace Hspi
             return WUWeatherData.GetStringDescription(unit, DeviceUnitType.WinSpeed);
         }
 
-        public override IList<VSVGPairs.VGPair> GetGraphicsPairs(PluginConfig config) => GetSingleGraphicsPairs("wind.png");
+        public override IList<VSVGPairs.VGPair> GraphicsPairs => GetSingleGraphicsPairs("wind.png");
     }
 }

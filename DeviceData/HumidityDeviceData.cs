@@ -30,6 +30,6 @@ namespace Hspi
             UpdateDeviceData(HS, device, data);
         }
 
-        public override IList<VSVGPairs.VGPair> GetGraphicsPairs(PluginConfig config) => GetSingleGraphicsPairs("humidity.png");
+        public override IList<VSVGPairs.VGPair> GraphicsPairs => GetSingleGraphicsPairs("humidity.png");
     }
 }

@@ -34,6 +34,6 @@ namespace Hspi
             UpdateDeviceData(HS, device, data);
         }
 
-        public override IList<VSVGPairs.VGPair> GetGraphicsPairs(PluginConfig config) => new List<VSVGPairs.VGPair>();
+        public override IList<VSVGPairs.VGPair> GraphicsPairs => new List<VSVGPairs.VGPair>();
     }
 }

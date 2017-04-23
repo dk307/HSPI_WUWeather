@@ -24,18 +24,21 @@ namespace Hspi
             UpdateDeviceData(HS, device, stringValue);
         }
 
-        public override IList<VSVGPairs.VSPair> GetStatusPairs(PluginConfig config)
+        public override IList<VSVGPairs.VSPair> StatusPairs
         {
-            var pairs = new List<VSVGPairs.VSPair>();
-            pairs.Add(new VSVGPairs.VSPair(HomeSeerAPI.ePairStatusControl.Status)
+            get
             {
-                PairType = VSVGPairs.VSVGPairType.SingleValue,
-                Value = 0,
-                Status = "None",
-            });
-            return pairs;
+                var pairs = new List<VSVGPairs.VSPair>();
+                pairs.Add(new VSVGPairs.VSPair(HomeSeerAPI.ePairStatusControl.Status)
+                {
+                    PairType = VSVGPairs.VSVGPairType.SingleValue,
+                    Value = 0,
+                    Status = "None",
+                });
+                return pairs;
+            }
         }
 
-        public override IList<VSVGPairs.VGPair> GetGraphicsPairs(PluginConfig config) => GetSingleGraphicsPairs("text.png");
+        public override IList<VSVGPairs.VGPair> GraphicsPairs => GetSingleGraphicsPairs("text.png");
     }
 }

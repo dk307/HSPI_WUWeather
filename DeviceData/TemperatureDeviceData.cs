@@ -12,7 +12,7 @@ namespace Hspi
         {
         }
 
-        public override IList<VSVGPairs.VGPair> GetGraphicsPairs(PluginConfig config) => GetSingleGraphicsPairs("temperature.png");
+        public override IList<VSVGPairs.VGPair> GraphicsPairs => GetSingleGraphicsPairs("temperature.png");
 
         public override string GetDeviceSuffix(Unit unit)
         {

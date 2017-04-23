@@ -20,15 +20,18 @@ namespace Hspi
         {
         }
 
-        public override IList<VSVGPairs.VSPair> GetStatusPairs(PluginConfig config)
+        public override IList<VSVGPairs.VSPair> StatusPairs
         {
-            var pairs = new List<VSVGPairs.VSPair>();
-            pairs.Add(new VSVGPairs.VSPair(HomeSeerAPI.ePairStatusControl.Status)
+            get
             {
-                PairType = VSVGPairs.VSVGPairType.SingleValue,
-                Value = 0,
-            });
-            return pairs;
+                var pairs = new List<VSVGPairs.VSPair>();
+                pairs.Add(new VSVGPairs.VSPair(HomeSeerAPI.ePairStatusControl.Status)
+                {
+                    PairType = VSVGPairs.VSVGPairType.SingleValue,
+                    Value = 0,
+                });
+                return pairs;
+            }
         }
 
         public abstract void UpdateDeviceData(IHSApplication HS, DeviceClass device, System.Xml.XmlElement value);
@@ -36,7 +39,7 @@ namespace Hspi
         public abstract IReadOnlyCollection<DeviceData> Children { get; }
         public virtual DateTimeOffset? LastUpdateTime => null;
 
-        public override IList<VSVGPairs.VGPair> GetGraphicsPairs(PluginConfig config) => GetSingleGraphicsPairs("root.png");
+        public override IList<VSVGPairs.VGPair> GraphicsPairs => GetSingleGraphicsPairs("root.png");
 
         public override string HSDeviceTypeString => Invariant($"{WUWeatherData.PlugInName} Root Device");
         public override string InitialString => "Root";

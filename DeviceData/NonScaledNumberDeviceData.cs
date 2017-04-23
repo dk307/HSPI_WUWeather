@@ -11,9 +11,12 @@ namespace Hspi
         {
         }
 
-        public override IList<VSVGPairs.VSPair> GetStatusPairs(PluginConfig config)
+        public override IList<VSVGPairs.VSPair> StatusPairs
         {
-            return GetNonScaledSingleStatusPairs(Suffix);
+            get
+            {
+                return GetNonScaledSingleStatusPairs(Suffix);
+            }
         }
 
         protected abstract string Suffix { get; }

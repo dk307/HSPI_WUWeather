@@ -17,6 +17,6 @@ namespace Hspi
             return WUWeatherData.GetStringDescription(unit, DeviceUnitType.Visibility);
         }
 
-        public override IList<VSVGPairs.VGPair> GetGraphicsPairs(PluginConfig config) => GetSingleGraphicsPairs("visiblity.png");
+        public override IList<VSVGPairs.VGPair> GraphicsPairs => GetSingleGraphicsPairs("visiblity.png");
     }
 }
