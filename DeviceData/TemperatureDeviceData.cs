@@ -5,15 +5,18 @@ using System.Collections.Generic;
 namespace Hspi
 {
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
-    internal class TemperatureDeviceData : NumberDeviceData
+    internal class TemperatureDeviceData : ScaledNumberDeviceData
     {
         public TemperatureDeviceData(string name, XmlPathData pathData) :
             base(name, pathData)
         {
         }
 
-        protected override string GetUnitString(PluginConfig config) => config.GetUnitDescription(DeviceUnitType.Temperature);
-
         public override IList<VSVGPairs.VGPair> GetGraphicsPairs(PluginConfig config) => GetSingleGraphicsPairs("temperature.png");
+
+        public override string GetDeviceSuffix(Unit unit)
+        {
+            return WUWeatherData.GetStringDescription(unit, DeviceUnitType.Temperature);
+        }
     }
 }

@@ -97,7 +97,9 @@
     <Compile Include="DeviceData\DayForecastRootDeviceData.cs" />
     <Compile Include="DeviceData\DayDeviceData.cs" />
     <Compile Include="DeviceData\HistoryRootDeviceData.cs" />
+    <Compile Include="DeviceData\NonScaledNumberDeviceData.cs" />
     <Compile Include="DeviceData\PressureTrendDeviceData.cs" />
+    <Compile Include="DeviceData\ScaledNumberDeviceData.cs" />
     <Compile Include="DeviceData\SolarRadiationDeviceData.cs" />
     <Compile Include="DeviceData\VisibilityDeviceData.cs" />
     <Compile Include="DeviceData\XmlPathData.cs" />

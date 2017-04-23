@@ -5,14 +5,17 @@ using System.Collections.Generic;
 namespace Hspi
 {
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
-    internal class VisibilityDeviceData : NumberDeviceData
+    internal class VisibilityDeviceData : ScaledNumberDeviceData
     {
         public VisibilityDeviceData(string name, XmlPathData pathData) :
             base(name, pathData)
         {
         }
 
-        protected override string GetUnitString(PluginConfig config) => config.GetUnitDescription(DeviceUnitType.Visibility);
+        public override string GetDeviceSuffix(Unit unit)
+        {
+            return WUWeatherData.GetStringDescription(unit, DeviceUnitType.Visibility);
+        }
 
         public override IList<VSVGPairs.VGPair> GetGraphicsPairs(PluginConfig config) => GetSingleGraphicsPairs("visiblity.png");
     }

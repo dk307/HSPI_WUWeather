@@ -34,28 +34,6 @@ namespace Hspi
             UpdateDeviceData(HS, device, data);
         }
 
-        public override IList<VSVGPairs.VSPair> GetStatusPairs(PluginConfig config)
-        {
-            var pairs = new List<VSVGPairs.VSPair>();
-            pairs.Add(new VSVGPairs.VSPair(HomeSeerAPI.ePairStatusControl.Status)
-            {
-                PairType = VSVGPairs.VSVGPairType.Range,
-                RangeStart = int.MinValue,
-                RangeEnd = int.MaxValue,
-                IncludeValues = true,
-                RangeStatusDecimals = 2,
-                RangeStatusSuffix = GetUnitString(config),
-            });
-            return pairs;
-        }
-
         public override IList<VSVGPairs.VGPair> GetGraphicsPairs(PluginConfig config) => new List<VSVGPairs.VGPair>();
-
-        /// <summary>
-        /// Gets the suffix for number device
-        /// </summary>
-        /// <param name="config">The plugin configuration.</param>
-        /// <returns>Suffix used for the device</returns>
-        protected abstract string GetUnitString(PluginConfig config);
     }
 }

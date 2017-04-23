@@ -5,15 +5,15 @@ using System.Collections.Generic;
 namespace Hspi
 {
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
-    internal class SolarRadiationDeviceData : NumberDeviceData
+    internal class SolarRadiationDeviceData : NonScaledNumberDeviceData
     {
         public SolarRadiationDeviceData(string name, XmlPathData pathData) :
             base(name, pathData)
         {
         }
 
-        public override IList<VSVGPairs.VGPair> GetGraphicsPairs(PluginConfig config) => GetSingleGraphicsPairs("solarradiation.png");
+        protected override string Suffix => string.Empty;
 
-        protected override string GetUnitString(PluginConfig config) => string.Empty;
+        public override IList<VSVGPairs.VGPair> GetGraphicsPairs(PluginConfig config) => GetSingleGraphicsPairs("solarradiation.png");
     }
 }

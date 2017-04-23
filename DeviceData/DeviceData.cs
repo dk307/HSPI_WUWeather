@@ -16,10 +16,9 @@ namespace Hspi
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     internal abstract class DeviceData : DeviceDataBase
     {
-        protected DeviceData(string name, XmlPathData pathData, int deviceType = 0, [AllowNull]string initialStringValue = "--", double initialValue = 0D) :
+        protected DeviceData(string name, XmlPathData pathData, [AllowNull]string initialStringValue = "--", double initialValue = 0D) :
             base(name, pathData)
         {
-            this.deviceType = deviceType;
             this.initialStringValue = initialStringValue;
             this.initialValue = initialValue;
         }
@@ -32,7 +31,7 @@ namespace Hspi
         /// <param name="value">XML Nodes Iterator containing values or null.</param>
         public abstract void UpdateDeviceData(IHSApplication HS, DeviceClass device, System.Xml.XPath.XPathNodeIterator value);
 
-        public override int HSDeviceType => deviceType;
+        public override int HSDeviceType => 0;
         public override string HSDeviceTypeString => Invariant($"{WUWeatherData.PlugInName} Information Device");
         public override string InitialString => initialStringValue;
         public override double InitialValue => initialValue;
@@ -70,7 +69,6 @@ namespace Hspi
             return pairs;
         }
 
-        private readonly int deviceType;
         private readonly double initialValue;
         private readonly string initialStringValue;
     };

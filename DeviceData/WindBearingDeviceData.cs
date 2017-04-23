@@ -5,14 +5,14 @@ using System.Collections.Generic;
 namespace Hspi
 {
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
-    internal class WindBearingDeviceData : NumberDeviceData
+    internal class WindBearingDeviceData : NonScaledNumberDeviceData
     {
         public WindBearingDeviceData(string name, XmlPathData pathData) :
             base(name, pathData)
         {
         }
 
-        protected override string GetUnitString(PluginConfig config) => string.Empty;
+        protected override string Suffix => string.Empty;
 
         public override IList<VSVGPairs.VGPair> GetGraphicsPairs(PluginConfig config) => GetSingleGraphicsPairs("windbearing.png");
     }

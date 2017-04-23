@@ -5,28 +5,15 @@ using System.Collections.Generic;
 namespace Hspi
 {
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
-    internal class ProbabilityDeviceData : NumberDeviceData
+    internal class ProbabilityDeviceData : NonScaledNumberDeviceData
     {
         public ProbabilityDeviceData(string name, XmlPathData pathData) :
             base(name, pathData)
         {
         }
 
-        protected override string GetUnitString(PluginConfig config) => @" %";
+        public override IList<VSVGPairs.VSPair> GetStatusPairs(PluginConfig config) => GetNonScaledSingleStatusPairs(Suffix, 0, 100);
 
-        public override IList<VSVGPairs.VSPair> GetStatusPairs(PluginConfig config)
-        {
-            var pairs = new List<VSVGPairs.VSPair>();
-            pairs.Add(new VSVGPairs.VSPair(HomeSeerAPI.ePairStatusControl.Status)
-            {
-                PairType = VSVGPairs.VSVGPairType.Range,
-                RangeStart = 0,
-                RangeEnd = 100,
-                IncludeValues = true,
-                RangeStatusDecimals = 0,
-                RangeStatusSuffix = GetUnitString(config),
-            });
-            return pairs;
-        }
+        protected override string Suffix => " %";
     }
 }

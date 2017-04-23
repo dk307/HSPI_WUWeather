@@ -431,7 +431,8 @@ namespace Hspi
                     continue;
                 }
 
-                XPathExpression childExpression = deviceDefinition.PathData.GetPath(this.pluginConfig.Unit);
+                Unit currentUnit = pluginConfig.Unit;
+                XPathExpression childExpression = deviceDefinition.PathData.GetPath(currentUnit);
                 XPathNodeIterator childNodeIter = rootNavigator.Select(childExpression);
 
                 if (childNodeIter != null && childNodeIter.MoveNext())
@@ -464,6 +465,12 @@ namespace Hspi
                                 if (lastUpdate.HasValue)
                                 {
                                     childDevice.set_Last_Change(HS, lastUpdate.Value.DateTime);
+                                }
+
+                                var scaledNumberDeviceData = childDeviceDefinition as ScaledNumberDeviceData;
+                                if (scaledNumberDeviceData != null)
+                                {
+                                    childDevice.set_ScaleText(HS, scaledNumberDeviceData.GetDeviceSuffix(currentUnit));
                                 }
                             }
                             catch (OperationCanceledException)

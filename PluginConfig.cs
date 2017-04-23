@@ -281,16 +281,6 @@ namespace Hspi
             }
         }
 
-        /// <summary>
-        /// Gets the unit type description based on current Unit
-        /// </summary>
-        /// <param name="deviceUnit">The device unit.</param>
-        /// <returns>Description of Unit</returns>
-        public string GetUnitDescription(DeviceUnitType deviceUnit)
-        {
-            return WUWeatherData.GetStringDescription(this.Unit, deviceUnit);
-        }
-
         private T GetValue<T>(string key, T defaultValue)
         {
             return GetValue(key, defaultValue, DefaultSection);
