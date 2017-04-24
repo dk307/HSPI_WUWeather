@@ -253,16 +253,24 @@ namespace Hspi
 
         public override object PluginFunction([AllowNull]string functionName, [AllowNull] object[] parameters)
         {
-            switch (functionName)
+            try
             {
-                case null:
-                    return null;
+                switch (functionName)
+                {
+                    case null:
+                        return null;
 
-                case "Refresh":
-                    RestartPeriodicTask();
-                    break;
+                    case "Refresh":
+                        RestartPeriodicTask();
+                        break;
+                }
+                return null;
             }
-            return null;
+            catch (Exception ex)
+            {
+                LogWarning(Invariant($"Failed to execute function with {ex.Message}"));
+                return null;
+            }
         }
 
         #endregion "Script Override"
@@ -312,14 +320,22 @@ namespace Hspi
 
         public override bool HandleAction(IPlugInAPI.strTrigActInfo actionInfo)
         {
-            switch (actionInfo.TANumber)
+            try
             {
-                case ActionRefreshTANumber:
-                    RestartPeriodicTask();
-                    return true;
+                switch (actionInfo.TANumber)
+                {
+                    case ActionRefreshTANumber:
+                        RestartPeriodicTask();
+                        return true;
 
-                default:
-                    return base.HandleAction(actionInfo);
+                    default:
+                        return base.HandleAction(actionInfo);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogWarning(Invariant($"Failed to execute action with {ex.Message}"));
+                return false;
             }
         }
 

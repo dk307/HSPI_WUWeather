@@ -1,8 +1,12 @@
 ﻿using HomeSeerAPI;
 using System.Collections.Generic;
+using NullGuard;
 
 namespace Hspi
 {
+    using static System.FormattableString;
+
+    [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     internal abstract class ScaledNumberDeviceData : NumberDeviceData
     {
         public ScaledNumberDeviceData(string name, XmlPathData pathData) : base(name, pathData)
@@ -21,7 +25,7 @@ namespace Hspi
                     RangeEnd = int.MaxValue,
                     IncludeValues = true,
                     RangeStatusDecimals = 2,
-                    RangeStatusSuffix = " @S@",
+                    RangeStatusSuffix = Invariant($" {VSVGPairs.VSPair.ScaleReplace}"),
                     HasScale = true,
                 });
                 return pairs;

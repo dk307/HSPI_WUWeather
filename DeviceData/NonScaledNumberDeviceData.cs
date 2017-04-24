@@ -1,10 +1,12 @@
 ﻿using HomeSeerAPI;
 using System.Collections.Generic;
+using NullGuard;
 
 namespace Hspi
 {
     using static System.FormattableString;
 
+    [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     internal abstract class NonScaledNumberDeviceData : NumberDeviceData
     {
         public NonScaledNumberDeviceData(string name, XmlPathData pathData) : base(name, pathData)
