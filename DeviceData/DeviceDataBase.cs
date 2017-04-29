@@ -39,11 +39,11 @@ namespace Hspi
 
         public abstract int HSDeviceType { get; }
         public abstract string HSDeviceTypeString { get; }
-        public abstract string InitialString { get; }
-        public abstract double InitialValue { get; }
 
         public string Name { get; private set; }
         public XmlPathData PathData { get; private set; }
+
+        public abstract void SetInitialData(IHSApplication HS, DeviceClass device);
 
         protected static IList<VSVGPairs.VGPair> GetSingleGraphicsPairs(string fileName)
         {
@@ -64,19 +64,19 @@ namespace Hspi
         /// <param name="HS">Homeseer application.</param>
         /// <param name="device">The device to update.</param>
         /// <param name="data">Number data.</param>
-        protected void UpdateDeviceData(IHSApplication HS, DeviceClass device, double? data)
+        protected static void UpdateDeviceData(IHSApplication HS, DeviceClass device, double? data)
         {
             int refId = device.get_Ref(HS);
 
             if (data.HasValue && !inValidValues.Contains(data.Value))
             {
-                HS.SetDeviceString(refId, null, false);
+                HS.set_DeviceInvalidValue(refId, false);
                 HS.SetDeviceValueByRef(refId, data.Value, true);
             }
             else
             {
                 // do not update double value on no value.
-                HS.SetDeviceString(refId, InitialString, false);
+                HS.set_DeviceInvalidValue(refId, true);
             }
         }
 
@@ -86,10 +86,10 @@ namespace Hspi
         /// <param name="HS">Homeseer application.</param>
         /// <param name="device">The device to update.</param>
         /// <param name="data">string data.</param>
-        protected void UpdateDeviceData(IHSApplication HS, DeviceClass device, [AllowNull]string data)
+        protected static void UpdateDeviceData(IHSApplication HS, DeviceClass device, [AllowNull]string data)
         {
             int refId = device.get_Ref(HS);
-            HS.SetDeviceValueByRef(refId, InitialValue, false);
+            HS.set_DeviceInvalidValue(refId, false);
             HS.SetDeviceString(refId, data, true);
         }
 

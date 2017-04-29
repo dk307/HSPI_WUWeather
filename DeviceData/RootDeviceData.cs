@@ -34,6 +34,13 @@ namespace Hspi
             }
         }
 
+        public override void SetInitialData(IHSApplication HS, DeviceClass device)
+        {
+            int refId = device.get_Ref(HS);
+            HS.set_DeviceInvalidValue(refId, false);
+            HS.SetDeviceString(refId, "Root", false);
+        }
+
         public abstract void UpdateDeviceData(IHSApplication HS, DeviceClass device, System.Xml.XmlElement value);
 
         public abstract IReadOnlyCollection<DeviceData> Children { get; }
@@ -42,8 +49,6 @@ namespace Hspi
         public override IList<VSVGPairs.VGPair> GraphicsPairs => GetSingleGraphicsPairs("root.png");
 
         public override string HSDeviceTypeString => Invariant($"{WUWeatherData.PlugInName} Root Device");
-        public override string InitialString => "Root";
-        public override double InitialValue => 0D;
         public override int HSDeviceType => (int)DeviceTypeInfo_m.DeviceTypeInfo.eDeviceType_Plugin.Root;
     };
 }

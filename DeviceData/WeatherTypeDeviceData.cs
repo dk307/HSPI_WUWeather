@@ -75,8 +75,14 @@ namespace Hspi
         };
 
         public WeatherTypeDeviceData(string name, XmlPathData pathData) :
-            base(name, pathData, initialValue: (double)WeatherType.Unknown)
+            base(name, pathData)
         {
+        }
+
+        public override void SetInitialData(IHSApplication HS, DeviceClass device)
+        {
+            int refId = device.get_Ref(HS);
+            HS.SetDeviceValueByRef(refId, (int)WeatherType.Unknown, false);
         }
 
         public override void UpdateDeviceData(IHSApplication HS, DeviceClass device, [AllowNull]System.Xml.XPath.XPathNodeIterator value)
@@ -90,7 +96,6 @@ namespace Hspi
 
                 if (!string.IsNullOrWhiteSpace(data))
                 {
-                    HS.SetDeviceString(refId, null, false);
                     HS.SetDeviceValueByRef(refId, (int)FromString(data), true);
                     valueSet = true;
                 }
@@ -98,8 +103,7 @@ namespace Hspi
 
             if (!valueSet)
             {
-                HS.SetDeviceValueByRef(refId, InitialValue, false);
-                HS.SetDeviceString(refId, null, true);
+                HS.SetDeviceValueByRef(refId, (int)WeatherType.Unknown, true);
             }
         }
 

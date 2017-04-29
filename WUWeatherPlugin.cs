@@ -142,9 +142,7 @@ namespace Hspi
                     device.AssociatedDevice_Add(HS, parent.get_Ref(HS));
                     parent.AssociatedDevice_Add(HS, device.get_Ref(HS));
                 }
-
-                HS.SetDeviceValueByRef(refId, deviceData.InitialValue, false);
-                HS.SetDeviceString(refId, deviceData.InitialString, false);
+                deviceData.SetInitialData(HS, device);
             }
 
             return device;

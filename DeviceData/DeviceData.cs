@@ -16,11 +16,16 @@ namespace Hspi
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     internal abstract class DeviceData : DeviceDataBase
     {
-        protected DeviceData(string name, XmlPathData pathData, [AllowNull]string initialStringValue = "--", double initialValue = 0D) :
+        protected DeviceData(string name, XmlPathData pathData) :
             base(name, pathData)
         {
-            this.initialStringValue = initialStringValue;
-            this.initialValue = initialValue;
+        }
+
+        public override void SetInitialData(IHSApplication HS, DeviceClass device)
+        {
+            int refId = device.get_Ref(HS);
+            HS.SetDeviceValueByRef(refId, 0D, false);
+            HS.set_DeviceInvalidValue(refId, true);
         }
 
         /// <summary>
@@ -33,8 +38,6 @@ namespace Hspi
 
         public override int HSDeviceType => 0;
         public override string HSDeviceTypeString => Invariant($"{WUWeatherData.PlugInName} Information Device");
-        public override string InitialString => initialStringValue;
-        public override double InitialValue => initialValue;
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Justification = "Need for Filename")]
         protected static IList<VSVGPairs.VGPair> GetGraphicsPairsForEnum(Type enumType)
@@ -68,8 +71,5 @@ namespace Hspi
 
             return pairs;
         }
-
-        private readonly double initialValue;
-        private readonly string initialStringValue;
     };
 }
