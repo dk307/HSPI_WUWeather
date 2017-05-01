@@ -95,12 +95,17 @@ namespace Hspi
                     results.AppendLine("Station is not Valid.<br>");
                 }
 
-                if (!uint.TryParse(parts[RefreshIntervalId], out var refreshIntervalMinutes) || refreshIntervalMinutes > int.MaxValue)
+                uint refreshIntervalMinutes = 0;
+                if (string.IsNullOrWhiteSpace(parts[RefreshIntervalId]) ||
+                    !uint.TryParse(parts[RefreshIntervalId], out refreshIntervalMinutes) ||
+                    refreshIntervalMinutes > int.MaxValue)
                 {
                     results.AppendLine("Refresh Interval is not Valid.<br>");
                 }
 
-                if (!System.Enum.TryParse<Unit>(parts[UnitId], out var unit))
+                Unit unit = Unit.US;
+                if (string.IsNullOrWhiteSpace(parts[UnitId]) ||
+                    !System.Enum.TryParse<Unit>(parts[UnitId], out unit))
                 {
                     results.AppendLine("Unit is not Valid.<br>");
                 }
@@ -344,7 +349,7 @@ namespace Hspi
         private const string ErrorDivId = "message_id";
         private const string ImageDivId = "image_id";
         private const string RefreshIntervalId = "RefreshIntervalId";
-        private static readonly string pageName = Invariant($"{WUWeatherData.PlugInName} Config");
+        private static readonly string pageName = Invariant($"{WUWeatherData.PlugInName} Configuration").Replace(' ', '_');
         private readonly IHSApplication HS;
         private readonly PluginConfig pluginConfig;
     }
