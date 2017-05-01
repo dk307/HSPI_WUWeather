@@ -100,7 +100,7 @@ namespace Hspi
             }
 
             DeviceClass device = null;
-            int refId = HS.NewDeviceRef(deviceData.Name);
+            int refId = HS.NewDeviceRef(rootDeviceData != null ? Invariant($"{rootDeviceData.Name} {deviceData.Name}") : deviceData.Name);
             if (refId > 0)
             {
                 device = (DeviceClass)HS.GetDeviceByRef(refId);
@@ -115,7 +115,6 @@ namespace Hspi
                 device.set_Interface(HS, Name);
                 device.set_InterfaceInstance(HS, string.Empty);
                 device.set_Last_Change(HS, DateTime.Now);
-                device.set_Location2(HS, parent != null ? parent.get_Name(HS) : deviceData.Name);
                 device.set_Location(HS, Name);
                 var pairs = deviceData.StatusPairs;
                 foreach (var pair in pairs)
