@@ -49,7 +49,7 @@ namespace Hspi
             }
             catch (Exception ex)
             {
-                result = Invariant($"Failed to initialize PlugIn With {ex.Message}");
+                result = Invariant($"Failed to initialize PlugIn With {ex.GetFullMessage()}");
                 LogError(result);
             }
 
@@ -192,7 +192,7 @@ namespace Hspi
             }
             catch (Exception ex)
             {
-                LogError(Invariant($"Failed to Create Devices For PlugIn With {ex.Message}"));
+                LogError(Invariant($"Failed to Create Devices For PlugIn With {ex.GetFullMessage()}"));
             }
         }
 
@@ -265,7 +265,7 @@ namespace Hspi
             }
             catch (Exception ex)
             {
-                LogWarning(Invariant($"Failed to execute function with {ex.Message}"));
+                LogWarning(Invariant($"Failed to execute function with {ex.GetFullMessage()}"));
                 return null;
             }
         }
@@ -331,7 +331,7 @@ namespace Hspi
             }
             catch (Exception ex)
             {
-                LogWarning(Invariant($"Failed to execute action with {ex.Message}"));
+                LogWarning(Invariant($"Failed to execute action with {ex.GetFullMessage()}"));
                 return false;
             }
         }
@@ -399,7 +399,7 @@ namespace Hspi
                     }
                     catch (Exception ex)
                     {
-                        LogWarning(Invariant($"Failed to Fetch Data with {ex.Message}"));
+                        LogWarning(Invariant($"Failed to Fetch Data with {ex.GetFullMessage()}"));
                     }
 
                     // Set it to run after RefreshIntervalMinutes minutes or next 12.00 am
@@ -491,7 +491,7 @@ namespace Hspi
                             }
                             catch (Exception ex)
                             {
-                                LogError($"Failed to update {childAddress} with {ex.Message}");
+                                LogError($"Failed to update {childAddress} with {ex.GetFullMessage()}");
                             }
                         }
                     }

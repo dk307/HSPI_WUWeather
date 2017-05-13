@@ -83,7 +83,7 @@ namespace Hspi
             }
             catch (Exception ex)
             {
-                throw new HspiConnectionException(Invariant($"Error connecting homeseer SCS client: {ex.Message}"), ex);
+                throw new HspiConnectionException(Invariant($"Error connecting homeseer SCS client: {ex.GetFullMessage()}"), ex);
             }
 
             try
@@ -96,7 +96,7 @@ namespace Hspi
             }
             catch (Exception ex)
             {
-                throw new HspiConnectionException(Invariant($"Error connecting callback SCS client: {ex.Message}"), ex);
+                throw new HspiConnectionException(Invariant($"Error connecting callback SCS client: {ex.GetFullMessage()}"), ex);
             }
 
             // Establish the reverse connection from homeseer back to our plugin
@@ -106,7 +106,7 @@ namespace Hspi
             }
             catch (Exception ex)
             {
-                throw new HspiConnectionException(Invariant($"Error connecting homeseer to our plugin: {ex.Message}"), ex);
+                throw new HspiConnectionException(Invariant($"Error connecting homeseer to our plugin: {ex.GetFullMessage()}"), ex);
             }
 
             HsClient.Disconnected += HsClient_Disconnected;
