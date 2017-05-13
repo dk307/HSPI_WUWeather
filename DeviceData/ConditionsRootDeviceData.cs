@@ -18,7 +18,7 @@ namespace Hspi
             var childNavigator = value.CreateNavigator();
             var nodeIter = childNavigator.Select(lastUpdatePath.GetPath(Unit.SI));
 
-            lastUpdateTime = DayDeviceData.Parse(nodeIter);
+            lastUpdateTime = EpochDeviceData.Parse(nodeIter);
             if (lastUpdateTime.HasValue)
             {
                 UpdateDeviceData(HS, device, lastUpdateTime.Value.ToString("G", System.Globalization.CultureInfo.CurrentCulture));
@@ -41,7 +41,7 @@ namespace Hspi
             new PressureDeviceData("Pressure", new XmlPathData("pressure_in", "pressure_mb")),
             new PressureTrendDeviceData("Pressure Trend", new XmlPathData("pressure_trend")),
             new SolarRadiationDeviceData("Solar Radiation", new XmlPathData("solarradiation")),
-            new SolarRadiationDeviceData("UV", new XmlPathData("UV")),
+            new SolarRadiationDeviceData("UV", new XmlPathData("UV"), "uv.png"),
             new VisibilityDeviceData("Visiblity", new XmlPathData("visibility_mi", "visibility_km")),
             new TextDeviceData("Wind Summary", new XmlPathData("wind_string")),
             new WindBearingDeviceData("Wind Direction", new XmlPathData("wind_degrees")),

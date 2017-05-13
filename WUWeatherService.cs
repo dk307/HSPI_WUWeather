@@ -41,7 +41,7 @@ namespace Hspi.WUWeather
         /// </returns>
         public Task<XmlDocument> GetDataForStationAsync(string station, CancellationToken cancellationToken)
         {
-            string stationUrl = Invariant($"http://api.wunderground.com/api/{apiKey}/yesterday/forecast/conditions/q/pws:{station}.xml");
+            string stationUrl = Invariant($"http://api.wunderground.com/api/{apiKey}/yesterday/forecast/conditions/alerts/q/pws:{station}.xml");
             return GetXmlFromUrlAsync(stationUrl, cancellationToken);
         }
 
@@ -106,7 +106,7 @@ namespace Hspi.WUWeather
         /// <exception cref="WUWeatherDataInvalidException"></exception>
         private static void CheckErrorinResponse(XmlDocument xmlDoument)
         {
-            var featureNodes = xmlDoument.SelectNodes("/response/*[self::current_observation or self::forecast or self::history]");
+            var featureNodes = xmlDoument.SelectNodes("/response/*[self::current_observation or self::forecast or self::history or self::alerts]");
 
             if (featureNodes.Count == 0)
             {

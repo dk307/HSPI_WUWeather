@@ -95,7 +95,11 @@
     <Compile Include="DeviceData\ConditionsRootDeviceData.cs" />
     <Compile Include="ConfigPage.cs" />
     <Compile Include="DeviceData\DayForecastRootDeviceData.cs" />
-    <Compile Include="DeviceData\DayDeviceData.cs" />
+    <Compile Include="DeviceData\EnumBasedDeviceData.cs" />
+    <Compile Include="DeviceData\EpochDeviceData.cs" />
+    <Compile Include="DeviceData\USAAlertSignificanceDeviceData.cs" />
+    <Compile Include="DeviceData\USAAlertTypeDeviceData.cs" />
+    <Compile Include="DeviceData\USAlertsRootDeviceData.cs" />
     <Compile Include="DeviceData\HistoryRootDeviceData.cs" />
     <Compile Include="DeviceData\NonScaledNumberDeviceData.cs" />
     <Compile Include="DeviceData\PressureTrendDeviceData.cs" />
@@ -110,6 +114,7 @@
     <Compile Include="Exceptions\WUWeatherDataInvalidException.cs" />
     <Compile Include="HSPI.cs" />
     <Compile Include="Unit.cs" />
+    <Compile Include="DeviceData\USAAlertPhenomenaDeviceData.cs" />
     <Compile Include="WUWeatherData.cs" />
     <Compile Include="WUWeatherService.cs" />
     <Compile Include="DeviceData\DeviceData.cs" />
@@ -138,7 +143,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include=".editorconfig" />
     <None Include="App.config" />
     <None Include="HSPI_WUWeather.ruleset" />
     <None Include="packages.config" />

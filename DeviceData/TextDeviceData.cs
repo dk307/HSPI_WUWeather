@@ -9,9 +9,10 @@ namespace Hspi
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     internal class TextDeviceData : DeviceData
     {
-        public TextDeviceData(string name, XmlPathData pathData) :
+        public TextDeviceData(string name, XmlPathData pathData, string icon = "text.png") :
             base(name, pathData)
         {
+            this.icon = icon;
         }
 
         public override void UpdateDeviceData(IHSApplication HS, DeviceClass device, [AllowNull] XPathNodeIterator value)
@@ -39,6 +40,7 @@ namespace Hspi
             }
         }
 
-        public override IList<VSVGPairs.VGPair> GraphicsPairs => GetSingleGraphicsPairs("text.png");
+        public override IList<VSVGPairs.VGPair> GraphicsPairs => GetSingleGraphicsPairs(icon);
+        private readonly string icon;
     }
 }

@@ -188,9 +188,10 @@ namespace Hspi
         {
             StringBuilder stb = new StringBuilder();
             string idName = NameToId(root.Name);
+            stb.Append(@"<br>");
             stb.Append(PageBuilderAndMenu.clsPageBuilder.FormStart(Invariant($"ftm{idName}"), Invariant($"Id{idName}"), "Post"));
 
-            stb.Append(@"<div>");
+            stb.Append(DivStart(idName + "div", string.Empty));
             stb.Append(@"<table class='full_width_table'");
             stb.Append("<tr height='5'><td colspan=2></td></tr>");
             stb.Append("<tr><td colspan=2> </td></tr>");
@@ -202,7 +203,7 @@ namespace Hspi
                 stb.Append(Invariant($"<tr><td colspan=2>{FormCheckBox(NameToId(root, childDeviceDefinition), childDeviceDefinition.Name, pluginConfig.GetDeviceEnabled(root, childDeviceDefinition))}</td></tr>"));
             }
             stb.Append(@" </table>");
-            stb.Append(@"</div>");
+            stb.Append(DivEnd());
             stb.Append(PageBuilderAndMenu.clsPageBuilder.FormEnd());
 
             return stb.ToString();
@@ -252,6 +253,7 @@ namespace Hspi
             StringBuilder stb = new StringBuilder();
             stb.Append(PageBuilderAndMenu.clsPageBuilder.FormStart("ftmSettings", "IdSettings", "Post"));
 
+            stb.Append(@"<br>");
             stb.Append(@"<div>");
             stb.Append(@"<table class='full_width_table'");
             stb.Append("<tr height='5'><td style='width:25%'></td><td style='width:20%'></td><td style='width:55%'></td></tr>");

@@ -96,6 +96,8 @@ namespace Hspi
         /// <summary>
         /// WU invalid values
         /// </summary>
-        private static readonly SortedSet<double> inValidValues = new SortedSet<double> { -999D, -99.99D, -9999, 99999, -25375, -2539.7, };
+        private static readonly SortedSet<double> inValidValues = new SortedSet<double> { -999.9D, -999D, -99, -99.99D,
+                                                                                          -9999, -9999.99D, 99999,
+                                                                                          -25375, -2539.7, };
     };
 }

@@ -39,6 +39,6 @@ namespace Hspi
             new WindBearingDeviceData("Maximum Wind Direction", new XmlPathData("maxwind/degrees")),
         }.AsReadOnly();
 
-        private readonly DayDeviceData dayDeviceData = new DayDeviceData("Date", new XmlPathData("date/epoch"));
+        private readonly EpochDeviceData dayDeviceData = new EpochDeviceData("Date", "D", new XmlPathData("date/epoch"));
     }
 }
