@@ -1,13 +1,11 @@
 ﻿using HomeSeerAPI;
 using NullGuard;
 using Scheduler.Classes;
+using System;
 using System.Collections.Generic;
 
 namespace Hspi
 {
-    using System;
-    using static System.FormattableString;
-
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     internal class HistoryRootDeviceData : RootDeviceData
     {
@@ -19,16 +17,6 @@ namespace Hspi
 
         public override void UpdateDeviceData(IHSApplication HS, DeviceClass device, System.Xml.XmlElement value)
         {
-        }
-
-        private static string GetPathMax(string child)
-        {
-            return Invariant($"//observation/{child}[not(. <../preceding-sibling::observation/{child}) and not(. <../following-sibling::observation/{child})]");
-        }
-
-        private static string GetPathMin(string child)
-        {
-            return Invariant($"//observation/{child}[not(. >../preceding-sibling::observation/{child}) and not(. >../following-sibling::observation/{child})]");
         }
 
         private static readonly IReadOnlyCollection<DeviceData> HistoryWeatherDevices = new List<DeviceData>()
