@@ -4,14 +4,14 @@ HomeSeer plugin to get weather data from Weather Underground into HomeSeer.
 
 Overview
 --------
-This plugin gets Current condition, today forecast, tomorrow forecast, 2nd & 3rd day forecast and yesterday weather to the devices in Homeseer. You can choose which devices are created and updated.
+This plugin gets Current condition, US Alerts, today forecast, tomorrow forecast, 2nd & 3rd day forecast and yesterday weather to the devices in Homeseer. You can choose which devices are created and updated.
 
 The plugin in written in C# and is based on a sample from http://board.homeseer.com/showthread.php?t=178122.
 
 Compatibility
 ------------
 Tested on the following platforms:
-* Windows 10 with Visual Studio 2017
+* Windows 10 
 
 Installation
 -----------
@@ -19,7 +19,7 @@ Make sure that dotNet 4.6.2 is installed on machine. [Link](https://support.micr
 
 Place the compiled [executable](https://ci.appveyor.com/project/dk307/hspi-wuweather/build/artifacts?branch=master) and [config file](https://ci.appveyor.com/project/dk307/hspi-wuweather/build/artifacts?branch=master) in the HomeSeer installation directory. Restart HomeSeer. HomeSeer will recognize the plugin and will add plugin in disable state to its Plugins. Go to HomeSeer -> PlugIns -> Manage and enable this plugin. Create directory *wuweather* under *HomeSeer installation directory\html\images*. Extract Icons([icons.zip](/asserts/Icons.zip)) to this new directory.
 
-Open Menu Item PlugIns->WU Weather->WU Weather Config. You should see page like this:
+Open Menu Item PlugIns->WU Weather->Configuration. You should see page like this:
 
 ![Initial Configuration Page](/asserts/Initial.png "Initial Configuration Setting Page")
 
