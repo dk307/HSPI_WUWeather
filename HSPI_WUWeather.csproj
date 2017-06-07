@@ -92,11 +92,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DeviceData\CalculatedHumidityDeviceData.cs" />
+    <Compile Include="DeviceData\CalculatedPrecipitationIntensityDeviceData.cs" />
+    <Compile Include="DeviceData\CalculatedSolarRadiationDeviceData.cs" />
+    <Compile Include="DeviceData\CalculatedTemperatureDeviceData.cs" />
     <Compile Include="DeviceData\ConditionsRootDeviceData.cs" />
     <Compile Include="ConfigPage.cs" />
     <Compile Include="DeviceData\DayForecastRootDeviceData.cs" />
     <Compile Include="DeviceData\EnumBasedDeviceData.cs" />
     <Compile Include="DeviceData\EpochDeviceData.cs" />
+    <Compile Include="DeviceData\TextDeviceDataBase.cs" />
     <Compile Include="DeviceData\USAAlertSignificanceDeviceData.cs" />
     <Compile Include="DeviceData\USAAlertTypeDeviceData.cs" />
     <Compile Include="DeviceData\USAlertsRootDeviceData.cs" />

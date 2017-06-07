@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace Hspi
 {
+    using System;
     using static System.FormattableString;
 
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
@@ -14,11 +15,11 @@ namespace Hspi
             base(name, pathData)
         { }
 
+        public override IReadOnlyCollection<DeviceData> Children => HistoryWeatherDevices;
+
         public override void UpdateDeviceData(IHSApplication HS, DeviceClass device, System.Xml.XmlElement value)
         {
         }
-
-        public override IReadOnlyCollection<DeviceData> Children => HistoryWeatherDevices;
 
         private static string GetPathMax(string child)
         {
@@ -32,12 +33,12 @@ namespace Hspi
 
         private static readonly IReadOnlyCollection<DeviceData> HistoryWeatherDevices = new List<DeviceData>()
         {
-            new TemperatureMinMaxDeviceData("Max Temperature", new XmlPathData(GetPathMax("tempi"),GetPathMax("tempm"))),
-            new TemperatureMinMaxDeviceData("Min Temperature", new XmlPathData(GetPathMin("tempi"),GetPathMin("tempm"))),
-            new HumidityDeviceData("Max Humidity", new XmlPathData(GetPathMax("hum"))),
-            new HumidityDeviceData("Min Humidity", new XmlPathData(GetPathMin("hum"))),
-            new PrecipitationIntensityDeviceData("Precipitation", new XmlPathData(GetPathMax("precip_totali"),GetPathMax("precip_totalm"))),
-            new SolarRadiationDeviceData("Max Solar Radiation", new XmlPathData(GetPathMax("solarradiation"))),
+            new CalculatedTemperatureDeviceData("Max Temperature", new XmlPathData("//observation/tempi" ,"//observation/tempm"), Math.Max),
+            new CalculatedTemperatureDeviceData("Min Temperature", new XmlPathData("//observation/tempi" ,"//observation/tempm"), Math.Min),
+            new CalculatedHumidityDeviceData("Max Humidity", new XmlPathData("//observation/hum"), Math.Max),
+            new CalculatedHumidityDeviceData("Min Humidity", new XmlPathData("//observation/hum"), Math.Min),
+            new CalculatedPrecipitationIntensityDeviceData("Precipitation", new XmlPathData("//observation/precip_totali", "//observation/precip_totalm"), Math.Max),
+            new CalculatedSolarRadiationDeviceData("Max Solar Radiation", new XmlPathData("//observation/solarradiation"), Math.Max),
          }.AsReadOnly();
     }
 }

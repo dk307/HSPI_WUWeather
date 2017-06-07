@@ -6,41 +6,20 @@ using System.Xml.XPath;
 
 namespace Hspi
 {
-    [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
-    internal class TextDeviceData : DeviceData
+    internal sealed class TextDeviceData : TextDeviceDataBase
     {
-        public TextDeviceData(string name, XmlPathData pathData, string icon = "text.png") :
-            base(name, pathData)
+        public TextDeviceData(string name, XmlPathData pathData, string icon = "text.png")
+            : base(name, pathData)
         {
             this.icon = icon;
         }
 
-        public override void UpdateDeviceData(IHSApplication HS, DeviceClass device, [AllowNull] XPathNodeIterator value)
+        public override void UpdateDeviceData(IHSApplication HS, DeviceClass device, [AllowNull]XPathNodeIterator value)
         {
-            string stringValue = null;
-            if ((value != null) && (value.MoveNext()))
-            {
-                stringValue = value.Current.ToString();
-            }
-            UpdateDeviceData(HS, device, stringValue);
-        }
-
-        public override IList<VSVGPairs.VSPair> StatusPairs
-        {
-            get
-            {
-                var pairs = new List<VSVGPairs.VSPair>();
-                pairs.Add(new VSVGPairs.VSPair(HomeSeerAPI.ePairStatusControl.Status)
-                {
-                    PairType = VSVGPairs.VSVGPairType.SingleValue,
-                    Value = 0,
-                    Status = "None",
-                });
-                return pairs;
-            }
+            UpdateFirstNodeAsText(HS, device, value);
         }
 
         public override IList<VSVGPairs.VGPair> GraphicsPairs => GetSingleGraphicsPairs(icon);
         private readonly string icon;
-    }
+    };
 }

@@ -23,7 +23,8 @@ namespace Hspi
 
         protected abstract string Suffix { get; }
 
-        protected static IList<VSVGPairs.VSPair> GetNonScaledSingleStatusPairs(string suffix, int rangeStart = int.MinValue, int rangeEnd = int.MaxValue)
+        protected static IList<VSVGPairs.VSPair> GetNonScaledSingleStatusPairs(string suffix, int rangeStart = int.MinValue,
+                                                                               int rangeEnd = int.MaxValue)
         {
             var pairs = new List<VSVGPairs.VSPair>();
             pairs.Add(new VSVGPairs.VSPair(HomeSeerAPI.ePairStatusControl.Status)

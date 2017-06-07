@@ -8,7 +8,7 @@ using System.Globalization;
 namespace Hspi
 {
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
-    internal class EpochDeviceData : TextDeviceData
+    internal class EpochDeviceData : TextDeviceDataBase
     {
         public EpochDeviceData(string name, string displayFormat, XmlPathData pathData) :
            base(name, pathData)

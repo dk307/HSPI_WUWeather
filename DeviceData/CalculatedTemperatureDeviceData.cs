@@ -1,17 +1,19 @@
 ﻿using HomeSeerAPI;
 using NullGuard;
 using Scheduler.Classes;
+using System;
 using System.Collections.Generic;
 using System.Xml.XPath;
 
 namespace Hspi
 {
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
-    internal sealed class TemperatureMinMaxDeviceData : ScaledNumberDeviceData
+    internal class CalculatedTemperatureDeviceData : ScaledNumberDeviceData
     {
-        public TemperatureMinMaxDeviceData(string name, XmlPathData pathData) :
+        public CalculatedTemperatureDeviceData(string name, XmlPathData pathData, Func<double, double, double> calculator) :
             base(name, pathData)
         {
+            this.calculator = calculator;
         }
 
         public override string GetDeviceSuffix(Unit unit)
@@ -19,11 +21,12 @@ namespace Hspi
             return WUWeatherData.GetStringDescription(unit, DeviceUnitType.Temperature);
         }
 
-        public override void UpdateDeviceData(IHSApplication HS, DeviceClass device, [AllowNull]XPathNodeIterator value)
+        public override void UpdateDeviceData(IHSApplication HS, DeviceClass device, [AllowNull] XPathNodeIterator value)
         {
-            UpdateFirstNodeAsNumber(HS, device, value);
+            UpdateByCalculatingAsNumber(HS, device, value, calculator);
         }
 
         public override IList<VSVGPairs.VGPair> GraphicsPairs => GetSingleGraphicsPairs("thermometers.png");
+        private Func<double, double, double> calculator;
     }
 }

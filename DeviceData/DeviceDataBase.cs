@@ -68,7 +68,7 @@ namespace Hspi
         {
             int refId = device.get_Ref(HS);
 
-            if (data.HasValue && !inValidValues.Contains(data.Value))
+            if (data.HasValue)
             {
                 HS.set_DeviceInvalidValue(refId, false);
                 HS.SetDeviceValueByRef(refId, data.Value, true);
@@ -92,12 +92,5 @@ namespace Hspi
             HS.set_DeviceInvalidValue(refId, false);
             HS.SetDeviceString(refId, data, true);
         }
-
-        /// <summary>
-        /// WU invalid values
-        /// </summary>
-        private static readonly SortedSet<double> inValidValues = new SortedSet<double> { -999.9D, -999D, -99, -99.99D,
-                                                                                          -9999, -9999.99D, 99999,
-                                                                                          -25375, -2539.7, -573.3, 573.3 };
     };
 }
