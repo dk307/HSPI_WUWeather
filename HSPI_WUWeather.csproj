@@ -77,8 +77,8 @@
     <Reference Include="HSCF, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Homeseer.1.0.0\lib\net45\HSCF.dll</HintPath>
     </Reference>
-    <Reference Include="NullGuard, Version=1.4.6.0, Culture=neutral, PublicKeyToken=1958ac8092168428, processorArchitecture=MSIL">
-      <HintPath>packages\NullGuard.Fody.1.4.6\lib\dotnet\NullGuard.dll</HintPath>
+    <Reference Include="NullGuard, Version=1.5.2.0, Culture=neutral, PublicKeyToken=1958ac8092168428, processorArchitecture=MSIL">
+      <HintPath>packages\NullGuard.Fody.1.5.2\lib\dotnet\NullGuard.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Scheduler, Version=3.0.0.0, Culture=neutral, processorArchitecture=x86">
@@ -165,15 +165,15 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="FodyWeavers.xml" />
+    <None Include="FodyWeavers.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="packages\Fody.1.29.4\build\dotnet\Fody.targets" Condition="Exists('packages\Fody.1.29.4\build\dotnet\Fody.targets')" />
+  <Import Project="packages\Fody.2.1.0\build\netstandard1.0\Fody.targets" Condition="Exists('packages\Fody.2.1.0\build\netstandard1.0\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('packages\Fody.1.29.4\build\dotnet\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Fody.1.29.4\build\dotnet\Fody.targets'))" />
+    <Error Condition="!Exists('packages\Fody.2.1.0\build\netstandard1.0\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Fody.2.1.0\build\netstandard1.0\Fody.targets'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
