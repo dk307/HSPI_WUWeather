@@ -2,10 +2,13 @@
 using NullGuard;
 using Scheduler.Classes;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 
 namespace Hspi
 {
+    using static System.FormattableString;
+
     /// <summary>
     /// This is base class for creating and updating devices in HomeSeer.
     /// </summary>
@@ -64,18 +67,20 @@ namespace Hspi
         /// <param name="HS">Homeseer application.</param>
         /// <param name="device">The device to update.</param>
         /// <param name="data">Number data.</param>
-        protected static void UpdateDeviceData(IHSApplication HS, DeviceClass device, double? data)
+        protected void UpdateDeviceData(IHSApplication HS, DeviceClass device, double? data)
         {
             int refId = device.get_Ref(HS);
 
             if (data.HasValue)
             {
+                Trace.WriteLine(Invariant($"Updating {Name} Address [{device.get_Address(null)}] to [{data.Value}]"));
                 HS.set_DeviceInvalidValue(refId, false);
                 HS.SetDeviceValueByRef(refId, data.Value, true);
             }
             else
             {
                 // do not update double value on no value.
+                Trace.WriteLine(Invariant($"Updating {Name} Address [{device.get_Address(null)}] to Invalid Value"));
                 HS.set_DeviceInvalidValue(refId, true);
             }
         }
@@ -86,8 +91,10 @@ namespace Hspi
         /// <param name="HS">Homeseer application.</param>
         /// <param name="device">The device to update.</param>
         /// <param name="data">string data.</param>
-        protected static void UpdateDeviceData(IHSApplication HS, DeviceClass device, [AllowNull]string data)
+        protected void UpdateDeviceData(IHSApplication HS, DeviceClass device, [AllowNull]string data)
         {
+            Trace.WriteLine(Invariant($"Updating {Name} Address [{device.get_Address(null)}] to [{data ?? "<NULL>"}]"));
+
             int refId = device.get_Ref(HS);
             HS.set_DeviceInvalidValue(refId, false);
             HS.SetDeviceString(refId, data, true);

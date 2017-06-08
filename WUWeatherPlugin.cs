@@ -68,7 +68,7 @@ namespace Hspi
             RestartPeriodicTask(TimeSpan.FromSeconds(5));
         }
 
-        protected override void LogDebug(string message)
+        public override void LogDebug(string message)
         {
             if (pluginConfig.DebugLogging)
             {
@@ -491,12 +491,14 @@ namespace Hspi
                             }
                             catch (Exception ex)
                             {
-                                LogError($"Failed to update {childAddress} with {ex.GetFullMessage()}");
+                                LogError(Invariant($"Failed to update [{childAddress}] with {ex.GetFullMessage()}"));
                             }
                         }
                     }
                 }
             }
+
+            LogInfo(Invariant($"Finished Processing update from station:{pluginConfig.StationId}"));
         }
 
         private void RegisterConfigPage()

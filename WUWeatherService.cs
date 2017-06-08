@@ -8,6 +8,7 @@ using System.Xml;
 
 namespace Hspi.WUWeather
 {
+    using System.Diagnostics;
     using static System.FormattableString;
 
     /// <summary>
@@ -85,6 +86,7 @@ namespace Hspi.WUWeather
 
                 using (var client = new HttpClient(compressionHandler))
                 {
+                    Trace.WriteLine(Invariant($"Making call to get XML Data from {requestUrl}"));
                     var response = await client.GetAsync(requestUrl, cancellationToken).ConfigureAwait(false);
                     if (!response.IsSuccessStatusCode)
                     {
@@ -92,6 +94,8 @@ namespace Hspi.WUWeather
                     }
                     var xmlDoument = await ParseStringFromResponse(response).ConfigureAwait(false);
                     CheckErrorinResponse(xmlDoument);
+                    Trace.WriteLine(Invariant($"Got valid data from XML Data from {requestUrl}"));
+
                     return xmlDoument;
                 }
             }
@@ -100,17 +104,17 @@ namespace Hspi.WUWeather
         /// <summary>
         /// Checks errors in response.
         /// </summary>
-        /// <param name="xmlDoument">The XML response.</param>
+        /// <param name="xmlDocument">The XML response.</param>
         /// <exception cref="ApiKeyInvalidException"></exception>
         /// <exception cref="StationIdInvalidException"></exception>
         /// <exception cref="WUWeatherDataInvalidException"></exception>
-        private static void CheckErrorinResponse(XmlDocument xmlDoument)
+        private static void CheckErrorinResponse(XmlDocument xmlDocument)
         {
-            var featureNodes = xmlDoument.SelectNodes("/response/*[self::current_observation or self::forecast or self::history or self::alerts]");
+            var featureNodes = xmlDocument.SelectNodes("/response/*[self::current_observation or self::forecast or self::history or self::alerts]");
 
             if (featureNodes.Count == 0)
             {
-                var errorNode = xmlDoument.SelectSingleNode("/response/error/type");
+                var errorNode = xmlDocument.SelectSingleNode("/response/error/type");
                 string errorDescription = errorNode != null ? errorNode.InnerText : "Unknown";
 
                 switch (errorDescription.ToUpperInvariant())

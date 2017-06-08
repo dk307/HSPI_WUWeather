@@ -3,10 +3,13 @@ using NullGuard;
 using Scheduler.Classes;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Xml.XPath;
 
 namespace Hspi
 {
+    using static System.FormattableString;
+
     /// <summary>
     ///  Base class for Number Device
     /// </summary>
@@ -19,7 +22,7 @@ namespace Hspi
         {
         }
 
-        protected static void UpdateFirstNodeAsNumber(IHSApplication HS, DeviceClass device, [AllowNull] XPathNodeIterator value)
+        protected void UpdateFirstNodeAsNumber(IHSApplication HS, DeviceClass device, [AllowNull] XPathNodeIterator value)
         {
             double? data = null;
 
@@ -32,13 +35,25 @@ namespace Hspi
                     {
                         data = doubleValue;
                     }
+                    else
+                    {
+                        Trace.WriteLine(Invariant($"Device {Name} Address [{device.get_Address(null)}] has invalid Value {doubleValue}"));
+                    }
                 }
+                else
+                {
+                    Trace.WriteLine(Invariant($"Device {Name} Address [{device.get_Address(null)}] has Non-Double Value:[{text}]"));
+                }
+            }
+            else
+            {
+                Trace.WriteLine(Invariant($"No node value found for {Name} Address [{device.get_Address(null)}]"));
             }
 
             UpdateDeviceData(HS, device, data);
         }
 
-        protected static void UpdateByCalculatingAsNumber(IHSApplication HS, DeviceClass device, [AllowNull] XPathNodeIterator value,
+        protected void UpdateByCalculatingAsNumber(IHSApplication HS, DeviceClass device, [AllowNull] XPathNodeIterator value,
                                  Func<double, double, double> calculator)
         {
             double? data = null;

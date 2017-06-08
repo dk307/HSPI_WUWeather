@@ -21,7 +21,7 @@ namespace Hspi
     /// <seealso cref="Hspi.IPlugInAPI2" />
     /// <seealso cref="System.IDisposable" />
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
-    internal abstract class HspiBase : IPlugInAPI2, IDisposable
+    internal abstract class HspiBase : IPlugInAPI2, IDisposable, IDebugLogger
     {
         protected HspiBase(string name, int capabilities = (int)Enums.eCapabilities.CA_IO, string instanceFriendlyName = "",
                            bool supportMutipleInstances = false, int accessLevel = 1, bool supportsMultipleInstancesSingleEXE = true,
@@ -80,6 +80,9 @@ namespace Hspi
                 HS = HsClient.ServiceProxy;
 
                 var apiVersion = HS.APIVersion; // just to make sure our connection is valid
+
+                hsTraceListener = new HSTraceListener(this as IDebugLogger);
+                Debug.Listeners.Add(hsTraceListener);
             }
             catch (Exception ex)
             {
@@ -253,6 +256,10 @@ namespace Hspi
                         HsClient.Disconnected -= HsClient_Disconnected;
                         HsClient.Dispose();
                     }
+                    if (hsTraceListener != null)
+                    {
+                        hsTraceListener.Dispose();
+                    }
                     CallbackClient?.Dispose();
                     cancellationTokenSource.Dispose();
                 }
@@ -266,28 +273,24 @@ namespace Hspi
 
         protected override int GetTriggerCount() => 0;
 
-        protected virtual void LogDebug(string message)
+        public virtual void LogDebug(string message)
         {
-            Trace.WriteLine(message);
             HS.WriteLog(Name, Invariant($"Debug:{message}"));
         }
 
         protected void LogError(string message)
         {
-            Trace.TraceError(message);
-            HS.WriteLog(Name, Invariant($"Error:{message}"));
+            HS.WriteLogEx(Name, Invariant($"Error:{message}"), "#FF0000");
         }
 
         protected void LogInfo(string message)
         {
-            Trace.TraceInformation(message);
             HS.WriteLog(Name, message);
         }
 
         protected void LogWarning(string message)
         {
-            Trace.TraceWarning(message);
-            HS.WriteLog(Name, Invariant($"Warning:{message}"));
+            HS.WriteLogEx(Name, Invariant($"Warning:{message}"), "#D58000");
         }
 
         private readonly int accessLevel;
@@ -302,5 +305,6 @@ namespace Hspi
         private readonly bool supportsAddDevice;
         private readonly bool supportsMultipleInstancesSingleEXE;
         private bool disposedValue = false;
+        private HSTraceListener hsTraceListener;
     }
 }
