@@ -38,7 +38,7 @@ namespace Hspi
             if ((value != null) && (value.MoveNext()))
             {
                 string text = value.Current.ToString();
-                if (long.TryParse(text, out long epoch))
+                if (long.TryParse(text, NumberStyles.Any, CultureInfo.InvariantCulture, out long epoch))
                 {
                     dateTime = DateTimeOffset.FromUnixTimeSeconds(epoch).LocalDateTime;
                 }

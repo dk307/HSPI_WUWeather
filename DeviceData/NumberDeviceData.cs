@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Xml.XPath;
+using System.Globalization;
 
 namespace Hspi
 {
@@ -29,7 +30,7 @@ namespace Hspi
             if ((value != null) && (value.MoveNext()))
             {
                 string text = value.Current.ToString().Trim(new char[] { '%', ' ' });
-                if (double.TryParse(text, out double doubleValue))
+                if (double.TryParse(text, NumberStyles.Any, CultureInfo.InvariantCulture, out double doubleValue))
                 {
                     if (!inValidValues.Contains(doubleValue))
                     {
@@ -61,7 +62,7 @@ namespace Hspi
             while ((value != null) && (value.MoveNext()))
             {
                 string text = value.Current.ToString().Trim(new char[] { '%', ' ' });
-                if (double.TryParse(text, out double doubleValue))
+                if (double.TryParse(text, NumberStyles.Any, CultureInfo.InvariantCulture, out double doubleValue))
                 {
                     if (!inValidValues.Contains(doubleValue))
                     {

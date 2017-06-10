@@ -5,6 +5,7 @@ using System;
 using System.Collections.Specialized;
 using System.Text;
 using System.Web;
+using System.Globalization;
 
 namespace Hspi
 {
@@ -97,7 +98,7 @@ namespace Hspi
 
                 uint refreshIntervalMinutes = 0;
                 if (string.IsNullOrWhiteSpace(parts[RefreshIntervalId]) ||
-                    !uint.TryParse(parts[RefreshIntervalId], out refreshIntervalMinutes) ||
+                    !uint.TryParse(parts[RefreshIntervalId], NumberStyles.Any, CultureInfo.InvariantCulture, out refreshIntervalMinutes) ||
                     refreshIntervalMinutes > int.MaxValue)
                 {
                     results.AppendLine("Refresh Interval is not Valid.<br>");
