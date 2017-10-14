@@ -6,7 +6,7 @@ using System.Reflection;
 namespace Hspi
 {
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
-    public static class EnumHelper
+    internal static class EnumHelper
     {
         /// <summary>
         /// Returns the value of the DescriptionAttribute if the specified Enum value has one.
@@ -16,10 +16,6 @@ namespace Hspi
         /// <returns></returns>
         public static string GetDescription(System.Enum value)
         {
-            if (value == null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
             FieldInfo fi = value.GetType().GetField(value.ToString());
             DescriptionAttribute[] attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
             if (attributes.Length > 0)
