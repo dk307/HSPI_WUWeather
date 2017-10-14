@@ -1,4 +1,5 @@
 ﻿using NullGuard;
+using System;
 using System.ComponentModel;
 using System.Reflection;
 
@@ -15,6 +16,10 @@ namespace Hspi
         /// <returns></returns>
         public static string GetDescription(System.Enum value)
         {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
             FieldInfo fi = value.GetType().GetField(value.ToString());
             DescriptionAttribute[] attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
             if (attributes.Length > 0)
