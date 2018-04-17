@@ -21,7 +21,7 @@ namespace Hspi
     /// <seealso cref="Hspi.IPlugInAPI2" />
     /// <seealso cref="System.IDisposable" />
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
-    internal abstract class HspiBase : IPlugInAPI2, IDisposable, IDebugLogger
+    internal abstract class HspiBase : IPlugInAPI2, ILogger, IDisposable
     {
         protected HspiBase(string name, int capabilities = (int)Enums.eCapabilities.CA_IO, string instanceFriendlyName = "",
                            bool supportMutipleInstances = false, int accessLevel = 1, bool supportsMultipleInstancesSingleEXE = true,
@@ -49,7 +49,7 @@ namespace Hspi
         protected IScsServiceClient<IHSApplication> HsClient { get; private set; }
         protected IHSApplication HS { get; private set; }
 
-        protected CancellationToken CancellationToken => cancellationTokenSource.Token;
+        protected CancellationToken ShutdownCancellationToken => cancellationTokenSource.Token;
 
         public override int AccessLevel() => accessLevel;
 
@@ -73,6 +73,7 @@ namespace Hspi
         [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "apiVersion")]
         public void Connect(string serverAddress, int serverPort)
         {
+            Trace.WriteLine(Invariant($"Connecting to {serverAddress}"));
             try
             {
                 HsClient = ScsServiceClientBuilder.CreateClient<IHSApplication>(new ScsTcpEndPoint(serverAddress, serverPort), this);
@@ -81,7 +82,7 @@ namespace Hspi
 
                 var apiVersion = HS.APIVersion; // just to make sure our connection is valid
 
-                hsTraceListener = new HSTraceListener(this as IDebugLogger);
+                hsTraceListener = new HSTraceListener(this as ILogger);
                 Debug.Listeners.Add(hsTraceListener);
             }
             catch (Exception ex)
@@ -113,20 +114,23 @@ namespace Hspi
             }
 
             HsClient.Disconnected += HsClient_Disconnected;
+            Trace.WriteLine(Invariant($"Connected to {serverAddress}"));
         }
 
         private void HsClient_Disconnected(object sender, EventArgs e)
         {
-            cancellationTokenSource.Cancel();
+            Trace.WriteLine(Invariant($"Disconnected from HS3"));
+            DisconnectHspiConnection();
         }
 
         public void WaitforShutDownOrDisconnect()
         {
-            cancellationTokenSource.Token.WaitHandle.WaitOne();
+            this.shutdownWaitEvent.WaitOne();
         }
 
         public void Dispose()
         {
+            DisconnectHspiConnection();
             Dispose(true);
         }
 
@@ -204,15 +208,7 @@ namespace Hspi
 
         public override void ShutdownIO()
         {
-            cancellationTokenSource.Cancel();
-
-            if (HsClient != null)
-            {
-                HsClient.Disconnected -= HsClient_Disconnected;
-            }
-
-            this.HsClient.Disconnect();
-            this.CallbackClient.Disconnect();
+            DisconnectHspiConnection();
         }
 
         public override void SpeakIn(int deviceId, [AllowNull]string text, bool wait, [AllowNull]string host)
@@ -256,12 +252,10 @@ namespace Hspi
                         HsClient.Disconnected -= HsClient_Disconnected;
                         HsClient.Dispose();
                     }
-                    if (hsTraceListener != null)
-                    {
-                        hsTraceListener.Dispose();
-                    }
+                    hsTraceListener?.Dispose();
                     CallbackClient?.Dispose();
                     cancellationTokenSource.Dispose();
+                    shutdownWaitEvent.Dispose();
                 }
                 disposedValue = true;
             }
@@ -275,26 +269,61 @@ namespace Hspi
 
         public virtual void LogDebug(string message)
         {
-            HS.WriteLog(Name, Invariant($"Debug:{message}"));
+            HS?.WriteLog(Name, Invariant($"Debug:{message}"));
         }
 
-        protected void LogError(string message)
+        public void LogError(string message)
         {
-            HS.WriteLogEx(Name, Invariant($"Error:{message}"), "#FF0000");
+            HS?.WriteLogEx(Name, Invariant($"Error:{message}"), "#FF0000");
         }
 
-        protected void LogInfo(string message)
+        public void LogInfo(string message)
         {
-            HS.WriteLog(Name, message);
+            HS?.WriteLog(Name, message);
         }
 
-        protected void LogWarning(string message)
+        public void LogWarning(string message)
         {
-            HS.WriteLogEx(Name, Invariant($"Warning:{message}"), "#D58000");
+            HS?.WriteLogEx(Name, Invariant($"Warning:{message}"), "#D58000");
         }
 
+        private void DisconnectHspiConnection()
+        {
+            Trace.WriteLine("Disconnecting Hspi Connection");
+            cancellationTokenSource.Cancel();
+
+            if (HsClient != null)
+            {
+                HsClient.Disconnected -= HsClient_Disconnected;
+            }
+
+            if (hsTraceListener != null)
+            {
+                Debug.Listeners.Remove(hsTraceListener);
+            }
+
+            if ((this.CallbackClient != null) &&
+                (this.CallbackClient.CommunicationState == CommunicationStates.Connected))
+            {
+                this.CallbackClient.Disconnect();
+                this.CallbackClient = null;
+            }
+
+            if ((this.HsClient != null) &&
+                (this.HsClient.CommunicationState == CommunicationStates.Connected))
+            {
+                this.HsClient.Disconnect();
+                this.HsClient = null;
+            }
+
+            this.shutdownWaitEvent.Set();
+            Trace.WriteLine("Disconnected Hspi Connection");
+        }
+
+        private HSTraceListener hsTraceListener;
         private readonly int accessLevel;
         private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+        private readonly EventWaitHandle shutdownWaitEvent = new EventWaitHandle(false, EventResetMode.ManualReset);
         private readonly int capabilities;
         private readonly bool hsComPort;
         private readonly string instanceFriendlyName;
@@ -305,6 +334,5 @@ namespace Hspi
         private readonly bool supportsAddDevice;
         private readonly bool supportsMultipleInstancesSingleEXE;
         private bool disposedValue = false;
-        private HSTraceListener hsTraceListener;
     }
 }

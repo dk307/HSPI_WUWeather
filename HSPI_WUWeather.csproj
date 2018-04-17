@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{6AFED710-7BB6-40E3-B4CD-4642DA950411}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Hspi</RootNamespace>
     <AssemblyName>HSPI_WUWeather</AssemblyName>
@@ -118,6 +118,7 @@
     <Compile Include="Exceptions\WUWeatherDataInvalidException.cs" />
     <Compile Include="HSPI.cs" />
     <Compile Include="HSTraceListener.cs" />
+    <Compile Include="ILogger.cs" />
     <Compile Include="Unit.cs" />
     <Compile Include="DeviceData\USAAlertPhenomenaDeviceData.cs" />
     <Compile Include="WUWeatherData.cs" />

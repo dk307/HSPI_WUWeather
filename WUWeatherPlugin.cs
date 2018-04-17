@@ -213,7 +213,7 @@ namespace Hspi
             var currentDevices = new Dictionary<string, DeviceClass>();
             do
             {
-                CancellationToken.ThrowIfCancellationRequested();
+                ShutdownCancellationToken.ThrowIfCancellationRequested();
                 DeviceClass device = deviceEnumerator.GetNext();
                 if ((device != null) &&
                     (device.get_Interface(HS) != null) &&
@@ -351,7 +351,7 @@ namespace Hspi
                     cancellationTokenSourceForUpdateDevice.Cancel();
                     try
                     {
-                        periodicTask.Wait(CancellationToken);
+                        periodicTask.Wait(ShutdownCancellationToken);
                     }
                     catch (AggregateException ex)
                     {
@@ -379,7 +379,7 @@ namespace Hspi
         /// <returns></returns>
         private async Task CreateAndUpdateDevices(TimeSpan? initialDelay)
         {
-            using (var combinedToken = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationTokenSourceForUpdateDevice.Token))
+            using (var combinedToken = CancellationTokenSource.CreateLinkedTokenSource(ShutdownCancellationToken, cancellationTokenSourceForUpdateDevice.Token))
             {
                 while (!combinedToken.IsCancellationRequested)
                 {
@@ -434,7 +434,7 @@ namespace Hspi
 
             foreach (var deviceDefinition in WUWeatherData.DeviceDefinitions)
             {
-                CancellationToken.ThrowIfCancellationRequested();
+                ShutdownCancellationToken.ThrowIfCancellationRequested();
 
                 existingDevices.TryGetValue(deviceDefinition.Name, out var rootDevice);
 
@@ -468,7 +468,7 @@ namespace Hspi
 
                         if (childDevice != null)
                         {
-                            CancellationToken.ThrowIfCancellationRequested();
+                            ShutdownCancellationToken.ThrowIfCancellationRequested();
                             try
                             {
                                 XPathExpression subExpression = childDeviceDefinition.PathData.GetPath(this.pluginConfig.Unit);

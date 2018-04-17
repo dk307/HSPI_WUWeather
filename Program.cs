@@ -1,4 +1,9 @@
-﻿namespace Hspi
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+
+namespace Hspi
 {
     /// <summary>
     /// Class for the main program.
@@ -12,12 +17,17 @@
 
         private const int serverPort = 10400;
 
+        private static ConsoleTraceListener consoleTracer = new ConsoleTraceListener();
+
         /// <summary>
         /// Defines the entry point of the application.
         /// </summary>
         /// <param name="args">Command line arguments</param>
         private static void Main(string[] args)
         {
+            Trace.Listeners.Add(consoleTracer);
+            Trace.WriteLine("Starting...");
+
             // parse command line arguments
             foreach (string sCmd in args)
             {
@@ -30,10 +40,17 @@
                 }
             }
 
-            using (var plugin = new HSPI_WUWeather.HSPI())
+            try
             {
-                plugin.Connect(serverAddress, serverPort);
-                plugin.WaitforShutDownOrDisconnect();
+                using (var plugin = new HSPI_WUWeather.HSPI())
+                {
+                    plugin.Connect(serverAddress, serverPort);
+                    plugin.WaitforShutDownOrDisconnect();
+                }
+            }
+            finally
+            {
+                Trace.WriteLine("Bye!!!");
             }
         }
     }
