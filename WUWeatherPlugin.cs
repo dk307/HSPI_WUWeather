@@ -12,6 +12,7 @@ using System.Xml.XPath;
 
 namespace Hspi
 {
+    using System.Diagnostics;
     using static System.FormattableString;
 
     /// <summary>
@@ -33,7 +34,7 @@ namespace Hspi
             {
                 pluginConfig = new PluginConfig(HS);
                 configPage = new ConfigPage(HS, pluginConfig);
-                LogInfo("Starting Plugin");
+                Trace.TraceInformation("Starting Plugin");
 #if DEBUG
                 pluginConfig.DebugLogging = true;
 #endif
@@ -45,12 +46,12 @@ namespace Hspi
 
                 RestartPeriodicTask();
 
-                LogDebug("Plugin Started");
+                Trace.TraceInformation("Plugin Started");
             }
             catch (Exception ex)
             {
                 result = Invariant($"Failed to initialize PlugIn With {ex.GetFullMessage()}");
-                LogError(result);
+                Trace.TraceError(result);
             }
 
             return result;
@@ -58,7 +59,7 @@ namespace Hspi
 
         private void LogConfiguration()
         {
-            LogDebug(Invariant($"APIKey:{pluginConfig.APIKey} Refresh Interval:{pluginConfig.RefreshIntervalMinutes} Minutes Station:{pluginConfig.StationId}"));
+            Trace.WriteLine(Invariant($"APIKey:{pluginConfig.APIKey} Refresh Interval:{pluginConfig.RefreshIntervalMinutes} Minutes Station:{pluginConfig.StationId}"));
         }
 
         private void PluginConfig_ConfigChanged(object sender, EventArgs e)
@@ -70,7 +71,7 @@ namespace Hspi
 
         public override void LogDebug(string message)
         {
-            if (pluginConfig.DebugLogging)
+            if ((pluginConfig != null) && pluginConfig.DebugLogging)
             {
                 base.LogDebug(message);
             }
@@ -92,11 +93,11 @@ namespace Hspi
         {
             if (rootDeviceData != null)
             {
-                LogDebug(Invariant($"Creating {deviceData.Name} under {rootDeviceData.Name}"));
+                Trace.TraceInformation(Invariant($"Creating {deviceData.Name} under {rootDeviceData.Name}"));
             }
             else
             {
-                LogDebug(Invariant($"Creating Root {deviceData.Name}"));
+                Trace.TraceInformation(Invariant($"Creating Root {deviceData.Name}"));
             }
 
             DeviceClass device = null;
@@ -192,7 +193,7 @@ namespace Hspi
             }
             catch (Exception ex)
             {
-                LogError(Invariant($"Failed to Create Devices For PlugIn With {ex.GetFullMessage()}"));
+                Trace.TraceError(Invariant($"Failed to Create Devices For PlugIn With {ex.GetFullMessage()}"));
             }
         }
 
@@ -265,7 +266,7 @@ namespace Hspi
             }
             catch (Exception ex)
             {
-                LogWarning(Invariant($"Failed to execute function with {ex.GetFullMessage()}"));
+                Trace.TraceWarning(Invariant($"Failed to execute function with {ex.GetFullMessage()}"));
                 return null;
             }
         }
@@ -331,7 +332,7 @@ namespace Hspi
             }
             catch (Exception ex)
             {
-                LogWarning(Invariant($"Failed to execute action with {ex.GetFullMessage()}"));
+                Trace.TraceWarning(Invariant($"Failed to execute action with {ex.GetFullMessage()}"));
                 return false;
             }
         }
@@ -399,7 +400,7 @@ namespace Hspi
                     }
                     catch (Exception ex)
                     {
-                        LogWarning(Invariant($"Failed to Fetch Data with {ex.GetFullMessage()}"));
+                        Trace.TraceWarning(Invariant($"Failed to Fetch Data with {ex.GetFullMessage()}"));
                     }
 
                     // Set it to run after RefreshIntervalMinutes minutes or next 12.00 am
@@ -421,11 +422,11 @@ namespace Hspi
         {
             if (string.IsNullOrWhiteSpace(pluginConfig.APIKey) || string.IsNullOrWhiteSpace(pluginConfig.StationId))
             {
-                LogWarning("Configuration not setup to fetch weather data");
+                Trace.TraceWarning("Configuration not setup to fetch weather data");
                 return;
             }
 
-            LogInfo(Invariant($"Starting data fetch from WU Weather from station:{pluginConfig.StationId}"));
+            Trace.TraceInformation(Invariant($"Starting data fetch from WU Weather from station:{pluginConfig.StationId}"));
             LogConfiguration();
 
             WUWeatherService service = new WUWeatherService(pluginConfig.APIKey);
@@ -454,7 +455,7 @@ namespace Hspi
 
                     if (childElement == null)
                     {
-                        LogWarning(Invariant($"{deviceDefinition.Name} has invalid type in xml document."));
+                        Trace.TraceWarning(Invariant($"{deviceDefinition.Name} has invalid type in xml document."));
                         continue;
                     }
                     deviceDefinition.UpdateDeviceData(HS, rootDevice, childElement);
@@ -491,14 +492,14 @@ namespace Hspi
                             }
                             catch (Exception ex)
                             {
-                                LogError(Invariant($"Failed to update [{childAddress}] with {ex.GetFullMessage()}"));
+                                Trace.TraceError(Invariant($"Failed to update [{childAddress}] with {ex.GetFullMessage()}"));
                             }
                         }
                     }
                 }
             }
 
-            LogInfo(Invariant($"Finished Processing update from station:{pluginConfig.StationId}"));
+            Trace.TraceInformation(Invariant($"Finished Processing update from station:{pluginConfig.StationId}"));
         }
 
         private void RegisterConfigPage()
