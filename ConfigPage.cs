@@ -48,9 +48,9 @@ namespace Hspi
             {
                 reset();
 
-                AddHeader(HS.GetPageHeader(Name, "Configuration", string.Empty, string.Empty, false, false));
-
                 System.Text.StringBuilder stb = new System.Text.StringBuilder();
+                stb.Append(HS.GetPageHeader(Name, "Configuration", string.Empty, string.Empty, false, false));
+
                 stb.Append(PageBuilderAndMenu.clsPageBuilder.DivStart("pluginpage", ""));
                 stb.Append(BuildWebPageBody());
                 stb.Append(PageBuilderAndMenu.clsPageBuilder.DivEnd());
@@ -193,7 +193,7 @@ namespace Hspi
             stb.Append(PageBuilderAndMenu.clsPageBuilder.FormStart(Invariant($"ftm{idName}"), Invariant($"Id{idName}"), "Post"));
 
             stb.Append(DivStart(idName + "div", string.Empty));
-            stb.Append(@"<table class='full_width_table'");
+            stb.Append(@"<table class='full_width_table'>");
             stb.Append("<tr height='5'><td colspan=2></td></tr>");
             stb.Append("<tr><td colspan=2> </td></tr>");
             stb.Append("<tr><td colspan=2><strong>Select devices to be created</strong><td></tr>");
@@ -256,20 +256,20 @@ namespace Hspi
 
             stb.Append(@"<br>");
             stb.Append(@"<div>");
-            stb.Append(@"<table class='full_width_table'");
+            stb.Append(@"<table class='full_width_table'>");
             stb.Append("<tr height='5'><td style='width:25%'></td><td style='width:20%'></td><td style='width:55%'></td></tr>");
             stb.Append(Invariant($"<tr><td class='tablecell'>APIKey:</td><td class='tablecell' style='width: 50px'>{HtmlTextBox(APIKeyId, pluginConfig.APIKey)}</td><td class='tablecell'>&nbsp;<a href='https://www.wunderground.com/weather/api/' target='_blank'>API Home</a></td></tr>"));
-            stb.Append(Invariant($"<tr><td class='tablecell'>Refresh Interval(minutes):</td><td class='tablecell'>{HtmlTextBox(RefreshIntervalId, Invariant($"{pluginConfig.RefreshIntervalMinutes}"))} </ td ><td class='tablecell'><div id={CallsPerDayId}>{GetCallsPerDay()}</div></td></ tr > "));
-            stb.Append(Invariant($"<tr><td class='tablecell'>Station:</td><td class='tablecell'>{HtmlTextBox(StationId, Invariant($"{pluginConfig.StationId}"))}</td ><td class='tablecell'><div id='{ImageDivId}'>{GetImageHtml()}</div></td></ tr > "));
-            stb.Append(Invariant($"<tr><td class='tablecell'>Unit:</td><td colspan=2 class='tablecell'>{FormDropDown(UnitId, unitsDropDown, unitsSelection, 150, "Units to be used for Device")}</ td ></ tr > "));
-            stb.Append(Invariant($"<tr><td class='tablecell'>Debug Logging Enabled:</td><td colspan=2 class='tablecell'>{FormCheckBox(DebugLoggingId, string.Empty, this.pluginConfig.DebugLogging)}</ td ></ tr > "));
+            stb.Append(Invariant($"<tr><td class='tablecell'>Refresh Interval(minutes):</td><td class='tablecell'>{HtmlTextBox(RefreshIntervalId, Invariant($"{pluginConfig.RefreshIntervalMinutes}"))} </td><td class='tablecell'><div id={CallsPerDayId}>{GetCallsPerDay()}</div></td></tr>"));
+            stb.Append(Invariant($"<tr><td class='tablecell'>Station:</td><td class='tablecell'>{HtmlTextBox(StationId, Invariant($"{pluginConfig.StationId}"))}</td ><td class='tablecell'><div id='{ImageDivId}'>{GetImageHtml()}</div></td></tr>"));
+            stb.Append(Invariant($"<tr><td class='tablecell'>Unit:</td><td colspan=2 class='tablecell'>{FormDropDown(UnitId, unitsDropDown, unitsSelection, 150, "Units to be used for Device")}</td></tr>"));
+            stb.Append(Invariant($"<tr><td class='tablecell'>Debug Logging Enabled:</td><td colspan=2 class='tablecell'>{FormCheckBox(DebugLoggingId, string.Empty, this.pluginConfig.DebugLogging)}</td></tr>"));
             stb.Append(Invariant($"<tr><td colspan=3><div id='{ErrorDivId}' style='color:Red'></div></td><td></td></tr>"));
             stb.Append(Invariant($"<tr><td colspan=3>{FormButton("Save", SaveButtonName, "Save Settings")}</td><td></td></tr>"));
             stb.Append("<tr height='5'><td colspan=3></td></tr>");
             stb.Append(Invariant($"<tr><td colspan=3></td></tr>"));
             stb.Append(@"<tr><td colspan=3><div>Icons made by <a href='http://www.freepik.com' title='Freepik' target='_blank'>Freepik</a> from <a href='http://www.flaticon.com' title='Flaticon' target='_blank'>www.flaticon.com</a> is licensed by <a href='http://creativecommons.org/licenses/by/3.0/' title='Creative Commons BY 3.0' target='_blank'>CC 3.0 BY</a></div></td></tr>");
             stb.Append(@"<tr height='5'><td colspan=3></td></tr>");
-            stb.Append(@" </table>");
+            stb.Append(@"</table>");
             stb.Append(@"</div>");
             stb.Append(PageBuilderAndMenu.clsPageBuilder.FormEnd());
 
