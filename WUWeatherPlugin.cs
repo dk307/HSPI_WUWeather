@@ -388,10 +388,10 @@ namespace Hspi
                     {
                         if (initialDelay.HasValue)
                         {
-                            await Task.Delay(initialDelay.Value, combinedToken.Token);
+                            await Task.Delay(initialDelay.Value, combinedToken.Token).ConfigureAwait(false);
                             initialDelay = null;
                         }
-                        IDictionary<string, DeviceClass> currentDevices = GetCurrentDevices();
+                        var currentDevices = GetCurrentDevices();
                         CreateDevices(currentDevices, combinedToken.Token);
                         await FetchAndUpdateDevices(currentDevices, combinedToken.Token).ConfigureAwait(false);
                     }

@@ -15,7 +15,7 @@ Tested on the following platforms:
 
 Installation
 -----------
-Make sure that dotNet 4.6.2 is installed on machine. [Link](https://support.microsoft.com/en-us/help/3151802/the-.net-framework-4.6.2-web-installer-for-windows)
+Make sure that dotNet 4.7.2 is installed on machine. [Link](https://support.microsoft.com/en-us/help/4054531/microsoft-net-framework-4-7-2-web-installer-for-windows)
 
 Place the compiled [executable](https://ci.appveyor.com/project/dk307/hspi-wuweather/build/artifacts?branch=master) and [config file](https://ci.appveyor.com/project/dk307/hspi-wuweather/build/artifacts?branch=master) in the HomeSeer installation directory. Restart HomeSeer. HomeSeer will recognize the plugin and will add plugin in disable state to its Plugins. Go to HomeSeer -> PlugIns -> Manage and enable this plugin. Create directory *wuweather* under *HomeSeer installation directory\html\images*. Extract Icons([icons.zip](/asserts/Icons.zip)) to this new directory.
 
