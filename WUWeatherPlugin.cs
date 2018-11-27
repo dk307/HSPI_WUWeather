@@ -202,7 +202,7 @@ namespace Hspi
         /// </summary>
         /// <returns>Current devices for plugin</returns>
         /// <exception cref="HspiException"></exception>
-        private IDictionary<string, DeviceClass> GetCurrentDevices()
+        private IDictionary<string, DeviceClass> GetCurrentDevices(CancellationToken token)
         {
             var deviceEnumerator = HS.GetDeviceEnumerator() as clsDeviceEnumeration;
 
@@ -214,7 +214,7 @@ namespace Hspi
             var currentDevices = new Dictionary<string, DeviceClass>();
             do
             {
-                ShutdownCancellationToken.ThrowIfCancellationRequested();
+                token.ThrowIfCancellationRequested();
                 DeviceClass device = deviceEnumerator.GetNext();
                 if ((device != null) &&
                     (device.get_Interface(HS) != null) &&
@@ -347,29 +347,35 @@ namespace Hspi
         {
             lock (periodicTaskLock)
             {
-                if (periodicTask != null)
-                {
-                    cancellationTokenSourceForUpdateDevice.Cancel();
-                    try
-                    {
-                        periodicTask.Wait(ShutdownCancellationToken);
-                    }
-                    catch (AggregateException ex)
-                    {
-                        ex.Handle((exception) =>
-                        {
-                            if (exception is OperationCanceledException)
-                            {
-                                return true;
-                            }
-                            return false;
-                        });
-                    }
-                    cancellationTokenSourceForUpdateDevice.Dispose();
-                }
+                StopPeriodicTask(false);
 
                 cancellationTokenSourceForUpdateDevice = new CancellationTokenSource();
                 periodicTask = CreateAndUpdateDevices(initialDelay); // dont wait
+            }
+        }
+
+        private void StopPeriodicTask(bool ignoreExceptions)
+        {
+            if (periodicTask != null)
+            {
+                cancellationTokenSourceForUpdateDevice.Cancel();
+                try
+                {
+                    periodicTask.Wait();
+                }
+                catch (AggregateException ex)
+                {
+                    ex.Handle((exception) =>
+                    {
+                        if ((exception is OperationCanceledException) ||
+                            (exception is TaskCanceledException))
+                        {
+                            return true;
+                        }
+                        return ignoreExceptions;
+                    });
+                }
+                cancellationTokenSourceForUpdateDevice.Dispose();
             }
         }
 
@@ -380,8 +386,11 @@ namespace Hspi
         /// <returns></returns>
         private async Task CreateAndUpdateDevices(TimeSpan? initialDelay)
         {
-            using (var combinedToken = CancellationTokenSource.CreateLinkedTokenSource(ShutdownCancellationToken, cancellationTokenSourceForUpdateDevice.Token))
+            using (var combinedToken = CancellationTokenSource.CreateLinkedTokenSource(ShutdownCancellationToken,
+                                                                            cancellationTokenSourceForUpdateDevice.Token))
             {
+                var currentDevices = GetCurrentDevices(combinedToken.Token);
+
                 while (!combinedToken.IsCancellationRequested)
                 {
                     try
@@ -391,12 +400,12 @@ namespace Hspi
                             await Task.Delay(initialDelay.Value, combinedToken.Token).ConfigureAwait(false);
                             initialDelay = null;
                         }
-                        var currentDevices = GetCurrentDevices();
                         CreateDevices(currentDevices, combinedToken.Token);
                         await FetchAndUpdateDevices(currentDevices, combinedToken.Token).ConfigureAwait(false);
                     }
                     catch (OperationCanceledException)
                     {
+                        throw;
                     }
                     catch (Exception ex)
                     {
@@ -435,7 +444,7 @@ namespace Hspi
 
             foreach (var deviceDefinition in WUWeatherData.DeviceDefinitions)
             {
-                ShutdownCancellationToken.ThrowIfCancellationRequested();
+                token.ThrowIfCancellationRequested();
 
                 existingDevices.TryGetValue(deviceDefinition.Name, out var rootDevice);
 
@@ -469,7 +478,7 @@ namespace Hspi
 
                         if (childDevice != null)
                         {
-                            ShutdownCancellationToken.ThrowIfCancellationRequested();
+                            token.ThrowIfCancellationRequested();
                             try
                             {
                                 XPathExpression subExpression = childDeviceDefinition.PathData.GetPath(this.pluginConfig.Unit);
@@ -489,6 +498,7 @@ namespace Hspi
                             }
                             catch (OperationCanceledException)
                             {
+                                throw;
                             }
                             catch (Exception ex)
                             {
@@ -526,11 +536,15 @@ namespace Hspi
         {
             if (!disposedValue)
             {
+                lock (periodicTaskLock)
+                {
+                    StopPeriodicTask(true);
+                }
+
                 if (pluginConfig != null)
                 {
                     pluginConfig.ConfigChanged -= PluginConfig_ConfigChanged;
                 }
-                cancellationTokenSourceForUpdateDevice.Dispose();
                 if (configPage != null)
                 {
                     configPage.Dispose();
@@ -540,7 +554,6 @@ namespace Hspi
                 {
                     pluginConfig.Dispose();
                 }
-                periodicTask?.Dispose();
 
                 disposedValue = true;
             }
