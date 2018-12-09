@@ -293,7 +293,7 @@ namespace Hspi
 
         protected static string HtmlTextBox(string name, string defaultText, int size = 25)
         {
-            return Invariant($"<input type=\'text\' id=\'{NameToIdWithPrefix(name)}\' size=\'{size}\' name=\'{name}\' value=\'{defaultText}\'>");
+            return Invariant($"<input type=\'text\' id=\'{NameToIdWithPrefix(name)}\' size=\'{size}\' name=\'{name}\' value=\'{HtmlEncode(defaultText)}\'>");
         }
 
         protected string FormDropDown(string name, NameValueCollection options, int selected, int width, string tooltip)
@@ -341,6 +341,15 @@ namespace Hspi
             button.enabled = true;
 
             return button.Build();
+        }
+
+        public static string HtmlEncode<T>([AllowNull]T value)
+        {
+            if (value == null)
+            {
+                return string.Empty;
+            }
+            return HttpUtility.HtmlEncode(value);
         }
 
         private const string SaveButtonName = "Save";
